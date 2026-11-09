@@ -1,29 +1,78 @@
 {
   "store": {
-    "slug": "soi-derm",
-    "name": "Soi Dermatology",
-    "tagline": "Dermatology clinic in Myeongdong, Seoul",
-    "address": "5F, 21 Myeongdong 8-gil, Jung-gu, Seoul (Myeongdong Station, Exit 8, 2 min walk)",
-    "phone": "+82-2-000-0000",
+    "slug": "dojagi",
+    "name": "Dojagi Clinic",
+    "tagline": "Skin clinic in Gangnam, Seoul — Rejuran, skin boosters, lifting lasers",
+    "address": "531 Gangnam-daero, Seocho-gu, Seoul (Nonhyeon Station, Line 7 / Shinbundang Line, Exit 4)",
     "timezone": "Asia/Seoul (KST, UTC+9)"
   },
   "settings": {
-    "hours": "Mon–Fri 10:00–20:00 · Sat 10:00–17:00 · Closed on Sundays",
-    "holidays": "Open on public holidays 10:00–17:00, except Seollal and Chuseok (closed).",
-    "accessibility": "Wheelchair accessible. Step-free entrance and elevator from street level to 5F. Accessible restroom on the same floor. Staff can assist from the building entrance on request.",
-    "languages": "Korean, English, Chinese (Mandarin).",
-    "payment": "Credit cards (Visa, Mastercard, AMEX, JCB), Alipay, WeChat Pay. Tax refund available for foreign visitors on cosmetic procedures.",
-    "medical": "Counter does not give medical advice. Suitability for any procedure is decided by the doctor at the in-person consultation (included in the visit)."
+    "hours": "Mon–Sat 10:00–19:00, bookings every 30 min · Closed on Sundays",
+    "holidays": "",
+    "accessibility": "",
+    "languages": "Korean, English, Japanese, Chinese, Indonesian (interpreters on site)",
+    "payment": "",
+    "medical": "Counter does not give medical advice. Suitability for any procedure is decided by the doctor at the in-person consultation."
   },
   "services": [
-    { "id": "rejuran", "name": "Rejuran Healer (full face)", "price": "₩350,000", "duration": "60 min incl. numbing cream" },
-    { "id": "toning", "name": "Laser Toning", "price": "₩120,000", "duration": "30 min" },
-    { "id": "botox", "name": "Botox (forehead)", "price": "₩150,000", "duration": "20 min" }
+    {
+      "id": "rejuran",
+      "name": "Rejuran Healer",
+      "price": "",
+      "duration": "60 min · Rejuran HB 4cc + Glowing 2cc + LDM"
+    },
+    {
+      "id": "booster",
+      "name": "Collagen & Glowing Booster",
+      "price": "",
+      "duration": "60 min"
+    },
+    {
+      "id": "toning",
+      "name": "Sebum Control & Toning laser",
+      "price": "",
+      "duration": "60 min"
+    },
+    {
+      "id": "lifting",
+      "name": "Premium Lifting Laser",
+      "price": "",
+      "duration": "120 min · Ulthera 400 shots"
+    }
   ],
   "slots": [
-    { "date": "2026-11-10", "times": ["10:00", "11:00", "14:00", "15:00", "16:00", "18:00"] },
-    { "date": "2026-11-11", "times": ["10:00", "13:00", "15:00", "17:00"] },
-    { "date": "2026-11-12", "times": ["11:00", "14:00", "16:00"] }
+    {
+      "date": "2026-11-10",
+      "times": [
+        "10:00",
+        "10:30",
+        "11:30",
+        "13:00",
+        "14:30",
+        "15:00",
+        "15:30",
+        "17:00"
+      ]
+    },
+    {
+      "date": "2026-11-11",
+      "times": [
+        "10:30",
+        "12:00",
+        "14:00",
+        "16:30",
+        "18:00"
+      ]
+    },
+    {
+      "date": "2026-11-12",
+      "times": [
+        "11:00",
+        "13:30",
+        "15:00",
+        "17:30"
+      ]
+    }
   ],
   "memory": [],
   "tasks": []

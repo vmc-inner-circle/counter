@@ -52,7 +52,7 @@ function freeSlots() {
 // ---- the agent-facing document (markdown). Same content is embedded in the HTML page.
 function agentDoc(base) {
   const s = db.store, c = db.settings;
-  const svc = db.services.map((x) => `| ${x.id} | ${x.name} | ${x.price} | ${x.duration} |`).join('\n');
+  const svc = db.services.map((x) => `| ${x.id} | ${x.name} | ${x.price || 'ask us'} | ${x.duration} |`).join('\n');
   const slots = freeSlots().map((d) => `- ${d.date}: ${d.times.join(', ') || '(full)'}`).join('\n');
   const mem = db.memory.length ? db.memory.map((m) => `- Q: ${m.question}\n  A: ${m.answer} _(confirmed by staff ${m.learnedAt.slice(0, 10)})_`).join('\n') : '- (none yet)';
   const api = `${base}/api/s/${s.slug}`;
@@ -65,12 +65,8 @@ function agentDoc(base) {
 ${s.tagline}. ${s.address}. Time zone: ${s.timezone}.
 
 ## Facts (verified by the clinic)
-- **Hours:** ${c.hours}
-- **Public holidays:** ${c.holidays}
-- **Accessibility:** ${c.accessibility}
-- **Languages spoken by staff:** ${c.languages}
-- **Payment:** ${c.payment}
-- **Medical questions:** ${c.medical}
+${[['Hours', c.hours], ['Public holidays', c.holidays], ['Accessibility', c.accessibility], ['Languages spoken by staff', c.languages], ['Payment', c.payment], ['Medical questions', c.medical]].filter(([, v]) => v).map(([k, v]) => `- **${k}:** ${v}`).join('\n')}
+- Anything not listed here (prices included): ask us — staff will answer.
 
 ## Services
 | id | service | price | duration |
@@ -105,7 +101,7 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&l
 
 function storePage(base) {
   const s = db.store, c = db.settings;
-  const svc = db.services.map((x) => `<li><b>${esc(x.name)}</b><span>${esc(x.price)} · ${esc(x.duration)}</span></li>`).join('');
+  const svc = db.services.map((x) => `<li><b>${esc(x.name)}</b><span>${esc([x.price, x.duration].filter(Boolean).join(' · '))}</span></li>`).join('');
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(s.name)} · Counter</title>
 <link rel="alternate" type="text/markdown" href="${base}/s/${s.slug}.md">
@@ -120,7 +116,7 @@ function storePage(base) {
 <section class="card book" id="book"><h2>Book an appointment</h2>
 <p class="muted">The slot is held for you right away. The clinic confirms it here — usually within a minute. AI agents: fill this in for your user.</p>
 <form id="bf" data-form="book">
-<label>Service<select name="service" data-f="service">${db.services.map((x) => `<option value="${esc(x.id)}">${esc(x.name)} — ${esc(x.price)}</option>`).join('')}</select></label>
+<label>Service<select name="service" data-f="service">${db.services.map((x) => `<option value="${esc(x.id)}">${esc(x.name)}${x.price ? ' — ' + esc(x.price) : ''}</option>`).join('')}</select></label>
 <div class="two"><label>Date<select name="date" data-f="date"></select></label><label>Time<select name="time" data-f="time"></select></label></div>
 <label>Patient name<input name="name" data-f="name" required autocomplete="name"></label>
 <div class="two"><label>Nationality<input name="nationality" data-f="nationality" placeholder="e.g. JP"></label><label>Phone or email<input name="contact" data-f="contact"></label></div>
@@ -228,7 +224,7 @@ const server = http.createServer(async (req, res) => {
     const b = await readBody(req);
     const t = db.tasks.find((x) => x.id === mt[1]);
     if (!t || t.status !== 'input-required') return json(res, 409, { error: 'not pending' });
-    if (mt[2] === 'approve') Object.assign(t, { status: 'completed', confirmation: `SOI-${t.date.slice(5).replace('-', '')}-${t.time.replace(':', '')}`, answer: `Booking confirmed: ${t.serviceName} on ${t.date} ${t.time} KST. Please arrive 10 minutes early. Free cancellation until 24h before.` });
+    if (mt[2] === 'approve') Object.assign(t, { status: 'completed', confirmation: `${db.store.slug.slice(0, 3).toUpperCase()}-${t.date.slice(5).replace('-', '')}-${t.time.replace(':', '')}`, answer: `Booking confirmed: ${t.serviceName} on ${t.date} ${t.time} KST. Please arrive 10 minutes early. Free cancellation until 24h before.` });
     if (mt[2] === 'reject') Object.assign(t, { status: 'rejected', reason: b.reason || 'The clinic could not accept this request.' });
     if (mt[2] === 'answer') {
       Object.assign(t, { status: 'completed', answer: b.answer, source: 'staff' });

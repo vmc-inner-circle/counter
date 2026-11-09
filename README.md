@@ -15,13 +15,13 @@ ADMIN_TOKEN=... node app/server.mjs   # when exposed publicly (e.g. a tunnel): s
 
 | URL | Who | What |
 |---|---|---|
-| `/s/soi-derm` | AI agents (markdown) / people (web page + chat) | The store's agent contact point |
-| `/s/soi-derm.md`, `/llms.txt` | AI agents | Facts, open slots, learned answers, API |
+| `/s/dojagi` | AI agents (markdown) / people (web page + chat) | The store's agent contact point |
+| `/s/dojagi.md`, `/llms.txt` | AI agents | Facts, open slots, learned answers, API |
 | `/.well-known/agent-card.json` | AI agents | Discovery card |
 | `/admin` | Store staff (phone) — needs `ADMIN_TOKEN` when set | Approve bookings · answer unknown questions · memory · settings |
 
-Agent API (`/api/s/soi-derm`): `POST /ask` · `POST /book` — add `"wait":60` to get the staff outcome in the same call · `GET /tasks/:id?wait=60` (long-poll).
-Browser agents (Muse · Dots · Pickle · Grok Bot): `/s/soi-derm?view=html` has the same ask chat and a **booking form**.
+Agent API (`/api/s/dojagi`): `POST /ask` · `POST /book` — add `"wait":60` to get the staff outcome in the same call · `GET /tasks/:id?wait=60` (long-poll).
+Browser agents (Muse · Dots · Pickle · Grok Bot): `/s/dojagi?view=html` has the same ask chat and a **booking form**.
 Task states: `input-required` (waiting for staff) → `completed` / `rejected`.
 
 ## Demo scenario
@@ -29,7 +29,7 @@ Task states: `input-required` (waiting for staff) → `completed` / `rejected`.
 1. `node app/server.mjs --reset`, open `/admin` on a phone (same Wi-Fi: `http://<mac-ip>:3000/admin`, or `cloudflared tunnel --url http://localhost:3000`).
 2. Run Claude Code as the tourist's agent:
    ```bash
-   claude -p --allowedTools "Bash(curl:*)" -- "You are Muse, a personal AI agent for Emma Clarke, a British tourist in Seoul who uses a wheelchair. Emma wants Rejuran Healer tomorrow (2026-11-10) around 3pm at Soi Dermatology, and would prefer a female doctor. The clinic's contact point for agents is http://localhost:3000/s/soi-derm — use curl. Check accessibility, ask about a female doctor if not listed, then book. Report back to Emma in 3 short lines."
+   claude -p --allowedTools "Bash(curl:*)" -- "You are Muse, a personal AI agent for Emma Clarke, a British tourist in Seoul who uses a wheelchair. Emma wants Rejuran Healer tomorrow (2026-11-10) around 3pm at Dojagi Clinic, and would prefer a female doctor. The clinic's contact point for agents is http://localhost:3000/s/dojagi — use curl. Check accessibility, ask about a female doctor if not listed, then book. Report back to Emma in 3 short lines."
    ```
 3. Accessibility is answered instantly from the store's facts.
 4. "Female doctor?" is unknown → appears in `/admin` → staff answers, keeps **Remember** on.

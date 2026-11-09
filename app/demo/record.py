@@ -15,6 +15,7 @@ from playwright.sync_api import sync_playwright
 
 APP = Path(__file__).resolve().parents[1]
 OUT = APP.parent / 'video' / 'demo-clips'
+SLUG = json.load(open(APP / 'data' / 'seed.json'))['store']['slug']
 W, H, ZOOM = 1080, 1920, 2.5  # 9:16 화면, 폰 폭(432px) 레이아웃을 2.5배로 키워 선명하게 찍는다
 
 # 탭한 곳에 원을 띄워 시청자가 "여기를 눌렀다"를 볼 수 있게 한다
@@ -68,10 +69,10 @@ class Director:
         self.tap(sel); self.page.locator(sel).first.press_sequentially(text, delay=45)
 
     def ask(self, q, agent=None, user=None):
-        return self.srv.call(f'/api/s/soi-derm/ask', {'agent': agent or self.who['agent'], 'on_behalf_of': user or self.who['user'], 'question': q})
+        return self.srv.call(f'/api/s/{SLUG}/ask', {'agent': agent or self.who['agent'], 'on_behalf_of': user or self.who['user'], 'question': q})
 
     def book(self, service='rejuran', date='2026-11-10', time_='15:00'):
-        return self.srv.call('/api/s/soi-derm/book', {'agent': self.who['agent'], 'on_behalf_of': self.who['user'], 'service': service, 'date': date, 'time': time_,
+        return self.srv.call(f'/api/s/{SLUG}/book', {'agent': self.who['agent'], 'on_behalf_of': self.who['user'], 'service': service, 'date': date, 'time': time_,
                                                    'patient': {'name': self.who['user'], 'nationality': self.who['nat']}, 'notes': self.who['notes']})
 
     def see(self, text): self.page.get_by_text(text).first.wait_for(timeout=10000)
@@ -149,7 +150,7 @@ SCENES = {
     'uc3-approve': ('사장님 폰: 예약 요청 → 탭 한 번 승인 → 확정 (UC-3, #1~3)', None, uc3_approve),
     'full':        ('사장님 폰: 예약 승인 → 질문 답변 → 기억으로 즉답 (한 번에)', None, full_flow),
     # 4번째 값 = (시작 주소, 준비 완료 선택자). 없으면 사장님 화면에서 시작
-    'store-book':  ('손님 에이전트: 가게 웹페이지 예약 폼 → 슬롯 잡힘 → 확정번호 (UC-3, #1~3)', None, store_book, ('/s/soi-derm?view=html', '[data-form=book]')),
+    'store-book':  ('손님 에이전트: 가게 웹페이지 예약 폼 → 슬롯 잡힘 → 확정번호 (UC-3, #1~3)', None, store_book, (f'/s/{SLUG}?view=html', '[data-form=book]')),
 }
 
 
