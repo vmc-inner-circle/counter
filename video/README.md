@@ -23,6 +23,11 @@ R&R(11/09 현장 회의): **영상 = 황준식·이성렬·조순형·채경완*
 - 방법 1 (브라우저): 자기 폴더 열기 → `Add file` → `Upload files` 또는 `README.md` 연필 아이콘 → `Commit changes` (main에 바로)
 - 방법 2 (git/Claude Code): `git pull --rebase` → 자기 폴더 수정 → commit → push
 
+## Claude Code로 작업할 때
+
+- 이 레포를 clone한 경로에서 Claude Code를 열고 영상 편집을 시킨다 (`common/` 소재·회의록을 바로 참조할 수 있다)
+- **프롬프트에 "최대한 빠르게 완성해라"를 넣는다.** 안 넣으면 HTML을 만든 뒤 브라우저에서 재생하며 화면을 녹화하는 식의 느린 방법을 고르기도 한다. 넣으면 눈에 띄게 빨라진다 ([상시녹음 1](../docs/meeting-logs/261109_상시녹음1-레포운영안내.md))
+
 ## 시간표 (싱크 = 카톡)
 
 | 싱크 | 이때까지 |
