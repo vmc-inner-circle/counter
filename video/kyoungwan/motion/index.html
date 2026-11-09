@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Counter — 75s draft v1 (kyoungwan)</title>
+<!--
+  채경완 안 — 모션그래픽 초안 v1. 대본 = ../script.md.
+  이번 초안의 초점: 식당 장면 두 곳만 공들여 만든다 — S1(문제상황, 0–15s)와 S5(해결상황, 60–68s).
+  앱 데모(S4, 25–60s)는 일부러 러프한 placeholder로만 둔다 — 그 파트는 다른 스타일(실제 화면 녹화)로 따로 만들 것.
+  조작: Space = 재생/멈춤, ←/→ = 2초, H = 조작 막대 숨김, R = 처음부터. ?t=60 = 60초부터. ?rec = 막대 없이 바로 재생(화면 녹화용).
+-->
+<style>
+:root{--red:#B02A24;--red-dark:#7A1E1A;--warm:#D68C28;--dark:#121216;--ink:#1C1C22;--muted:#8A8A92;--line:#E6E2DC;--card:#FFFFFF;--ok:#1F9D55}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#000;overflow:hidden;font-family:"Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Inter",sans-serif;-webkit-font-smoothing:antialiased}
+#stage{position:absolute;left:50%;top:50%;width:1080px;height:1920px;transform-origin:center center;overflow:hidden;background:#000;color:#fff}
+.scene{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .35s}
+.scene.active{opacity:1;visibility:visible}
+.on-fade{opacity:0;transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.on-fade.on{opacity:1}
+.up{transform:translateY(36px)}.up.on{transform:none}
+.pop{transform:scale(.7)}.pop.on{transform:scale(1)}
+
+#subs{position:absolute;left:0;right:0;bottom:120px;text-align:center;z-index:50;pointer-events:none;padding:0 48px}
+#subs .ko{display:inline-block;font-size:44px;font-weight:700;line-height:1.35;padding:10px 24px;border-radius:14px;background:rgba(0,0,0,.5);color:#fff;transition:opacity .25s}
+#subs .en{display:block;margin-top:10px;font-size:24px;color:#cfd0d6;text-shadow:0 2px 6px #000}
+#subs .ko:empty{opacity:0}
+.badge-t{position:absolute;right:28px;top:28px;font-size:18px;color:#fff;background:rgba(0,0,0,.35);padding:6px 14px;border-radius:999px;z-index:5;font-variant-numeric:tabular-nums}
+
+/* ---------- restaurant room (shared S1 / S5) ---------- */
+.room-wrap{position:absolute;inset:0;background:linear-gradient(180deg,#2a2016,#16110b)}
+.room{position:absolute;left:60px;right:60px;top:160px;bottom:520px;border-radius:28px;background:linear-gradient(180deg,#3a2d1d,#2a2015);box-shadow:0 30px 80px rgba(0,0,0,.4);overflow:hidden}
+.sign{position:absolute;left:0;right:0;top:36px;text-align:center;font-size:36px;font-weight:800;color:#f3d9a8}
+.sign small{display:block;font-size:20px;color:#c9b48a;font-weight:500;margin-top:4px}
+.owner{position:absolute;left:50%;top:330px;transform:translateX(-50%);font-size:200px;transition:transform .3s}
+.counter-desk{position:absolute;left:80px;right:80px;bottom:60px;height:70px;background:#4a3824;border-radius:14px;box-shadow:0 6px 0 #241a0f}
+.dphone{position:absolute;left:50%;top:560px;transform:translateX(-50%);font-size:92px}
+.dphone.ring{animation:ring .14s infinite alternate}
+@keyframes ring{from{transform:translateX(-50%) rotate(-14deg)}to{transform:translateX(-50%) rotate(14deg)}}
+.dphone.down{opacity:.35;transform:translateX(-50%) rotate(90deg) scale(.9)}
+.missed{position:absolute;left:28px;top:28px;background:var(--red-dark);color:#fff;border-radius:14px;padding:10px 16px;font-size:20px;font-weight:700;z-index:4}
+.missed b{font-size:34px;font-variant-numeric:tabular-nums;margin-left:4px}
+
+.calls{position:absolute;left:0;right:0;top:720px;padding:0 50px}
+.call{background:rgba(0,0,0,.55);color:#fff;border-radius:18px;padding:14px 18px;font-size:22px;line-height:1.35;margin-bottom:12px;backdrop-filter:blur(2px)}
+.call small{display:block;color:#e8a5a0;font-size:15px;margin-bottom:2px;font-weight:700}
+
+.callbar{position:absolute;left:0;right:0;bottom:0;height:480px;background:#0c0c0f;border-top-left-radius:36px;border-top-right-radius:36px;padding:34px 36px}
+.callbar h4{font-size:24px;color:#f3d9a8;margin-bottom:16px}
+.logline{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #26262c;opacity:0;transform:translateY(10px);transition:all .3s}
+.logline.on{opacity:1;transform:none}
+.logline b{font-size:22px}
+.logline span{font-size:18px;color:#8a8a92}
+
+/* ---------- S2 / S3 solution ---------- */
+#s2{background:var(--dark)}
+.quote{position:absolute;left:70px;right:70px;top:50%;transform:translateY(-50%);text-align:center}
+.quote p{font-size:48px;font-weight:800;line-height:1.4;color:#f3f3f5}
+.quote p em{color:#f0b35a;font-style:normal}
+
+#s3{background:#101014;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#s3 img{width:180px;height:180px;border-radius:50%;background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+#s3 h1{font-size:96px;font-weight:900;margin-top:24px;letter-spacing:-.02em;color:#fff}
+#s3 p{font-size:28px;font-weight:500;color:#c9c9cf;margin-top:10px;max-width:800px;text-align:center}
+
+/* ---------- S4 app-demo placeholder (일부러 러프하게) ---------- */
+#s4{background:repeating-linear-gradient(135deg,#3a3a42,#3a3a42 18px,#333339 18px,#333339 36px)}
+.ph-card{position:absolute;left:60px;right:60px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.55);border:2px dashed #7a7a86;border-radius:24px;padding:60px 40px;text-align:center}
+.ph-card h3{font-size:44px;color:#fff;margin-bottom:14px}
+.ph-card p{font-size:22px;color:#c6c6cc;line-height:1.5}
+.ph-card .uc{margin-top:22px;font-size:18px;color:#9a9aa2}
+
+/* ---------- S5 closing notifications ---------- */
+.notibox{position:absolute;left:0;right:0;top:620px;padding:0 50px}
+.noti{background:#fff;color:var(--ink);border-radius:18px;padding:16px 20px;font-size:20px;margin-bottom:14px;box-shadow:0 10px 24px rgba(0,0,0,.25);opacity:0;transform:translateY(-24px) scale(.9);transition:all .4s cubic-bezier(.2,1.2,.4,1)}
+.noti.on{opacity:1;transform:none}
+.noti b{display:block;font-size:22px;color:var(--ok)}
+.noti small{color:var(--muted)}
+.noti img{width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-right:8px}
+
+/* ---------- S6 logo ---------- */
+#s6{background:var(--red)}
+#s6 img{width:180px;height:180px;border-radius:50%;background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+#s6 h1{font-size:96px;font-weight:900;margin-top:24px;letter-spacing:-.02em}
+#s6 p{font-size:28px;font-weight:500;opacity:.95;margin-top:10px;max-width:800px;text-align:center}
+#s6{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff}
+
+/* ---------- controls ---------- */
+#ctl{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;padding:10px 16px;background:rgba(10,14,22,.92);color:#cfd6e0;font:14px -apple-system,sans-serif;z-index:100}
+#ctl button{background:var(--red);color:#fff;border:0;border-radius:8px;padding:6px 14px;font:inherit;cursor:pointer}
+#ctl input[type=range]{flex:1}
+#ctl .t{font-variant-numeric:tabular-nums;min-width:96px}
+#ctl .hint{opacity:.6}
+body.rec #ctl,body.hidectl #ctl{display:none}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- S1 0-15 문제제기: 식당 사장님, 전화에 질려감 -->
+  <section class="scene" id="s1" data-s="0" data-e="15">
+    <div class="room-wrap"></div>
+    <div class="missed">📵 부재중 <b id="missed">0</b></div>
+    <div class="room">
+      <div class="sign">마포식당<small>저녁 영업 준비 중</small></div>
+      <div class="owner" id="owner">🧑‍🍳</div>
+      <div class="dphone ring" id="dphone">☎️</div>
+      <div class="counter-desk"></div>
+      <div class="calls">
+        <div class="call on-fade up" data-at="1.0"><small>📞 영어</small>"Hi, I'm an AI assistant calling to book a table…"</div>
+        <div class="call on-fade up" data-at="2.6"><small>📞 中文</small>"您好，我是AI助理，想为客户预订…"</div>
+        <div class="call on-fade up" data-at="4.2"><small>📞 Tiếng Việt</small>"Xin chào, tôi là trợ lý AI muốn đặt bàn…"</div>
+      </div>
+    </div>
+    <div class="callbar">
+      <h4>오늘 수신 전화 40건</h4>
+      <div class="logline on-fade" data-at="6.0"><b>예약 문의</b><span>AI 비서입니다</span></div>
+      <div class="logline on-fade" data-at="7.0"><b>예약 문의</b><span>AI 비서입니다</span></div>
+      <div class="logline on-fade" data-at="8.0"><b>예약 문의</b><span>AI 비서입니다</span></div>
+      <div class="logline on-fade" data-at="9.0"><b>예약 문의</b><span>AI 비서입니다</span></div>
+    </div>
+  </section>
+
+  <!-- S2 15-22 솔루션 문구 -->
+  <section class="scene" id="s2" data-s="15" data-e="22">
+    <div class="quote on-fade up" data-at="0.2">
+      <p>수백만 에이전트가<br>전화를 걸 줄은 안다.<br><em>받는 쪽은,<br>아무도 만들지 않았다.</em></p>
+    </div>
+  </section>
+
+  <!-- S3 22-25 솔루션 로고 -->
+  <section class="scene" id="s3" data-s="22" data-e="25">
+    <img class="on-fade pop" data-at="0.1" src="../../../app/public/counter.png" alt="Counter">
+    <h1 class="on-fade up" data-at="0.4">Counter</h1>
+    <p class="on-fade up" data-at="0.8">A million agents can dial.<br>Nobody picks up.</p>
+  </section>
+
+  <!-- S4 25-60 앱 데모 — 러프 placeholder (다른 스타일로 별도 제작) -->
+  <section class="scene" id="s4" data-s="25" data-e="60">
+    <div class="badge-t" id="s4t">0:25</div>
+    <div class="ph-card">
+      <h3>앱 데모 (35초)</h3>
+      <p>피부과·Muse·영어 → 식당·Pickle·중국어 → 숙소·Dots·베트남어<br>UC-1 즉답 · UC-2 직원 1회 응답+기억 · UC-3 승인 예약</p>
+      <div class="uc">실제 화면 녹화로 교체 예정 — demo-clips.md 참고. 이 모션그래픽과 톤이 달라도 된다.</div>
+    </div>
+  </section>
+
+  <!-- S5 60-68 클로징: 같은 식당, 해결됨 -->
+  <section class="scene" id="s5" data-s="60" data-e="68">
+    <div class="room-wrap"></div>
+    <div class="room">
+      <div class="sign">마포식당<small>저녁 영업 중</small></div>
+      <div class="owner" id="owner2">😌</div>
+      <div class="dphone down">☎️</div>
+      <div class="counter-desk"></div>
+    </div>
+    <div class="notibox">
+      <div class="noti on-fade" data-at="0.4"><b>✅ 예약 확정 · Muse (영어)</b><small>피부과 · 목 15:00</small></div>
+      <div class="noti on-fade" data-at="1.0"><b>✅ 예약 확정 · Pickle (中文)</b><small>마포식당 · 토 19:00</small></div>
+      <div class="noti on-fade" data-at="1.6"><b>✅ 예약 확정 · Dots (Tiếng Việt)</b><small>숙소 · 금~일</small></div>
+      <div class="noti on-fade" data-at="2.2"><b>✅ 예약 확정</b><small>전화 한 통 없이</small></div>
+    </div>
+  </section>
+
+  <!-- S6 68-75 클로징 로고 -->
+  <section class="scene" id="s6" data-s="68" data-e="75">
+    <img class="on-fade pop" data-at="0.1" src="../../../app/public/counter.png" alt="Counter">
+    <h1 class="on-fade up" data-at="0.4">Counter</h1>
+    <p class="on-fade up" data-at="0.8">A million agents can dial.<br>Now, someone picks up.</p>
+  </section>
+
+  <div id="subs"><span class="ko"></span><span class="en"></span></div>
+</div>
+
+<div id="ctl">
+  <button id="play">▶ Play</button>
+  <span class="t" id="tt">0.0 / 75.0</span>
+  <input type="range" id="seek" min="0" max="75" step="0.1" value="0">
+  <span class="hint">Space 재생 · ←/→ 2초 · H 막대 숨김 · R 처음</span>
+</div>
+
+<script>
+const DUR = 75;
+const SUBS = [
+  [0, 10, '하루에 전화만 40통', ''],
+  [10, 15, '그중 반은 AI 비서가 건 전화', ''],
+  [15, 22, '', ''],
+  [22, 25, '', ''],
+  [25, 60, '', '(앱 데모 — 별도 스타일로 제작 예정)'],
+  [60, 68, '전화 한 통 없이, 예약 완료', ''],
+  [68, 75, '', ''],
+];
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const scenes = $$('.scene').map((el) => ({ el, s: +el.dataset.s, e: +el.dataset.e, items: $$('[data-at]', el) }));
+const ST = Object.fromEntries(scenes.map((x) => [x.el.id, x.s]));
+const subs = $('#subs'), ko = $('.ko', subs), en = $('.en', subs);
+let t = 0, playing = false, last = 0;
+const fmt = (x) => `${Math.floor(x / 60)}:${String(Math.floor(x % 60)).padStart(2, '0')}`;
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+
+function render() {
+  for (const sc of scenes) {
+    const act = t >= sc.s && t < sc.e;
+    sc.el.classList.toggle('active', act);
+    const lt = t - sc.s;
+    for (const it of sc.items) it.classList.toggle('on', act && lt >= +it.dataset.at);
+  }
+  // S1 problem: ringing counter, call log lines, owner mood, phone flip near end
+  const l1 = t - ST.s1;
+  if (l1 >= 0 && l1 < 15) {
+    $('#missed').textContent = Math.round(clamp(l1 / 13.5, 0, 1) * 40);
+    $('#owner').textContent = l1 < 4 ? '🧑‍🍳' : l1 < 9 ? '😤' : '😮‍💨';
+    $('#dphone').classList.toggle('ring', l1 < 13.5);
+    $('#dphone').classList.toggle('down', l1 >= 13.5);
+  }
+  // S4 timer badge
+  const l4 = t - ST.s4;
+  if (l4 >= 0 && l4 < 35) $('#s4t').textContent = fmt(25 + l4);
+  // subtitles
+  const cur = SUBS.find(([a, b]) => t >= a && t < b) || ['', '', '', ''];
+  if (ko.textContent !== cur[2]) { ko.textContent = cur[2]; en.textContent = cur[3]; }
+  $('#tt').textContent = `${t.toFixed(1)} / ${DUR.toFixed(1)}`;
+  $('#seek').value = t;
+}
+function loop(ts) {
+  if (playing) { t += (ts - last) / 1000; if (t >= DUR) { t = DUR; playing = false; $('#play').textContent = '▶ Play'; document.title = 'DONE'; } }
+  last = ts; render(); requestAnimationFrame(loop);
+}
+function setPlay(p) { playing = p; $('#play').textContent = p ? '❚❚ Pause' : '▶ Play'; if (p && t >= DUR) t = 0; }
+$('#play').onclick = () => setPlay(!playing);
+$('#seek').oninput = (e) => { t = +e.target.value; };
+addEventListener('keydown', (e) => {
+  if (e.code === 'Space') { e.preventDefault(); setPlay(!playing); }
+  if (e.key === 'ArrowRight') t = Math.min(DUR, t + 2);
+  if (e.key === 'ArrowLeft') t = Math.max(0, t - 2);
+  if (e.key === 'h' || e.key === 'H') document.body.classList.toggle('hidectl');
+  if (e.key === 'r' || e.key === 'R') { t = 0; setPlay(true); }
+});
+function fit() { const st = $('#stage'), s = Math.min(innerWidth / 1080, innerHeight / 1920); st.style.transform = `translate(-50%,-50%) scale(${s})`; }
+addEventListener('resize', fit); fit();
+const q = new URLSearchParams(location.search);
+if (q.has('t')) t = +q.get('t');
+if (q.has('rec')) { document.body.classList.add('rec'); setTimeout(() => setPlay(true), 800); }
+requestAnimationFrame((ts) => { last = ts; loop(ts); });
+</script>
+</body>
+</html>
