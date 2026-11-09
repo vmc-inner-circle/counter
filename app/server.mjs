@@ -46,6 +46,34 @@ function recall(question) {
   return best?.m;
 }
 
+// ---- facts match: a question about something the clinic already listed (hours, holidays, access, languages, payment) is answered from Settings, not sent to staff.
+// Only when the question is mostly about that topic (half its content words are topic words or appear in the fact) — "Is the female doctor in on Sundays?" still goes to staff.
+const TOPICS = {
+  hours: 'hours open opening opens close closing closes closed time times monday tuesday wednesday thursday friday saturday sunday weekday weekdays weekend weekends lunch',
+  holidays: 'holiday holidays seollal chuseok christmas lunar',
+  accessibility: 'wheelchair wheelchairs accessible accessibility elevator escalator stairs step steps stroller ramp disabled disability mobility parking park entrance floor get',
+  languages: 'language languages speak speaks speaking english japanese chinese korean vietnamese indonesian thai spanish french german interpreter interpreters translator translation',
+  payment: 'pay paying payment payments card cards credit cash visa mastercard amex alipay wechat unionpay refund',
+};
+const GENERIC = new Set('clinic shop store place staff someone anyone people get'.split(' '));
+const LABEL = { hours: 'Hours', holidays: 'Public holidays', accessibility: 'Accessibility', languages: 'Languages', payment: 'Payment' };
+function factAnswer(question) {
+  const q = words(question);
+  if (!q.length) return null;
+  const same = (a, b) => a === b || (a.length >= 5 && b.length >= 5 && a.slice(0, 5) === b.slice(0, 5));
+  const hits = [];
+  for (const [key, kw] of Object.entries(TOPICS)) {
+    const fact = db.settings[key];
+    if (!fact) continue;
+    const topic = kw.split(' '), inFact = words(fact);
+    const isTopic = (w) => topic.some((k) => same(w, k));
+    if (!q.some((w) => isTopic(w) && !GENERIC.has(w))) continue;
+    const covered = q.filter((w) => isTopic(w) || GENERIC.has(w) || inFact.some((f) => same(w, f))).length;
+    if (covered / q.length >= 0.5) hits.push(`${LABEL[key]}: ${fact}`);
+  }
+  return hits.length ? hits.join('\n') : null;
+}
+
 function freeSlots() {
   const taken = new Set(db.tasks.filter((t) => t.type === 'booking' && ['input-required', 'completed'].includes(t.status)).map((t) => `${t.date} ${t.time}`));
   return db.slots.map((d) => ({ date: d.date, times: d.times.filter((t) => !taken.has(`${d.date} ${t}`)) }));
@@ -154,6 +182,7 @@ const server = http.createServer(async (req, res) => {
     const m = recall(b.question);
     const t = { id: newId('q'), type: 'question', agent: b.agent || 'Unknown agent', onBehalfOf: b.on_behalf_of || '', question: b.question, createdAt: now(), status: 'input-required' };
     if (m) Object.assign(t, { status: 'completed', answer: m.answer, source: 'memory', resolvedAt: now() });
+    else { const f = factAnswer(b.question); if (f) Object.assign(t, { status: 'completed', answer: f, source: 'facts', resolvedAt: now() }); }
     db.tasks.push(t); save(); log(t.status, b.question);
     return json(res, 200, publicTask(await settle(t, waitSecs(url, b))));
   }

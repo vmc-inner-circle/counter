@@ -134,8 +134,8 @@ const avatar = (agent, cls = '') => { const k = Object.keys(AV).find((x) => new 
 // 'GB' → 🇬🇧 GB, 'Japan' → Japan
 const nat = (n) => /^[A-Za-z]{2}$/.test(n || '') ? String.fromCodePoint(...[...n.toUpperCase()].map((c) => 0x1f1a5 + c.charCodeAt(0))) + ' ' + n.toUpperCase() : n;
 const pending = (t) => t.status === 'input-required';
-// Counter가 사장님 손 없이 끝낸 건: 기억으로 바로 답한 질문
-const auto = (t) => t.status === 'completed' && t.source === 'memory';
+// Counter가 사장님 손 없이 끝낸 건: 기억이나 가게 정보로 바로 답한 질문
+const auto = (t) => t.status === 'completed' && (t.source === 'memory' || t.source === 'facts');
 
 // 손님 1명(에이전트 + 손님 이름) = 대화 1개
 function conversations() {
@@ -156,7 +156,7 @@ function preview(t) {
     const when = `${t.serviceName}, ${day(t.date)} ${t.time}`;
     return pending(t) ? `Booking: ${when} — approve?` : t.status === 'completed' ? `Booked · ${when}` : `Declined · ${when}`;
   }
-  return pending(t) ? `“${t.question}”` : t.source === 'memory' ? `✓ Answered from memory: ${t.answer}` : `You: ${t.answer}`;
+  return pending(t) ? `“${t.question}”` : t.source === 'memory' ? `✓ Answered from memory: ${t.answer}` : t.source === 'facts' ? `✓ Answered from your info: ${t.answer}` : `You: ${t.answer}`;
 }
 
 function convRow(c) {
