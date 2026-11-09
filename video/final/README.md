@@ -27,3 +27,7 @@
 | Extra Tracks | Transpose Award |
 
 > Every person will soon have an AI agent, but local businesses aren't ready to talk to one: owners are drowning in AI phone slop, and agents fail to get things done because people hang up on them — all because agents are forced through channels built for humans. Counter is the agent-native front door each store needs — owners are freed from AI phone slop, while every agent gets answered automatically and turns into bookings instead of missed calls, so the billions of people relying on agents can actually get served.
+
+## 결과 (11/09 시상)
+
+수상하지 못했다. 1등은 바다에 데이터센터를 짓는 팀, 2·3등은 산업 현장 로봇 움직임 제어(피지컬 AI) 팀이었다 (최수민 기억). 팀 회고는 11/11(수) 19:00.
