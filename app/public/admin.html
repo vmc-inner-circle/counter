@@ -9,10 +9,10 @@
 <style>
 /* 사장님 화면 — design/inbox 시안 A(채널톡형). 손님 1명 = 대화 1개, 승인·답장은 대화 하단에 고정 */
 html:has(body.admin),body.admin{height:100%}
-body.admin{background:#fff;--sub:#4A5563;--mut:#8A94A3}
+body.admin{background:#fff}
 .app{max-width:520px;margin:0 auto;height:100%;display:flex;flex-direction:column} /* vh 대신 %: 녹화기 zoom에서도 화면에 맞는다 */
 .main{flex:1;overflow-y:auto;position:relative}
-.av.s{width:28px;height:28px}.av.txt{background:#D97757;font-size:15px}.av.s.txt{font-size:12px}
+.av.s{width:28px;height:28px}.av.txt{background:#ff9364;font-size:15px}.av.s.txt{font-size:12px}
 .hd{padding:18px 20px 10px}.hd h1{font-size:26px;margin:0;line-height:1.2}
 .seg{display:flex;gap:6px;padding:0 16px 8px}
 .seg button{font-size:13.5px;padding:7px 12px;border-radius:999px;background:var(--bg);color:var(--sub);font-weight:600}
@@ -27,16 +27,16 @@ body.admin{background:#fff;--sub:#4A5563;--mut:#8A94A3}
 .conv p{margin:2px 0 0;font-size:14px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .conv.need p{color:var(--ink);font-weight:600}
 .conv .time{font-size:12px;color:var(--mut);white-space:nowrap}
-.conv.need .time{color:var(--blue);font-weight:600}
+.conv.need .time{color:var(--brand);font-weight:600}
 .th{display:flex;gap:10px;align-items:center;padding:12px 14px 10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:2}
-.th .back{font-size:26px;line-height:1;color:var(--blue);padding:0 6px;background:none}
+.th .back{font-size:26px;line-height:1;color:var(--brand);padding:0 6px;background:none}
 .th b{display:block;font-size:16px}.th small{font-size:12.5px;color:var(--mut)}
 .facts{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line)}
 .chip{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--bg);color:var(--sub)}
 .msgs{padding:14px;display:flex;flex-direction:column;gap:8px}
 .b{max-width:80%;padding:9px 13px;border-radius:18px;font-size:14.5px;animation:pop .3s ease}
 .b.in{align-self:flex-start;background:var(--bg);border-bottom-left-radius:6px}
-.b.out{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:6px}
+.b.out{align-self:flex-end;background:var(--brand);color:#fff;border-bottom-right-radius:6px}
 .lbl{font-size:11.5px;color:var(--mut);margin-bottom:4px}.lbl.r{align-self:flex-end}
 .lbl.wait{color:var(--warn);font-weight:600}
 .req{align-self:stretch;border:1px solid var(--line);border-radius:16px;padding:14px;animation:pop .3s ease;margin-bottom:4px}
@@ -49,17 +49,17 @@ body.admin{background:#fff;--sub:#4A5563;--mut:#8A94A3}
 .ghost{background:var(--bg);border:0}
 .inp{display:flex;gap:8px;align-items:flex-end}
 .inp textarea{flex:1;border-radius:20px;padding:9px 14px;resize:none;min-height:40px}
-.send{background:var(--blue);color:#fff;border-radius:50%;width:40px;height:40px;flex:none;font-size:18px;font-weight:700}
+.send{background:var(--brand);color:#fff;border-radius:50%;width:40px;height:40px;flex:none;font-size:18px;font-weight:700}
 .rem{display:flex;align-items:center;gap:8px;font-size:13.5px;margin-top:9px;color:var(--sub);cursor:pointer}
 .rem input{display:none}
-.tog{width:34px;height:20px;border-radius:10px;background:#CBD2DA;position:relative;flex:none;transition:background .15s}
+.tog{width:34px;height:20px;border-radius:10px;background:#d1d3d8;position:relative;flex:none;transition:background .15s}
 .tog:after{content:"";position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
-.rem input:checked+.tog{background:var(--blue)}.rem input:checked+.tog:after{left:16px}
+.rem input:checked+.tog{background:var(--brand)}.rem input:checked+.tog:after{left:16px}
 .tabs{position:static;flex:none}
 .wrap{padding-bottom:24px}
 
 /* 다듬기: design/polish 시안 1 Clean (11/09 최수민 선택) */
-body.admin{--ink:#0B0F14;--sub:#5B6470;--mut:#9AA2AD;--line:#EEF0F3;--bg:#F2F3F5;--blue:#0A6CFF;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif;letter-spacing:-.01em}
+body.admin{--sub:#555d6d;--mut:#868b94;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif;letter-spacing:-.01em}
 .hd{padding:22px 20px 12px}.hd h1{font-size:30px;font-weight:800;letter-spacing:-.03em}
 .seg button{background:none;padding:6px 2px;margin-right:14px;border-radius:0;font-size:15px;color:var(--mut)}
 .seg button.on{background:none;color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
@@ -68,18 +68,18 @@ body.admin{--ink:#0B0F14;--sub:#5B6470;--mut:#9AA2AD;--line:#EEF0F3;--bg:#F2F3F5
 .conv b{font-size:16.5px;font-weight:600}
 .conv p{font-size:14.5px;color:var(--mut)}
 .conv.need p{color:var(--ink);font-weight:500}
-.conv.need .time{color:var(--blue)}
-.conv.need .time:before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--blue);margin-right:6px;vertical-align:1px}
+.conv.need .time{color:var(--brand)}
+.conv.need .time:before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--brand);margin-right:6px;vertical-align:1px}
 .th{border-bottom:0;padding:14px 14px 6px}.th b{font-size:17px}
 .facts{border-bottom:1px solid var(--line);padding:6px 16px 14px}
 .chip{background:none;border:1px solid var(--line);color:var(--sub)}
 .b{font-size:15px;border-radius:20px;padding:10px 14px}
-.b.in{background:var(--bg)}.b.out{background:var(--blue)}
+.b.in{background:var(--bg)}.b.out{background:var(--brand)}
 .req{border:0;background:var(--bg);border-radius:22px;padding:18px}
 .req .k{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
 .req .big{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 0 2px}
 .req .sub{color:var(--sub)}
-.req.done{background:#E9F8EF}.req.done .big{color:var(--ink)}
+.req.done{background:var(--ok-50)}.req.done .big{color:var(--ink)}
 .dock{border-top:0;padding-top:6px}
 .dock .why{text-align:center}
 .dock .two{flex-direction:row-reverse}
@@ -94,6 +94,15 @@ body.admin{--ink:#0B0F14;--sub:#5B6470;--mut:#9AA2AD;--line:#EEF0F3;--bg:#F2F3F5
 .tabs button.on svg{stroke-width:2.2}
 .tabs .ic{position:relative;display:block;line-height:0}
 .tabs .badge{position:absolute;top:-4px;left:16px;margin:0}
+/* Counter가 사장님 없이 끝낸 대화 = 초록. 목록 행·말풍선·라벨이 같은 초록(당근 green)으로 "알아서 끝났다"를 보여 준다 */
+.conv.auto{background:var(--ok-50)}
+.avw{position:relative;flex:none;line-height:0}
+.conv.auto .avw:after{content:"✓";position:absolute;right:-3px;bottom:-3px;width:20px;height:20px;border-radius:50%;background:var(--ok-500);color:#fff;font-size:12px;font-weight:800;line-height:20px;text-align:center;box-shadow:0 0 0 2px #fff}
+.conv.auto p{color:var(--ok);font-weight:600}
+.conv.auto .time{color:var(--ok)}
+.b.out.auto{background:var(--ok-500)}
+.lbl.auto{color:var(--ok);font-weight:600}
+.conv{will-change:transform}
 </style>
 </head>
 <body class="admin">
@@ -119,6 +128,8 @@ const avatar = (agent, cls = '') => { const k = Object.keys(AV).find((x) => new 
 // 'GB' → 🇬🇧 GB, 'Japan' → Japan
 const nat = (n) => /^[A-Za-z]{2}$/.test(n || '') ? String.fromCodePoint(...[...n.toUpperCase()].map((c) => 0x1f1a5 + c.charCodeAt(0))) + ' ' + n.toUpperCase() : n;
 const pending = (t) => t.status === 'input-required';
+// Counter가 사장님 손 없이 끝낸 건: 기억으로 바로 답한 질문
+const auto = (t) => t.status === 'completed' && t.source === 'memory';
 
 // 손님 1명(에이전트 + 손님 이름) = 대화 1개
 function conversations() {
@@ -130,7 +141,7 @@ function conversations() {
   }
   return [...m.values()].map((c) => {
     const last = c.tasks[c.tasks.length - 1], booking = [...c.tasks].reverse().find((t) => t.type === 'booking');
-    return { ...c, last, booking, need: c.tasks.some(pending), at: last.resolvedAt || last.createdAt };
+    return { ...c, last, booking, need: c.tasks.some(pending), auto: c.tasks.every(auto), at: last.resolvedAt || last.createdAt };
   }).sort((a, b) => (b.need - a.need) || b.at.localeCompare(a.at));
 }
 
@@ -139,7 +150,7 @@ function preview(t) {
     const when = `${t.serviceName}, ${day(t.date)} ${t.time}`;
     return pending(t) ? `Booking: ${when} — approve?` : t.status === 'completed' ? `Booked · ${when}` : `Declined · ${when}`;
   }
-  return pending(t) ? `“${t.question}”` : t.source === 'memory' ? `Answered from memory: ${t.answer}` : `You: ${t.answer}`;
+  return pending(t) ? `“${t.question}”` : t.source === 'memory' ? `✓ Answered from memory: ${t.answer}` : `You: ${t.answer}`;
 }
 
 function listView() {
@@ -148,7 +159,7 @@ function listView() {
     <div class="seg"><button class="${filter === 'need' ? 'on' : ''}" onclick="filter='need';render()">Needs you · ${need.length}</button><button class="${filter === 'all' ? 'on' : ''}" onclick="filter='all';render()">All · ${all.length}</button></div>
     ${shown.map((c) => {
       const p = c.booking?.patient || {};
-      return `<button class="conv ${c.need ? 'need' : ''}" data-conv="${esc(c.key)}" onclick="openConv(this.dataset.conv)">${avatar(c.agent)}<div class="m">
+      return `<button class="conv ${c.need ? 'need' : c.auto ? 'auto' : ''}" data-conv="${esc(c.key)}" onclick="openConv(this.dataset.conv)"><span class="avw">${avatar(c.agent)}</span><div class="m">
         <div class="t"><b>${esc(c.guest)}</b><span class="time">${ago(c.at)}</span></div>
         <div class="via">via ${esc(c.agent)}${p.nationality ? ' · ' + esc(nat(p.nationality)) : ''}</div>
         <p>${esc(preview(c.tasks.find(pending) || c.last))}</p></div></button>`;
@@ -164,7 +175,7 @@ function threadItem(t, c) {
   const saved = S.memory.some((m) => m.question === t.question);
   return `<div class="b in">${esc(t.question)}</div>` + (pending(t)
     ? `<div class="lbl wait">Not in your store info · ${esc(t.agent)} is waiting</div>`
-    : `<div class="b out">${esc(t.answer)}</div><div class="lbl r">${t.source === 'memory' ? 'Counter answered from memory · instantly' : `You answered in ${t.seconds}s${saved ? ' · saved to memory' : ''}`}</div>`);
+    : `<div class="b out ${auto(t) ? 'auto' : ''}">${esc(t.answer)}</div><div class="lbl r ${auto(t) ? 'auto' : ''}">${auto(t) ? '✓ Counter answered from memory · instantly' : `You answered in ${t.seconds}s${saved ? ' · saved to memory' : ''}`}</div>`);
 }
 
 function threadView(c) {
@@ -213,6 +224,26 @@ function render() {
   $('#view').innerHTML = html;
   $('#dock').innerHTML = dock;
   $('#view').scrollTop = openKey ? $('#view').scrollHeight : 0;
+  springNew();
+}
+
+// 새 inbox(새 대화, 또는 기존 대화에 새로 들어온 요청)가 생기면 그 행만 스프링으로 튀어 들어온다.
+// 마지막 요청 id를 기억해 두고 바뀐 행만 고른다. 첫 로딩에 있던 행은 움직이지 않는다.
+let seen = null;
+const SPRING = (() => { // 감쇠 스프링(ζ=0.45)을 키프레임으로 펼친다 — 아래로 떨어지며 살짝 넘쳤다 제자리
+  const z = 0.45, w = 2 * Math.PI / 0.42, wd = w * Math.sqrt(1 - z * z), N = 40, T = 0.9;
+  return Array.from({ length: N + 1 }, (_, i) => {
+    const t = (i / N) * T, x = 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t));
+    return { offset: i / N, transform: `translateY(${((1 - x) * -36).toFixed(2)}px) scale(${(0.86 + 0.14 * x).toFixed(4)})`, opacity: Math.min(1, i / (N * 0.15)) };
+  });
+})();
+function springNew() {
+  if (tab !== 'inbox' || !S) return;
+  const now = new Map(conversations().map((c) => [c.key, c.last.id]));
+  if (seen) document.querySelectorAll('[data-conv]').forEach((el) => {
+    if (seen.get(el.dataset.conv) !== now.get(el.dataset.conv)) el.animate(SPRING, { duration: 900, easing: 'linear' });
+  });
+  seen = now;
 }
 
 function openConv(key) { openKey = key; render(); }
