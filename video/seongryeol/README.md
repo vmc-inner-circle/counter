@@ -4,7 +4,7 @@
 
 | 버전 | 시각 | 링크 | 바뀐 점 |
 |---|---|---|---|
-| **v13 최종 (가로 16:9, English, 90초)** | 11/09 14:3x | [Counter_v13_최종.mp4](Counter_v13_최종.mp4) | 13:15 싱크 피드백 5개 반영: ① 첫 문장 "More AI assistants. More AI calls." ② "So we made an agent for owners. Counter." ③ 최신 사장님 앱 녹화·새 로고(주황 돔 캐릭터) ④ Any person 장면 선이 노드에서 끊기게 ⑤ 슬로건 "OpenAI · Meta · xAI · Pickle spread agents. We build their front door." · 예약 완료 장면 없음 |
+| **v13 최종 (가로 16:9, English, 90초)** | 11/09 14:5x | [Counter_v13_최종.mp4](Counter_v13_최종.mp4) | 13:15 싱크 피드백 5개 반영: ① 첫 문장 "More AI assistants. More AI calls." ② "So we made an agent for owners. Counter." ③ 새 로고(주황 돔 캐릭터) · 사장님 앱은 처리 건이 실시간으로 올라가는 데모를 최신 제품 색(당근 주황)으로 ④ Any person 장면 선이 노드에서 끊기게 + 말하는 줄의 말풍선·에이전트 카드에 주황 bbox ⑤ 슬로건 "Tech companies [OpenAI→Meta→xAI→Pickle 회전] now spread agents. / We build their front door." → 전환 후 Counter 로고만으로 끝 · 예약 완료 장면 없음 |
 | v12 최종 | 11/09 13:5x | (git 이력) | 순형 안 색감, Before/After 노드 체인, 지구본 네트워크 |
 | v10 (가로) | 11/09 12:49 | (git 이력) | 다크 미니멀, 3초 가치 문구 |
 | v7 (가게 중심) | 11/09 11:47 | (git 이력) | 비행기 컨셉 제외, UC-1~3 챕터 |

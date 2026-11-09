@@ -8,12 +8,12 @@
 | 0:00–0:10 | 근미래 인트로 | 전화 아이콘 + "More AI assistants. More AI calls." → 사장님 3명(원장·식당·호텔) 괴로움, 말풍선 → "Owners can't keep up." → "So we made an agent for owners. COUNTER" | 내레이션 + AI 통화 음성 4개 겹침 |
 | 0:10–0:22 | Before / After | Before: 에이전트가 사장님에게 직접 → 대부분 missed / With Counter: 가게 3곳마다 [에이전트 → Counter → 사장님] 노드 체인, 전부 Counter에서 ✓, 사장님에게는 1건씩 | Without Counter… most calls get missed. / With Counter, every request gets answered… |
 | 0:22–0:30 | 흐름 | Emma "Muse, ask Soi Dermatology if they have a female doctor." → Emma → Muse → Counter → 원장 | Emma 음성 / Emma asks her agent. Her agent asks Counter — not the owner. |
-| 0:30–0:44 | 사장님 앱 | 최신 실제 녹화(demo-clips 13:51): 손님 질문에 한 번 답 + Remember → 다음 에이전트는 기억으로 즉답 | The owner sees only what matters. / Only one needs her — a brand-new question. / Answer once — Counter remembers… |
+| 0:30–0:44 | 사장님 앱 | 처리된 건이 실시간으로 올라가는 폰 데모(최신 제품 색 당근 주황) → Needs you 1건 → 추천 답 한 번 탭 → 기억 → 다음 에이전트 즉답 | The owner sees only what matters. / Only one needs her — a brand-new question. / Answer once — Counter remembers… |
 | 0:44–0:49 | 답 전달 | Muse 알림 "Good news — Soi has a female doctor. Dr. Kim, Tue & Thu." | Muse 음성 |
-| 0:49–1:03 | 다국어 | 사람 ↔ 에이전트 ↔ Counter 네 줄, 말하는 사람 줄만 강조 | Any person. Any agent. Any language. → Wei → Lucía → Yui (겹침 없이) |
+| 0:49–1:03 | 다국어 | 사람 ↔ 에이전트 ↔ Counter 네 줄, 말하는 줄의 말풍선·에이전트 카드에 주황 bbox(나머지는 회색) | Any person. Any agent. Any language. → Wei → Lucía → Yui (겹침 없이) |
 | 1:03–1:11 | 지구본 네트워크 | 실사 지구 + 서울 원장·도쿄 라멘·파리 호텔·뉴욕 미용실·멕시코시티 카페·방콕 스파 프로필, Agent → Counter → Owner, "One Counter network." | Clinics, cafés, hotels, salons — from Seoul to Paris… |
 | 1:11–1:23 | 효용 | Every shop focuses on its craft · Agents get answers, not hang-ups · Shops win. Agents win. People win. | 내레이션 3줄 |
-| 1:23–1:30 | 슬로건 | "OpenAI · Meta · xAI · Pickle" / "spread agents." / "We build their front door." + 새 로고 COUNTER | OpenAI, Meta, xAI and Pickle spread agents. We build their front door. |
+| 1:23–1:30 | 슬로건 | "Tech companies" 라벨 + [아이콘+회사명 OpenAI→Meta→xAI→Pickle 회전] "now spread agents." / "We build their front door." → 전환 → Counter 로고 + COUNTER만 | Tech companies now spread agents. We build their front door. |
 
 ## 메모
 - 사장님 3D 캐릭터: 식당은 순형 안 소재, 원장·호텔 매니저와 실사 지구는 GPT 이미지로 생성
