@@ -49,7 +49,7 @@ svg.wire{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visi
 .badge{position:absolute;background:#1F9D55;color:#fff;font-weight:700;font-size:26px;border-radius:999px;padding:14px 26px 14px 20px;display:flex;gap:12px;align-items:center;box-shadow:0 10px 30px rgba(31,157,85,.3);transform-origin:center}
 .badge svg{width:28px;height:28px}
 /* ===== phone (design/inbox 시안 A) ===== */
-.phone{position:absolute;width:390px;height:800px;background:#fff;border-radius:44px;border:10px solid #10151C;overflow:hidden;transform-origin:center;
+.phone{position:absolute;width:390px;height:640px;background:#fff;border-radius:22px;border:0;box-shadow:0 30px 90px rgba(20,20,20,.14);overflow:hidden;transform-origin:center;
   font:15px/1.45 P,-apple-system,"Inter",sans-serif;color:#0F1B2A;letter-spacing:0}
 .phone .status{height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 26px;font-size:14px;font-weight:600}
 .phone .screen{position:absolute;left:0;top:44px;right:0;bottom:0;background:#fff;overflow:hidden}
@@ -87,7 +87,7 @@ svg.wire{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visi
 // C1 31 workflow: 42 agents → 3 Counters → owner phone; VO n3 @32 | C2 45 owner phone (시안 A): list → thread → Approve @49 → question → answer+remember @54–57 → memory payoff @59; VO n4 @50.5
 // D1 62 "받은 전화 0통" | D2 66 "모든 에이전트·언어·24시간" | D3 70 "확정은 사장님이" | E1 74 owner happy | E2 79 pickle happy | E3 83 slogan, VO n5 @83.4 | E4 87 end card
 const LANG = 'en';
-const W = 1920, H = 1080, DUR = 89.5;
+const W = 1920, H = 1080, DUR = 87.5;
 window.VIDEO = { w: W, h: H, duration: DUR };
 const ACC = '#FF6B3D';
 const COPY = {
@@ -177,7 +177,7 @@ const A2 = scene('A2', 2.2, 6.8); const a2T = titleLine(A2.cam, 505);
 const B1 = scene('B1', 6.6, 11.6);
 const b1user = el('div', 'node', B1.cam); b1user.style.left = '885px'; b1user.style.top = '430px'; el('div', 'circ u', b1user, USER_SVG); el('div', 'lab', b1user, COPY.b4n[0]);
 const b1ub = bubble(B1.cam, 'dark', 700, 290); b1ub.textContent = COPY.b4u; b1ub.style.fontSize = '40px';
-const b1 = COPY.b1.map(([nm, msg], i) => { const x = 290 + i * 520; const av = avatar(B1.cam, ['muse_avatar.png', 'pickle_avatar.png', 'dots_avatar.png'][i], 280, x, 440); const bb = bubble(B1.cam, '', x - 60, 270); bb.textContent = msg; const nmE = el('div', 'name', B1.cam, nm); nmE.style.left = (x - 60) + 'px'; nmE.style.width = '400px'; nmE.style.top = '740px'; return { av, bb, nmE }; });
+const b1 = COPY.b1.map(([nm, msg], i) => { const x = 290 + i * 520; const av = avatar(B1.cam, ['muse_avatar.png', 'pickle_avatar.png', 'dots_avatar.png'][i], 280, x, 400); const nmE = el('div', 'name', B1.cam, nm); nmE.style.left = (x - 60) + 'px'; nmE.style.width = '400px'; nmE.style.top = '700px'; return { av, nmE }; });
 const B2 = scene('B2', 11.4, 15.8); const b2grid = el('div', 'abs', B2.cam); b2grid.style.inset = '0';
 const b2ph = []; for (let r = 0; r < 5; r++) for (let c = 0; c < 10; c++) { const p = el('div', 'ph', b2grid, PHONE_SVG('#BDB9AE')); p.style.width = p.style.height = '72px'; p.style.left = (190 + c * 170) + 'px'; p.style.top = (140 + r * 200) + 'px'; b2ph.push(p); }
 const b2bg = el('div', 'abs', B2.cam); Object.assign(b2bg.style, { left: '0', right: '0', top: '470px', height: '130px', background: 'rgba(246,245,240,.92)' }); const b2T = titleLine(B2.cam, 505);
@@ -214,10 +214,10 @@ const c1cntB = el('div', 'cnt', C1.cam); c1cntB.style.left = '150px'; c1cntB.sty
 const c1lines = c1flows.map(f => { const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('fill', 'none'); p.setAttribute('stroke', '#D9D6CD'); p.setAttribute('stroke-width', '2'); c1wire.appendChild(p); return p; });
 const c1olines = [0, 1, 2].map(() => { const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('fill', 'none'); p.setAttribute('stroke', '#FF6B3D'); p.setAttribute('stroke-width', '3'); p.setAttribute('stroke-dasharray', '10 10'); c1wire.appendChild(p); return p; });
 // C2 owner phone (시안 A)
-const C2 = scene('C2', 45, 62.3);
-const c2keys = COPY.c2k.map((k, i) => { const e = el('div', 'abs', C2.cam); Object.assign(e.style, { left: '120px', top: '400px', fontSize: '80px', fontWeight: '800', letterSpacing: '-0.04em', whiteSpace: 'normal', width: '900px', lineHeight: '1.1' }); e.textContent = k; return e; });
-const c2subs = COPY.c2s.map((k, i) => { const e = el('div', 'abs', C2.cam); Object.assign(e.style, { left: '124px', top: '610px', fontSize: '32px', fontWeight: '500', color: '#8A8A8A', whiteSpace: 'normal', width: '900px' }); e.textContent = k; return e; });
-const phone = el('div', 'phone', C2.cam); phone.style.left = '1200px'; phone.style.top = '120px';
+const C2 = scene('C2', 45, 60.3);
+const c2keys = COPY.c2k.map((k, i) => { const e = el('div', 'abs', C2.cam); Object.assign(e.style, { left: '110px', top: '400px', fontSize: '68px', fontWeight: '800', letterSpacing: '-0.04em', whiteSpace: 'normal', width: '780px', lineHeight: '1.1' }); e.textContent = k; return e; });
+const c2subs = COPY.c2s.map((k, i) => { const e = el('div', 'abs', C2.cam); Object.assign(e.style, { left: '114px', top: '600px', fontSize: '30px', fontWeight: '500', color: '#8A8A8A', whiteSpace: 'normal', width: '680px' }); e.textContent = k; return e; });
+const phone = el('div', 'phone', C2.cam); phone.style.left = '1150px'; phone.style.top = '220px';
 phone.innerHTML = `<div class="status"><span>11:27</span><span>●●● 100%</span></div>`;
 const scrList = el('div', 'screen', phone); scrList.innerHTML = `<div class="ph-hd"><h1>${PH.store}</h1></div><div class="seg"><span class="on" id="segNeed">Needs you · 0</span><span>${PH.all}</span></div><div id="rows"></div><div class="ptabs"><span class="on">Inbox</span><span>Memory</span><span>Store info</span></div>`;
 const rowEls = PH.rows.map(([src, nm, via, p, tm, need, at]) => { const r = el('div', 'row' + (need ? ' need' : ''), scrList.querySelector('#rows'), `${src.length === 1 ? `<span class="av" style="display:grid;place-items:center;background:#D97757;color:#fff;font-weight:700">${src}</span>` : `<img class="av" src="assets/${src}">`}<div class="m"><div class="t"><b>${nm}</b><span class="time">${tm}</span></div><div class="via">${via}</div><p>${p}</p></div>`); r.at = at; r.need = need; r.style.transformOrigin = 'center top'; return r; });
@@ -232,7 +232,7 @@ const Q = s => scrTh.querySelector(s);
 const c2cur = el('div', 'cursor', C2.cam, CURSOR_SVG); const c2rip = el('div', 'ripple', C2.cam);
 const c2mock = el('div', 'abs', C2.cam, COPY.mock); Object.assign(c2mock.style, { right: '40px', bottom: '28px', fontSize: '20px', color: '#8A8A8A' });
 // D benefits
-const D = scene('D', 62, 74.3);
+const D = scene('D', 60, 72.3);
 const dBig = [0, 1, 2].map(() => { const e = el('div', 'big', D.cam); e.style.top = '430px'; e.style.fontSize = '96px'; return e; });
 const dSub = [0, 1, 2].map(() => { const e = el('div', 'abs sub', D.cam); e.style.top = '570px'; e.style.fontSize = '34px'; return e; });
 dBig[0].textContent = COPY.d1; dSub[0].textContent = COPY.d1s; dBig[1].textContent = COPY.d2; dSub[1].textContent = COPY.d2s; dBig[2].textContent = COPY.d3; dSub[2].textContent = COPY.d3s;
@@ -240,18 +240,18 @@ const dPh = el('div', 'abs', D.cam); dPh.style.left = '0'; dPh.style.right = '0'
 const dAv = ['muse_avatar.png', 'pickle_avatar.png', 'dots_avatar.png'].map((s, i) => avatar(D.cam, s, 110, 800 + i * 160, 260));
 const dTap = el('div', 'abs', D.cam, `<svg viewBox="0 0 120 80" width="180" height="120" fill="none" stroke="#FF6B3D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14 C 40 14, 50 40, 82 40"/><path d="M8 40 H82"/><path d="M8 66 C 40 66, 50 40, 82 40"/><rect x="84" y="26" width="28" height="28" rx="8" fill="#FF6B3D" stroke="none"/><text x="98" y="46" font-size="18" font-weight="800" fill="#fff" text-anchor="middle" font-family="P,sans-serif">C</text></svg>`); dTap.style.left = '870px'; dTap.style.top = '262px';
 // E1 owner happy, E2 pickle happy, E3 slogan, E4 end
-const E1 = scene('E1', 74, 79.3);
+const E1 = scene('E1', 72, 77.3);
 const e1owner = el('img', 'abs', E1.cam); e1owner.src = 'assets/owner.png'; e1owner.style.width = '600px'; e1owner.style.left = '560px'; e1owner.style.top = '300px'; e1owner.style.transformOrigin = 'center bottom';
 const e1checks = [0, 1, 2].map(i => { const c = el('div', 'badge', E1.cam, CHECK_SVG); c.style.padding = '12px'; c.style.left = (770 + i * 100) + 'px'; c.style.top = '220px'; c.style.borderRadius = '50%'; return c; });
 const e1b = bubble(E1.cam, '', 1150, 400); e1b.textContent = COPY.e1; e1b.style.maxWidth = '600px';
 const e1name = el('div', 'name', E1.cam, COPY.owner); e1name.style.left = '560px'; e1name.style.width = '600px'; e1name.style.top = '930px';
-const E2 = scene('E2', 79, 83.3);
+const E2 = scene('E2', 77, 81.3);
 const e2av = avatar(E2.cam, 'pickle_avatar.png', 300, 810, 420); const e2face = face(E2.cam, 300, 810, 420);
 const e2b = bubble(E2.cam, 'acc', 1130, 480); e2b.textContent = COPY.e2; e2b.style.maxWidth = '560px';
 const e2name = el('div', 'name', E2.cam, 'Pickle'); e2name.style.left = '810px'; e2name.style.width = '300px'; e2name.style.top = '740px';
-const E3 = scene('E3', 83, 87.3);
+const E3 = scene('E3', 81, 85.3);
 const e3a = el('div', 'big', E3.cam, COPY.e3a); const e3b = el('div', 'big', E3.cam, COPY.e3b); e3a.style.top = '380px'; e3b.style.top = '520px'; e3a.style.fontSize = e3b.style.fontSize = '110px'; e3b.style.color = ACC;
-const E4 = scene('E4', 87, DUR + 1);
+const E4 = scene('E4', 85, DUR + 1);
 const e4wm = el('div', 'abs wm', E4.cam, 'COUNTER'); e4wm.style.top = '470px'; e4wm.style.fontSize = '72px';
 const e4url = el('div', 'abs sub', E4.cam, COPY.e4); e4url.style.top = '590px'; e4url.style.fontSize = '34px'; e4url.setAttribute('data-todo', '도메인 가칭');
 const e4team = el('div', 'abs sub', E4.cam, COPY.e4b); e4team.style.top = '960px'; e4team.style.fontSize = '24px';
@@ -271,7 +271,7 @@ function render(t) {
   if (B1.style.display !== 'none') { const tl = t - 6.6; const uq = pop(tl, 0.2, 12, 0.8); const mv = ease(seg(tl, 1.5, 2.1)); // user speaks, then slides to the top-left as the agents fan out
     b1user.style.left = lerp(885, 90, mv) + 'px'; b1user.style.top = lerp(430, 60, mv) + 'px'; b1user.style.transform = `scale(${uq * lerp(1, 0.55, mv)})`; b1user.style.opacity = clamp(uq * 2);
     const bq = pop(tl, 0.6); b1ub.style.left = lerp(700, 200, mv) + 'px'; b1ub.style.top = lerp(290, 80, mv) + 'px'; xf(b1ub, { s: (0.8 + 0.2 * bq) * lerp(1, 0.6, mv), o: clamp(bq * 2) });
-    b1.forEach((o, i) => { const t0 = 8.6 + i * 0.8; const p = pop(t, t0); xf(o.av, { s: p, o: clamp(p * 2) }); const bp = pop(t, t0 + 0.3); xf(o.bb, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2), y: -8 * (1 - bp) }); o.nmE.style.opacity = fadeIn(t, t0 + 0.2); }); setCam(B1, lerp(1, 1.06, seg(t, 6.6, 11.6))); B1.cam.style.opacity = 1 - seg(t, 11.2, 11.55); }
+    b1.forEach((o, i) => { const t0 = 8.7 + i * 0.5; const p = pop(t, t0); xf(o.av, { s: p, o: clamp(p * 2) }); o.nmE.style.opacity = fadeIn(t, t0 + 0.2); }); setCam(B1, lerp(1, 1.06, seg(t, 6.6, 11.6))); B1.cam.style.opacity = 1 - seg(t, 11.2, 11.55); }
   // B2
   if (B2.style.display !== 'none') { const tl = t - 11.4; b2ph.forEach((p, i) => { const t0 = 1.4 + (i === 24 ? 0 : 0.25 + (Math.abs((i % 10) - 4.5) + Math.abs(Math.floor(i / 10) - 2)) * 0.22); const pp = pop(tl, t0, 18, 0.7); xf(p, { s: pp, o: clamp(pp * 2) }); }); setTitle(b2T, COPY.b2, t, 11.7, { hlWord: COPY.b2hl, hlT: 14.1 }); setCam(B2, lerp(1, 1.18, seg(tl, 0.5, 4.4))); B2.cam.style.opacity = 1 - seg(t, 15.45, 15.75); }
   // B3 + B4
@@ -317,11 +317,13 @@ function render(t) {
     setCam(C1, lerp(lerp(1, 1.22, k1), 1.0, k2) + 0.03 * k3, 0, lerp(lerp(0, 130, k1), 0, k2) - 40 * k3); C1.cam.style.opacity = Math.min(fadeIn(tl, 0, 0.35), 1 - seg(t, 44.95, 45.25)); }
   // C2 owner phone
   if (C2.style.display !== 'none') { const tl = t - 45;
-    const tapRow = 3.4, thIn = 3.8, tapApr = 5.6, toastT = 6.0, qT = 8.6, typeT = 9.6, sendT = 12.2, savedT = 12.6, s2T = 15.2;
+    const tapRow = 2.6, thIn = 3.0, tapApr = 4.6, toastT = 5.0, qT = 7.2, typeT = 8.0, sendT = 10.4, savedT = 10.8, s2T = 12.8;
+    // camera on the phone content: list top -> approve dock (bottom) -> composer (bottom) -> thread middle. phone is 1.6x, so top/bottom fall off-frame on purpose
+    const PS = 1.6; const dy = 0;
     // rows stream in (newest on top): collapse height + fade; "Needs you" count flips when Emma lands
-    rowEls.forEach(r => { const q = r.at === 0 ? 1 : eo(seg(tl, r.at, r.at + 0.45)); r.style.display = q > 0 ? '' : 'none'; r.style.opacity = q; r.style.transform = `scaleY(${0.6 + 0.4 * q}) translateY(${-8 * (1 - q)}px)`; r.style.background = r.need && tl > r.at && tl < r.at + 1.0 ? `rgba(29,120,198,${0.12 * (1 - seg(tl, r.at + 0.5, r.at + 1.0))})` : ''; });
-    scrList.querySelector('#segNeed').textContent = tl > 2.3 ? PH.needs : 'Needs you · 0';
-    const pq = pop(tl, 0.1, 10, 0.85); phone.style.transform = `scale(${1.25 * (0.9 + 0.1 * pq)})`; phone.style.opacity = clamp(pq * 2);
+    rowEls.forEach(r => { const q = r.at === 0 ? 1 : eo(seg(tl, r.at * 0.75, r.at * 0.75 + 0.4)); r.style.display = q > 0 ? '' : 'none'; r.style.opacity = q; r.style.transform = `scaleY(${0.6 + 0.4 * q}) translateY(${-8 * (1 - q)}px)`; r.style.background = r.need && tl > r.at && tl < r.at + 1.0 ? `rgba(29,120,198,${0.12 * (1 - seg(tl, r.at + 0.5, r.at + 1.0))})` : ''; });
+    scrList.querySelector('#segNeed').textContent = tl > 1.75 ? PH.needs : 'Needs you · 0';
+    const pq = pop(tl, 0.1, 10, 0.85); phone.style.transform = `translateY(${dy}px) scale(${PS * (0.94 + 0.06 * pq)})`; phone.style.opacity = clamp(pq * 2);
     const sl = eo(seg(tl, thIn, thIn + 0.45)); scrList.style.transform = `translateX(${-120 * sl}px)`; scrList.style.opacity = 1 - sl; scrTh.style.transform = `translateX(${390 * (1 - sl)}px)`; scrTh.style.display = tl > thIn - 0.05 ? '' : 'none';
     // approve
     const apr = Q('#apr'); apr.style.transform = tl > tapApr && tl < tapApr + 0.14 ? 'scale(0.96)' : ''; apr.style.background = tl > tapApr ? '#12A15F' : '#1D78C6';
@@ -333,28 +335,31 @@ function render(t) {
     Q('#ab').style.display = tl > sendT ? '' : 'none'; Q('#sl').style.display = tl > savedT ? '' : 'none'; Q('#s2').style.display = tl > s2T ? '' : 'none';
     // cursor: tap row (1.6), tap approve (4.0), tap send (10.6)
     const PX = 1240 + 10, PY = 120 + 10; // phone inner origin (before scale) — scale 1.1 around center handled approx
-    const pts = [[2.4, 1900, 1000], [tapRow - 0.1, 1420, 255], [tapApr - 0.1, 1500, 970], [typeT - 0.3, 1410, 930], [sendT - 0.1, 1592, 932], [sendT + 0.8, 1900, 1050]];
-    const cx = kf(pts.map(([a, b]) => [a, b]))(tl), cy = kf(pts.map(([a, , c]) => [a, c]))(tl); c2cur.style.left = cx + 'px'; c2cur.style.top = cy + 'px'; c2cur.style.opacity = tl > 2.4 && tl < sendT + 1.0 ? 1 : 0;
-    const rips = [[tapRow, 1420, 255], [tapApr, 1500, 970], [sendT, 1592, 932]]; let ro = 0; rips.forEach(([tt, x, y]) => { const rp = seg(tl, tt, tt + 0.45); if (rp > 0 && rp < 1) { c2rip.style.left = x + 'px'; c2rip.style.top = y + 'px'; c2rip.style.width = c2rip.style.height = (16 + 80 * eo(rp)) + 'px'; ro = 1 - rp; } }); c2rip.style.opacity = ro;
+    // cursor targets in stage space: phone centre (1345, 540) + dy, local offsets × PS
+    const P = (lx, ly) => [1345 + (lx - 195) * PS, 540 + (ly - 320) * PS];
+    const ptsL = [[1.6, [1900, 1000]], [tapRow - 0.1, P(230, 172)], [tapApr - 0.1, P(275, 596)], [typeT - 0.3, P(190, 572)], [sendT - 0.1, P(350, 572)], [sendT + 0.8, [1900, 1050]]];
+    const pts = ptsL.map(([a, [x, y]]) => [a, x, y]);
+    const cx = kf(pts.map(([a, b]) => [a, b]))(tl), cy = kf(pts.map(([a, , c]) => [a, c]))(tl); c2cur.style.left = cx + 'px'; c2cur.style.top = cy + 'px'; c2cur.style.opacity = tl > 1.6 && tl < sendT + 1.0 ? 1 : 0;
+    const rips = [[tapRow, ...P(230, 172)], [tapApr, ...P(275, 596)], [sendT, ...P(350, 572)]]; let ro = 0; rips.forEach(([tt, x, y]) => { const rp = seg(tl, tt, tt + 0.45); if (rp > 0 && rp < 1) { c2rip.style.left = x + 'px'; c2rip.style.top = y + 'px'; c2rip.style.width = c2rip.style.height = (16 + 80 * eo(rp)) + 'px'; ro = 1 - rp; } }); c2rip.style.opacity = ro;
     // left keylines
     const ks = [[toastT + 0.3, qT - 0.3], [sendT + 0.5, s2T - 0.3], [s2T + 0.3, 99]];
     c2keys.forEach((k, i) => { const [a, b] = ks[i]; const o = Math.min(fadeIn(tl, a, 0.4), 1 - seg(tl, b - 0.3, b)); xf(k, { o, y: 20 * (1 - fadeIn(tl, a, 0.5)) }); c2subs[i].style.opacity = o * fadeIn(tl, a + 0.3, 0.4); });
-    setCam(C2, lerp(1, 1.04, seg(tl, 0, 17))); C2.cam.style.opacity = Math.min(fadeIn(tl, 0, 0.3), 1 - seg(t, 61.95, 62.25)); }
+    setCam(C2, lerp(1, 1.04, seg(tl, 0, 17))); C2.cam.style.opacity = Math.min(fadeIn(tl, 0, 0.3), 1 - seg(t, 59.95, 60.25)); }
   // D benefits
-  if (D.style.display !== 'none') { const tl = t - 62; const idx = tl < 4 ? 0 : tl < 8 ? 1 : 2; const lt = tl - idx * 4;
+  if (D.style.display !== 'none') { const tl = t - 60; const idx = tl < 4 ? 0 : tl < 8 ? 1 : 2; const lt = tl - idx * 4;
     dBig.forEach((e, i) => { const on = i === idx; const o = on ? Math.min(fadeIn(lt, 0.15, 0.4), 1 - seg(lt, 3.7, 4.0)) : 0; xf(e, { o, y: 16 * (1 - fadeIn(lt, 0.15, 0.5)) }); dSub[i].style.opacity = on ? Math.min(fadeIn(lt, 0.6, 0.4), 1 - seg(lt, 3.7, 4.0)) : 0; });
     const iq = Math.min(pop(lt, 0.05, 12, 0.75), 1) * (1 - seg(lt, 3.7, 4.0)); dPh.style.opacity = idx === 0 ? iq : 0; dPh.style.transform = `scale(${0.8 + 0.2 * iq})`;
     dAv.forEach((a, i) => { const q = pop(lt, 0.1 + i * 0.15, 14, 0.7); xf(a, { s: q, o: idx === 1 ? clamp(q * 2) * (1 - seg(lt, 3.7, 4.0)) : 0 }); });
     dTap.style.opacity = idx === 2 ? iq : 0; dTap.style.transform = `scale(${0.8 + 0.2 * iq})`;
-    setCam(D, 1 + 0.05 * (lt / 4)); D.cam.style.opacity = 1 - seg(t, 73.95, 74.25); }
+    setCam(D, 1 + 0.05 * (lt / 4)); D.cam.style.opacity = 1 - seg(t, 71.95, 72.25); }
   // E1
-  if (E1.style.display !== 'none') { const tl = t - 74; const p = pop(tl, 0.15, 12, 0.8); xf(e1owner, { s: p, o: clamp(p * 2) }); e1checks.forEach((c, i) => { const q = pop(tl, 0.7 + i * 0.3, 18, 0.6); xf(c, { s: q, o: clamp(q * 2) }); }); const bp = pop(tl, 1.5); xf(e1b, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2) }); e1name.style.opacity = fadeIn(tl, 0.5); setCam(E1, lerp(1, 1.06, seg(tl, 0, 5))); E1.cam.style.opacity = 1 - seg(t, 78.95, 79.25); }
+  if (E1.style.display !== 'none') { const tl = t - 72; const p = pop(tl, 0.15, 12, 0.8); xf(e1owner, { s: p, o: clamp(p * 2) }); e1checks.forEach((c, i) => { const q = pop(tl, 0.7 + i * 0.3, 18, 0.6); xf(c, { s: q, o: clamp(q * 2) }); }); const bp = pop(tl, 1.5); xf(e1b, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2) }); e1name.style.opacity = fadeIn(tl, 0.5); setCam(E1, lerp(1, 1.06, seg(tl, 0, 5))); E1.cam.style.opacity = 1 - seg(t, 76.95, 77.25); }
   // E2
-  if (E2.style.display !== 'none') { const tl = t - 79; const p = pop(tl, 0.1, 12, 0.8); e2face.style.opacity = clamp(p * 2); setFace(e2face, tl < 0.8 ? 'tense' : 'happy'); const b = pop(tl, 1.2); xf(e2b, { s: 0.8 + 0.2 * b, o: clamp(b * 2) }); e2name.style.opacity = fadeIn(tl, 0.4); const bounce = tl > 0.8 ? Math.abs(Math.sin((tl - 0.8) * 6)) * 14 * Math.exp(-(tl - 0.8) * 1.2) : 0; e2av.style.transform = `translateY(${-bounce}px) scale(${p})`; e2av.style.opacity = clamp(p * 2); e2face.style.transform = `translateY(${-bounce}px)`; setCam(E2, lerp(1, 1.05, seg(tl, 0, 4))); E2.cam.style.opacity = 1 - seg(t, 82.95, 83.25); }
+  if (E2.style.display !== 'none') { const tl = t - 77; const p = pop(tl, 0.1, 12, 0.8); e2face.style.opacity = clamp(p * 2); setFace(e2face, tl < 0.8 ? 'tense' : 'happy'); const b = pop(tl, 1.2); xf(e2b, { s: 0.8 + 0.2 * b, o: clamp(b * 2) }); e2name.style.opacity = fadeIn(tl, 0.4); const bounce = tl > 0.8 ? Math.abs(Math.sin((tl - 0.8) * 6)) * 14 * Math.exp(-(tl - 0.8) * 1.2) : 0; e2av.style.transform = `translateY(${-bounce}px) scale(${p})`; e2av.style.opacity = clamp(p * 2); e2face.style.transform = `translateY(${-bounce}px)`; setCam(E2, lerp(1, 1.05, seg(tl, 0, 4))); E2.cam.style.opacity = 1 - seg(t, 80.95, 81.25); }
   // E3
-  if (E3.style.display !== 'none') { const tl = t - 83; const a = eo(seg(tl, 0.2, 0.9)), b = eo(seg(tl, 1.1, 1.8)); xf(e3a, { o: a, y: 24 * (1 - a) }); xf(e3b, { o: b, y: 24 * (1 - b) }); setCam(E3, lerp(1, 1.08, seg(tl, 0, 4.3))); E3.cam.style.opacity = 1 - seg(t, 86.95, 87.25); }
+  if (E3.style.display !== 'none') { const tl = t - 81; const a = eo(seg(tl, 0.2, 0.9)), b = eo(seg(tl, 1.1, 1.8)); xf(e3a, { o: a, y: 24 * (1 - a) }); xf(e3b, { o: b, y: 24 * (1 - b) }); setCam(E3, lerp(1, 1.08, seg(tl, 0, 4.3))); E3.cam.style.opacity = 1 - seg(t, 84.95, 85.25); }
   // E4
-  if (E4.style.display !== 'none') { const tl = t - 87; e4wm.style.opacity = fadeIn(tl, 0.1, 0.6); e4url.style.opacity = fadeIn(tl, 0.6, 0.5); e4team.style.opacity = fadeIn(tl, 0.9, 0.5); setCam(E4); }
+  if (E4.style.display !== 'none') { const tl = t - 85; e4wm.style.opacity = fadeIn(tl, 0.1, 0.6); e4url.style.opacity = fadeIn(tl, 0.6, 0.5); e4team.style.opacity = fadeIn(tl, 0.9, 0.5); setCam(E4); }
   fadeLayer.style.opacity = seg(t, DUR - 0.6, DUR);
 }
 window.seek = t => render(((t % DUR) + DUR) % DUR);
@@ -362,7 +367,7 @@ window.seek = t => render(((t % DUR) + DUR) % DUR);
 // ===== audio =====
 const SFX = {};
 async function loadBuf(ctx, name) { if (!SFX[name]) { const ab = await (await fetch('assets/' + name)).arrayBuffer(); SFX[name] = ab; } return await ctx.decodeAudioData(SFX[name].slice(0)); }
-const VO_T = { n1: 2.6, n2: 24.2, n3: 32.0, n4: 50.5, n5: 83.4 };
+const VO_T = { n1: 2.6, n2: 24.2, n3: 32.0, n4: 49.6, n5: 81.4 };
 window.buildAudio = async function (ctx) {
   const out = ctx.createGain(); out.connect(ctx.destination);
   const play = (buf, t, g = 1, { rate = 1, fadeOut = 0, dur = 0 } = {}) => { const s = ctx.createBufferSource(); s.buffer = buf; s.playbackRate.value = rate; const gn = ctx.createGain(); gn.gain.setValueAtTime(g, t); if (fadeOut && dur) { gn.gain.setValueAtTime(g, t + dur - fadeOut); gn.gain.linearRampToValueAtTime(0.0001, t + dur); } s.connect(gn); gn.connect(out); s.start(t); if (dur) s.stop(t + dur + 0.05); };
@@ -378,16 +383,16 @@ window.buildAudio = async function (ctx) {
   for (const [k, t0] of Object.entries(VO_T)) play(B[`vo/${LANG}_${k}.wav`], t0, 1.0);
   // cues
   play(click, 1.6, 0.8);
-  [6.9, 8.0, 9.1].forEach(t => play(popB, t, 0.55));
+  play(popB, 7.2, 0.5); [8.7, 9.2, 9.7].forEach(t => play(popB, t, 0.55));
   { const rg = ctx.createGain(); rg.gain.setValueAtTime(0.0001, 12.8); rg.gain.exponentialRampToValueAtTime(0.45, 15.0); rg.gain.setValueAtTime(0.45, 21.6); rg.gain.linearRampToValueAtTime(0.0001, 23.0); const rs = ctx.createBufferSource(); rs.buffer = ring; rs.loop = true; rs.connect(rg); rg.connect(out); rs.start(12.8); rs.stop(23.1); }
   play(busy, 16.8, 0.22, { dur: 3.5, fadeOut: 1.0 }); play(popB, 16.6, 0.5); play(popB, 18.8, 0.5);
   play(whoosh, 22.4, 0.6); [23.8, 24.7, 25.6].forEach(t => play(popB, t, 0.5)); play(impact, 27.6, 0.8);
   play(whoosh, 30.95, 0.5); for (let i = 0; i < 30; i++) play(tick, 31 + (i < 12 ? 1.0 + i * 0.28 : 5.4 + (i - 12) * 0.26) + 0.9, 0.22, { rate: 1.4 + (i % 4) * 0.1 }); play(whoosh, 36.0, 0.35, { rate: 1.2 }); [40.8, 41.1, 41.4].forEach(t => play(popB, t, 0.4, { rate: 0.9 }));
-  play(whoosh, 44.95, 0.5); [0.8, 1.5].forEach(d => play(tick, 45 + d, 0.35, { rate: 1.2 })); play(popB, 45 + 2.3, 0.7, { rate: 0.95 }); play(click, 45 + 3.4, 0.7); play(whoosh, 45 + 3.8, 0.35, { rate: 1.3 }); play(click, 45 + 5.6, 0.9); play(popB, 45 + 6.0, 0.8, { rate: 1.2 }); play(popB, 45 + 8.6, 0.6, { rate: 0.9 });
-  for (let i = 0; i < PH.ans.length; i += 2) play(tick, 45 + 9.6 + i / 18, 0.15, { rate: 1.7 }); play(click, 45 + 12.2, 0.7); play(popB, 45 + 12.6, 0.6, { rate: 1.2 }); play(popB, 45 + 15.2, 0.6, { rate: 1.3 });
-  [62.1, 66.1, 70.1].forEach(t => play(whoosh, t, 0.4, { rate: 1.1 })); [66.2, 66.35, 66.5].forEach(t => play(popB, t, 0.4));
-  [74.7, 75.0, 75.3].forEach(t => play(popB, t, 0.6, { rate: 1.25 })); play(popB, 75.5, 0.5); play(popB, 80.2, 0.5); play(tick, 79.8, 0.5, { rate: 1.4 });
-  play(whoosh, 83.1, 0.4, { rate: 0.8 }); play(impact, 87.1, 0.5, { rate: 1.3 });
+  play(whoosh, 44.95, 0.5); [0.6, 1.1].forEach(d => play(tick, 45 + d, 0.35, { rate: 1.2 })); play(popB, 45 + 1.75, 0.7, { rate: 0.95 }); play(click, 45 + 2.6, 0.7); play(whoosh, 45 + 3.0, 0.35, { rate: 1.3 }); play(click, 45 + 4.6, 0.9); play(popB, 45 + 5.0, 0.8, { rate: 1.2 }); play(popB, 45 + 7.2, 0.6, { rate: 0.9 });
+  for (let i = 0; i < PH.ans.length; i += 2) play(tick, 45 + 8.0 + i / 18, 0.15, { rate: 1.7 }); play(click, 45 + 10.4, 0.7); play(popB, 45 + 10.8, 0.6, { rate: 1.2 }); play(popB, 45 + 12.8, 0.6, { rate: 1.3 });
+  [60.1, 64.1, 68.1].forEach(t => play(whoosh, t, 0.4, { rate: 1.1 })); [64.2, 64.35, 64.5].forEach(t => play(popB, t, 0.4));
+  [72.7, 73.0, 73.3].forEach(t => play(popB, t, 0.6, { rate: 1.25 })); play(popB, 73.5, 0.5); play(popB, 78.2, 0.5); play(tick, 77.8, 0.5, { rate: 1.4 });
+  play(whoosh, 81.1, 0.4, { rate: 0.8 }); play(impact, 85.1, 0.5, { rate: 1.3 });
 };
 
 // ===== preview =====
