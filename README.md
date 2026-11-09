@@ -6,6 +6,11 @@ Every store gets one URL that personal AI agents (Muse, Dots, Pickle, Claude…)
 Counter answers from what the store has told it, holds a slot and asks staff to approve anything irreversible,
 and when it doesn't know something it asks staff once — then remembers.
 
+## Live
+
+**https://counter-agent.fly.dev/s/drd-yeongdeungpo** — Counter for a real Seoul dermatology clinic (Dr. Designer Clinic Yeongdeungpo, built from its public website; demo only, not affiliated).
+Give that URL to any AI agent: it reads the clinic's facts, asks what isn't covered, and books a slot that staff approve. Browsers get the page with a booking form.
+
 ## Run
 
 ```bash

@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
-const SEED = path.join(ROOT, 'data/seed.json');
+const SEED = process.env.SEED_FILE ? path.resolve(ROOT, process.env.SEED_FILE) : path.join(ROOT, 'data/seed.json'); // deploy uses data/seed-drd.json
 const STATE = process.env.STATE_FILE || path.join(ROOT, 'data/state.json'); // demo recorder uses its own file
 const PORT = Number(process.env.PORT || 3000);
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || ''; // empty = admin open (local only)
@@ -105,7 +105,7 @@ function storePage(base) {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(s.name)} · Counter</title>
 <link rel="alternate" type="text/markdown" href="${base}/s/${s.slug}.md">
-<link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/store.css"></head><body class="store">
+<meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/store.css"></head><body class="store">
 <header class="bar"><img src="/counter.png" alt=""><div><b>${esc(s.name)}</b><small>Counter · agent contact point</small></div></header>
 <main class="wrap">
 <section class="card hero"><h1>${esc(s.name)}</h1><p>${esc(s.tagline)}</p><p class="muted">${esc(s.address)}</p></section>

@@ -1,0 +1,101 @@
+{
+ "store": {
+  "slug": "drd-yeongdeungpo",
+  "name": "Dr. Designer Clinic Yeongdeungpo",
+  "tagline": "Dermatology clinic in Yeongdeungpo, Seoul — botox, fillers, lifting, skin boosters",
+  "address": "2F Fairfield by Marriott, 870 Gyeongin-ro, Yeongdeungpo-gu, Seoul (Yeongdeungpo Station Exit 5, 200 m)",
+  "timezone": "Asia/Seoul (KST, UTC+9)"
+ },
+ "settings": {
+  "hours": "Mon–Fri 10:00–20:30 · Sat 10:00–16:30 · Lunch break 13:00–14:00 · Closed on Sundays",
+  "holidays": "Open on public holidays. Closed on the day of Seollal and Chuseok.",
+  "accessibility": "On the 2nd floor of Fairfield by Marriott. From the hotel's underground parking, take the elevator. On foot, enter through the door between Starbucks and the hotel and take the escalator.",
+  "languages": "Korean. Consultations available in English, Chinese and Japanese.",
+  "payment": "",
+  "medical": "Counter does not give medical advice. Suitability for any procedure is decided by the doctor at the in-person consultation."
+ },
+ "services": [
+  {
+   "id": "jaw-botox",
+   "name": "Jaw Botox",
+   "price": "from ₩19,000",
+   "duration": ""
+  },
+  {
+   "id": "allergan",
+   "name": "Botox (Allergan)",
+   "price": "from ₩90,000",
+   "duration": ""
+  },
+  {
+   "id": "volume-filler",
+   "name": "Volume Filler (cheeks · nasolabial)",
+   "price": "from ₩150,000",
+   "duration": ""
+  },
+  {
+   "id": "belotero",
+   "name": "Belotero Filler (under-eye)",
+   "price": "from ₩250,000",
+   "duration": ""
+  },
+  {
+   "id": "ellanse",
+   "name": "Ellansé (collagen stimulator)",
+   "price": "from ₩400,000",
+   "duration": ""
+  }
+ ],
+ "slots": [
+  {
+   "date": "2026-11-10",
+   "times": [
+    "10:00",
+    "11:00",
+    "14:00",
+    "15:00",
+    "16:30",
+    "19:00"
+   ]
+  },
+  {
+   "date": "2026-11-11",
+   "times": [
+    "10:30",
+    "11:30",
+    "14:30",
+    "17:00",
+    "19:30"
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "times": [
+    "10:00",
+    "12:00",
+    "15:00",
+    "18:00"
+   ]
+  },
+  {
+   "date": "2026-11-13",
+   "times": [
+    "11:00",
+    "14:00",
+    "16:00",
+    "19:00"
+   ]
+  },
+  {
+   "date": "2026-11-14",
+   "times": [
+    "10:00",
+    "11:30",
+    "14:00",
+    "15:30"
+   ]
+  }
+ ],
+ "memory": [],
+ "tasks": []
+}
