@@ -28,14 +28,14 @@ Task states: `input-required` (waiting for staff) → `completed` / `rejected`.
 1. `node app/server.mjs --reset`, open `/admin` on a phone (same Wi-Fi: `http://<mac-ip>:3000/admin`, or `cloudflared tunnel --url http://localhost:3000`).
 2. Run Claude Code as the tourist's agent:
    ```bash
-   claude -p --allowedTools "Bash(curl:*)" -- "You are Muse, a personal AI agent for Yuki Tanaka, a Japanese tourist in Seoul who uses a wheelchair. Yuki wants Rejuran Healer tomorrow (2026-11-10) around 3pm at Soi Dermatology, and needs a Japanese-speaking staff member. The clinic's contact point for agents is http://localhost:3000/s/soi-derm — use curl. Check accessibility, ask about Japanese-speaking staff if not listed, then book. Report back to Yuki in 3 short lines."
+   claude -p --allowedTools "Bash(curl:*)" -- "You are Muse, a personal AI agent for Emma Clarke, a British tourist in Seoul who uses a wheelchair. Emma wants Rejuran Healer tomorrow (2026-11-10) around 3pm at Soi Dermatology, and would prefer a female doctor. The clinic's contact point for agents is http://localhost:3000/s/soi-derm — use curl. Check accessibility, ask about a female doctor if not listed, then book. Report back to Emma in 3 short lines."
    ```
 3. Accessibility is answered instantly from the store's facts.
-4. "Japanese-speaking staff?" is unknown → appears in `/admin` → staff answers, keeps **Remember** on.
+4. "Female doctor?" is unknown → appears in `/admin` → staff answers, keeps **Remember** on.
 5. Booking request → slot held → staff taps **Approve** → the agent gets the confirmation number.
-6. Ask again from another agent → answered instantly from memory, no staff needed.
+6. Ask again from another agent (e.g. just "Do you have a female doctor?") → answered instantly from memory, no staff needed.
 
-Measured on 2026-11-09 with Claude Code: whole flow 26 s end to end (incl. ~5 s staff response per step).
+Measured on 2026-11-09 with Claude Code: whole flow 24 s end to end (staff responding 5 s after each request). Use cases and scenarios: [`docs/use-cases.md`](docs/use-cases.md).
 
 ## Team
 
