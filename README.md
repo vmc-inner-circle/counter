@@ -43,7 +43,7 @@ Measured on 2026-11-09 with Claude Code: whole flow 26 s end to end (incl. ~5 s 
 |---|---|
 | [`app/`](app/) (`server.mjs`, `public/`, `data/`) | Product (build) — the only deployed code |
 | [`video/`](video/README.md) | Demo video work — one folder per teammate (Korean) |
-| [`docs/use-cases.md`](docs/use-cases.md) | **Use cases UC-1~3 + demo scenarios — the shared reference for build, demo clips and video (Korean)** |
+| [`docs/use-cases.md`](docs/use-cases.md) | **Use cases UC-1~5 + demo scenarios — the shared reference for build, demo clips and video (Korean)** |
 | [`docs/measurement.md`](docs/measurement.md) | Phone vs Counter measurement plan (Korean) |
 | [`docs/`](docs/README.md) | Meeting notes (Korean) |
 

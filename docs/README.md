@@ -2,7 +2,7 @@
 
 c0mpiled-17: Seoul 해커톤(2026-11-09) Counter 팀 회의록. 전부 마크다운이라 clone 후 바로 읽을 수 있다.
 
-**무엇을 만들고 찍는지의 기준: [유스케이스](use-cases.md)** (UC-1~3 + 데모 시나리오 피부과·식당·숙소) · 전화 vs Counter 실측: [measurement.md](measurement.md)
+**무엇을 만들고 찍는지의 기준: [유스케이스](use-cases.md)** (UC-1~5 + 범위 밖 + 데모 시나리오 피부과·식당·숙소) · 전화 vs Counter 실측: [measurement.md](measurement.md)
 
 | 날짜 | 문서 | 내용 |
 |---|---|---|
