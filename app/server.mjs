@@ -130,6 +130,9 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'OPTIONS') { res.writeHead(204, { 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type', 'access-control-allow-methods': 'GET,POST' }); return res.end(); }
 
+  // root → the store's contact point (one store per deployment)
+  if (p === '/') { res.writeHead(302, { location: `/s/${slug}` }); return res.end(); }
+
   // store contact point: browsers get the page, agents/curl get markdown
   if (p === `/s/${slug}` || p === `/s/${slug}.md` || p === '/llms.txt') {
     const view = url.searchParams.get('view');
@@ -208,7 +211,7 @@ const server = http.createServer(async (req, res) => {
   if (p === '/admin/api/reset' && req.method === 'POST') { db = JSON.parse(fs.readFileSync(SEED, 'utf8')); save(); return json(res, 200, { ok: true }); }
 
   // ---- static
-  let file = p === '/' ? '/index.html' : p === '/admin' ? '/admin.html' : p;
+  let file = p === '/admin' ? '/admin.html' : p;
   file = path.join(ROOT, 'public', path.normalize(file).replace(/^(\.\.[/\\])+/, ''));
   if (file.startsWith(path.join(ROOT, 'public')) && fs.existsSync(file) && fs.statSync(file).isFile()) {
     res.writeHead(200, { 'content-type': MIME[path.extname(file)] || 'application/octet-stream' }); return fs.createReadStream(file).pipe(res);
