@@ -124,17 +124,38 @@ def setup_learned(d):  # uc2-memory 장면 전에: 이미 한 번 배운 상태�
     t = d.ask(Q); d.srv.call(f'/admin/api/tasks/{t["id"]}/answer', {'answer': A, 'remember': True})
 
 
+# ---- 손님 쪽: 브라우저 에이전트(Muse·Dots·Pickle·Grok Bot)가 가게 웹페이지의 예약 폼을 채우는 장면
+def pending_id(d):
+    return next(t['id'] for t in json.load(urllib.request.urlopen(d.srv.base + '/admin/api/state'))['tasks'] if t['status'] == 'input-required')
+
+
+def store_book(d):
+    p = d.page
+    d.hold(1.2); p.locator('#book').scroll_into_view_if_needed(); d.hold(0.8)
+    d.tap('[data-f=service]'); p.select_option('[data-f=service]', 'rejuran'); d.hold(0.3)
+    d.tap('[data-f=date]'); p.select_option('[data-f=date]', '2026-11-10'); d.hold(0.3)
+    d.tap('[data-f=time]'); p.select_option('[data-f=time]', '15:00'); d.hold(0.3)
+    d.type('[data-f=name]', d.who['user']); d.type('[data-f=nationality]', d.who['nat'])
+    d.type('[data-f=notes]', d.who['notes']); d.type('[data-f=agent]', d.who['agent']); d.hold(0.6)
+    d.tap('[data-act=book]'); d.see('Slot held'); d.hold(2.0)
+    d.srv.call(f'/admin/api/tasks/{pending_id(d)}/approve')   # 사장님이 폰에서 승인(이 장면에서는 화면 밖)
+    d.see('Booking confirmed'); p.locator('#bstate').scroll_into_view_if_needed(); d.hold(3.5)
+
+
 SCENES = {
     # 장면 id: (설명, 녹화 전 준비, 대본)  — 번호는 video/demo-clips.md
     'uc2-answer':  ('사장님 폰: 모르는 질문이 들어와 한 번 답하고 "기억" (UC-2, #4)', None, uc2_answer),
     'uc2-memory':  ('사장님 폰: 다른 에이전트의 같은 질문이 사장님 없이 바로 답됨 (UC-2, #4)', setup_learned, uc2_memory),
     'uc3-approve': ('사장님 폰: 예약 요청 → 탭 한 번 승인 → 확정 (UC-3, #1~3)', None, uc3_approve),
     'full':        ('사장님 폰: 예약 승인 → 질문 답변 → 기억으로 즉답 (한 번에)', None, full_flow),
+    # 4번째 값 = (시작 주소, 준비 완료 선택자). 없으면 사장님 화면에서 시작
+    'store-book':  ('손님 에이전트: 가게 웹페이지 예약 폼 → 슬롯 잡힘 → 확정번호 (UC-3, #1~3)', None, store_book, ('/s/soi-derm?view=html', '[data-form=book]')),
 }
 
 
 def record(pw, sid, who):
-    desc, setup, script = SCENES[sid]
+    desc, setup, script, *start = SCENES[sid]
+    path, ready = start[0] if start else ('/admin', '[data-screen=list]')
     srv = Server(); tmp = tempfile.mkdtemp(prefix='counter-rec-')
     try:
         browser = pw.chromium.launch()
@@ -144,7 +165,7 @@ def record(pw, sid, who):
         d = Director(page, srv, who)
         if setup: setup(d)
         t0 = time.time()
-        page.goto(srv.base + '/admin'); page.wait_for_selector('[data-screen=list]'); lead = time.time() - t0
+        page.goto(srv.base + path); page.wait_for_selector(ready); lead = time.time() - t0
         script(d)
         ctx.close(); browser.close()
         webm = next(Path(tmp).glob('*.webm'))

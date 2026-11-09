@@ -20,7 +20,8 @@ ADMIN_TOKEN=... node app/server.mjs   # when deployed: staff open /admin?key=<to
 | `/.well-known/agent-card.json` | AI agents | Discovery card |
 | `/admin` | Store staff (phone) — needs `ADMIN_TOKEN` when set | Approve bookings · answer unknown questions · memory · settings |
 
-Agent API (`/api/s/soi-derm`): `POST /ask` · `POST /book` · `GET /tasks/:id?wait=60` (long-poll).
+Agent API (`/api/s/soi-derm`): `POST /ask` · `POST /book` — add `"wait":60` to get the staff outcome in the same call · `GET /tasks/:id?wait=60` (long-poll).
+Browser agents (Muse · Dots · Pickle · Grok Bot): `/s/soi-derm?view=html` has the same ask chat and a **booking form**.
 Task states: `input-required` (waiting for staff) → `completed` / `rejected`.
 
 ## Demo scenario
