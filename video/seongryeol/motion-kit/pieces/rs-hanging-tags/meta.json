@@ -29,7 +29,6 @@
     "shorts",
     "ad"
   ],
-  "reference": "https://www.threads.com/@gasket_love/post/DeczZviEwFD (원작 @hayriyeakguller 의 매달린 ID 카드 Framer 컴포넌트 — 판매 중이라 연출만 봄) · https://www.threads.com/@gasket_love/post/DeeDRLrD2cy (매달린 체크리스트 카드) — 연출만 참고해 새로 짬, 원본 코드·문구·로고 안 씀. 카드는 우리 행택 디자인으로 새로 그림. 예시 소재는 #영상 레인파카 컬러스왑(rs-chat-carousel 소재) 5색.",
   "what": "0~2초 살짝 처진 가로줄 하나에 행택 5장이 오른쪽에서 차례로 미끄러져 들어온다(끈 길이 엇갈림, 줄 끝 가속도를 받는 감쇠 진자로 흔들림·살짝 비틀림). 앞면은 행택(위 구멍·금속 아일릿·끈·RealSnap 로고·상품명·사이즈 칸·COLOR 01 + 색 칩·바코드·아래 색 띠). 2.3초부터 1.22초마다 카메라가 한 장에 1.9배로 다가가고 카드가 앞으로 뒤집혀(3D, 살짝 튕김) 뒷면 화보 + 'COLOR 02 · 레몬 옐로' 정보, 뒤집힐 때 흔들림. 8.1초 전체로 물러나고 8.6초 바람처럼 왼쪽부터 차례로 다 같이 흔들렸다가 감쇠해 멈춤. 9.1초 큰 카피, 9.45초 작은 카피, 9.7초 로고.",
   "how_to_use": "같은 옷의 컬러·룩 변형 3~5개를 보여 줄 때(컬러별 화보·룩북). names 개수(| 구분, 3~5)가 카드 수이고 photo1..5·swatches 가 순서대로 붙는다. 뒷면 사진은 세로(9:16·3:4) 모델 전신이 좋다. 행택 앞면 글자(product·edition·sizes·label)와 종이 색(paper), 위 작은 글(kicker_l·kicker_r), 끝 카피(headline·sub)를 바꾼다. 카드 4장이면 kicker_r·headline 도 '4 COLORS'·'한 벌로 네 룩' 처럼 맞춘다. 바코드·숫자는 장식용 무작위.",
   "slots": {

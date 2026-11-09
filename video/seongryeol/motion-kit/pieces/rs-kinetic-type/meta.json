@@ -33,7 +33,6 @@
     "shorts",
     "ad"
   ],
-  "reference": "https://www.threads.com/@gasket_love/post/Devf8_XHZSV (원작 @thomasgiro_ 키네틱 가사 프로모, gasket_love 재현) — 연출만 참고해 새로 짬, 원본 코드·문구·로고 안 씀. 실루엣 예시 소재는 instaragnet/02_projects/cardnews/realsnap_image_prompt_carousel_v2/assets/look02_result.png.",
   "what": "BPM 120 기준 장면마다 4비트(2초). 0~2초 빨간 판에 오프화이트 Anton 두 줄(EVERY/LOOK)이 한 비트씩 1.6배에서 슬램(세로 모션블러), 2비트째 반 비트 색 반전, 4비트째 좌우 스타카토. 2~4초 검은 판, 빨간 두 줄이 좌우에서 가로 블러로 쓸려 들어오고 3·4비트에 위아래 자리 교대, 뒤엔 마지막 줄을 세로로 늘인 어두운 빨강 벽이 흐름. 4~6초 단어 벽(ONE PHOTO 8줄, 가운데 2줄 빨강) — 줄마다 반대 방향, 비트마다 한 칸 툭 밀림(가로 블러), 3비트째 판 반전. 6~8초 빨간 판에 모델 사진을 망점 실루엣(검정)으로, ALL/COLORS 슬램, 3·4비트 반 비트마다 판 오프화이트로 깜빡. 8~9초 화면 높이로 늘인 REALSNAP 이 블러로 쓸고 지나감 → 9초 제자리 슬램 + 빨간 밑줄 + 한글 보조줄 → 9.8초 로고·주소. 전체에 인쇄 번짐(점 파냄)·망점·필름 입자, 비트마다 화면 살짝 튐.",
   "how_to_use": "음악 비트에 맞춘 브랜드 훅·티저나 광고 끝 3초 전 리듬 컷. bpm 을 BGM 에 맞추면 슬램이 비트에 떨어진다(장면 = 4비트, 길이 11초 고정이라 BPM 이 느리거나 장면이 많으면 비트를 줄여 맞춤). lines 의 장면 순서는 stack → alt → wall → silhouette 로 돌고 마지막이 끝 타이틀. 영어 대문자 1~2단어가 잘 맞는다(Anton 은 한글이 없어 한글은 subs 로). 실루엣 사진은 밝은 단색 배경의 전신 모델컷.",
   "slots": {

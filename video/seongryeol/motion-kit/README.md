@@ -1,6 +1,6 @@
 # 모션 그래픽 키트 (RealSnap 자체 제작, 13개)
 
-이성렬이 RealSnap 광고용으로 만든 9:16(1080×1920) [HyperFrames](https://www.npmjs.com/package/hyperframes) 템플릿 모음이다.
+RealSnap 광고용으로 만든 9:16(1080×1920) [HyperFrames](https://www.npmjs.com/package/hyperframes) 템플릿 모음이다.
 잘 된 광고 연출만 참고해서 새로 짠 것이라 소스를 그대로 고쳐 써도 된다. Counter 영상에 필요한 걸 골라 문구·색·소재만 바꿔 쓰면 된다.
 
 ## 템플릿

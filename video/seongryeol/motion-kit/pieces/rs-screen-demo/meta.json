@@ -28,7 +28,6 @@
     "shorts",
     "ad"
   ],
-  "reference": "https://www.threads.com/@gasket_love/post/DeqUujRjInN · https://www.threads.com/@gasket_love/post/Dey71xIFmt4 · https://www.threads.com/@gasket_love/post/Dewakc7nwie (gasket_love 「클로드 x 업무 자동화」 화면 데모) — 연출만 참고해 새로 짬, 원본 코드·문구·로고 안 씀. 예시 녹화는 RealSnap 온보딩 039 의상 색상 변경(instaragnet/01_assets/onboarding/realsnap/039_의상_색상_변경/videos/02_intro-b9.mp4, 앱 창 부분만 잘라 씀).",
   "what": "0~0.8초 위에 기능 알약·2줄 제목, 가운데 브라우저 창(주소창 + 녹화)이 아래에서 올라온다. 0.6초부터 steps 의 각 단계 시각에 가상 카메라가 zoom 영역으로 1초(power3.inOut) 동안 줌·팬하고, 머무는 동안 2.5% 천천히 민다. 누를 곳에는 강조 박스가 테두리를 한 바퀴 그리며(0.5초) 나타나고 옅게 채워지며, 탭 시각에 링이 퍼진다. 왼쪽 아래 둥근 단계 칩(강조색 원 안 번호 + 짧은 설명)과 아래 중앙 검은 자막 알약이 단계마다 아래에서 올라오고 다음 단계 직전에 위로 빠진다. 기본 예시: ① 컬러 사진 올리기(Add → 파일 고르기 → 열기) ② 만들기 누르기 ③ AI가 색만 바꾸기(After 칸 강조) ④ 컬러 화보 완성(결과로 바짝 줌). 12.9초 창이 흐려지며 빠지고 제목이 끝 제목으로 바뀌며 원본·결과 카드가 튀어 오르고(셔터), 14.3초 알약, 14.8초 로고, 18초까지 머문다.",
   "how_to_use": "기능 하나를 실제 화면으로 3~5단계에 보여 줄 때(온보딩·기능 소개 광고·튜토리얼 쇼츠). 녹화는 assets/slots/screen.mp4(가로, 앱 창만 잘라서) + 첫 프레임 screen-first.jpg·마지막 프레임 screen-last.jpg 를 같은 비율로 두고, index.html 의 v-screen data-duration 을 녹화 길이로 맞춘다(시작 0.6초). 결과 카드는 before.jpg·after.jpg. steps 는 JSON 문자열: [{at:시작초, zoom:[x,y,w,h], chip, cap, marks:[{from,to,box:[x,y,w,h],tap:[x,y],tap_at}]}] — 좌표는 녹화 영상 기준 0~1 비율, 시각은 컴포지션 초. chip·cap 이 없는 단계는 칩을 그대로 두고 카메라만 옮긴다(파일 창처럼 화면이 바뀔 때). zoom 은 세로 화면이라 폭이 좁을수록 크게 보인다(w 0.3 ≈ 2배). 녹화 자체에 줌이 들어 있으면(온보딩 영상) 그 구간은 zoom 을 넓게 잡는다. end_at 은 녹화가 끝나는 시각(0.6 + 녹화 길이). 박스 위치는 snapshot 으로 프레임을 보며 맞춘다.",
   "slots": {
