@@ -1,23 +1,20 @@
-# v7 대본 — 가게 중심 (90초, 영어)
+# v10 대본 — 가로 16:9 (90초, 영어)
 
-내레이션: Gemini TTS 여성(Kore) 1.2배속. 손님 음성: Emma(영어)·Wei(중국어)·Lucía(스페인어), 원속도.
-기준: [docs/use-cases.md](../../docs/use-cases.md) UC-1~3. 비행기 컨셉은 회의에서 기각돼 뺐다.
+내레이션 Gemini TTS 'Kore' 1.2배속 · Emma 'Zephyr' · Muse 'Sulafat' · Wei/Lucía 모국어 음성. 기준: 11:30 싱크(상시녹음 2) 영상 원칙. 다크 미니멀 톤.
 
 | 시간 | 장면 | 화면 | 소리 |
 |---|---|---|---|
-| 0:00–0:02 | 훅 | 바쁜 데스크 위로 Muse·Grok Bot·Pickle·Dots "incoming call" 알림 폭주 → **Who picks up?** | 전화벨 |
-| 0:02–0:06 | 손님 요청 | 공항 게이트의 Emma | Emma: "Hey Muse — book me a skin clinic in Seoul for when I land." |
-| 0:06–0:10 | 문제 | 100칸 그리드, 한 칸만 초록 — "Agents call 100 clinics at once. Each clinic has one phone line." | Her agent calls a hundred clinics at once. Each has one phone line. |
-| 0:10–0:16 | 비교 | 위: AI → Human(벨·부재중·보류·다시 전화) / 아래: AI → AI(`/s/soi-derm` → 즉시 ✓) | AI calling humans: missed, on hold, call back later. AI talking to AI: done in seconds. |
-| 0:16–0:22 | 서비스 소개 | 에이전트 4종 → `/s/soi-derm` 링크 → 가게·직원 폰, 하는 일 01~03 → 지도 정보에 전화번호 옆 "AI AGENTS" 줄 | Counter gives every shop one link for AI agents — right next to its phone number. |
-| 0:22–0:36 | 챕터 01~03 | 터미널(Muse = Claude Code가 `curl /s/soi-derm.md` → `POST /ask` 세금 환급 → completed / 캐리어 보관 → input-required / `POST /book` 15:00 → slot held) + 오른쪽 "What agents read" 가게 정보 | One: it answers what it knows… / Two: what it doesn't know, it asks the staff once. / Three: bookings are held until a human approves. |
-| 0:36–0:48 | 전 세계 | 지구본(7개 도시 → 서울) → Wei·Lucía가 모국어로 자기 에이전트에게, 에이전트는 Counter와 영어로 | Muse, Pickle, Grok Bot — agents from everywhere. + Wei·Lucía 음성 |
-| 0:48–1:02 | 사장님 | 실제 `/admin` 화면 재현 폰 3대: 피부과 Approve booking(SOI-1110-1500) · 호텔 Approve · 식당 모르는 질문 답변 + Remember → 다음 에이전트(Dots)는 기억으로 즉답 | The owner just taps to approve. / Answer once — Counter remembers it for the next agent. |
-| 1:02–1:07 | 실측 | **26s** end to end(README 참고치, Claude Code) · 전화 0 · 직원 탭 2 | Measured end to end: twenty-six seconds. |
-| 1:07–1:17 | 완료 | 4컷 → 4분할(Emma·Wei·Lucía·Yui 각 언어 확정 알림) | Four guests. Four agents. Four languages. / And the shop never picked up a phone. |
-| 1:17–1:30 | 엔드 | 가게 3곳 연락처 카드(PHONE + AI AGENTS 링크) → **Counter.** "Phones are for people. Counter is for agents." | Phones are for people. Counter is for agents. |
+| 0:00–0:03 | 가치 | "AI agents call." / "Counter answers." + 로고 | AI agents call. Counter answers. |
+| 0:03–0:10 | 문제 | 괴로워하는 원장(GPT 이미지) 위로 Muse·Pickle·Grok Bot·Dots 전화 토스트 폭주, 부재중 0→120, 할 일 줄 그어짐 → "Owners can't" / "keep up." | Shops are flooded with AI calls. Owners can't keep up. |
+| 0:10–0:20 | 흐름 | Emma "Muse, ask Soi Dermatology if they have a female doctor." → 체인 Emma → Muse → Counter(앞에서 막음) → 사장님 | Emma 음성 / Emma asks her agent. Her agent asks Counter — not the owner. |
+| 0:20–0:32 | 자동 처리 | 에이전트 42곳 → Counter, 38 handled by Counter · 3 sent to the owner | Hundreds of agent requests. Counter handles most — and sends the owner only what needs a human. |
+| 0:32–0:48 | 사장님 앱 | Today 자동 처리 피드 → Needs you 1건 "Is there a female doctor?" → 추천 답 한 번 탭(Remember) → 다음 에이전트 Dots는 기억으로 즉답 → "Only what matters." / "One tap." | The owner sees only what matters. / One tap — and Counter remembers it for every agent after. |
+| 0:48–0:54 | 답 전달 | Emma 폰 알림 "Muse: Good news — Soi has a female doctor. Dr. Kim, Tue & Thu." | Muse 음성 |
+| 0:54–1:04 | 다국어(부가가치) | 에이전트 4종·언어 칩 → Counter, Wei(中文)·Lucía(Español) | Any agent. Any language. Around the clock. + Wei·Lucía |
+| 1:04–1:16 | 강점 | "Calls taken today: 0" · "Every agent gets an answer." · "The owner sees only what matters." | BGM |
+| 1:16–1:30 | 슬로건 | "Phones are for people." / "Counter is for agents." + 로고 · "While big tech builds agents, we build their counter." | Phones are for people. Counter is for agents. |
 
 ## 남은 것
-- S2 비교 시계(4:12 vs 1.2s)는 연출 값 — [measurement.md](../../docs/measurement.md) 실측 나오면 교체
-- 터미널·사장님 화면은 실제 디자인 재현 — demo-clips 녹화 오면 교체
+- 스타일 확정은 13:15 싱크(순형 안 Notion 톤으로 정해지면 다시 입힘)
+- 38/3건은 예시 수치, 사장님 앱은 회의 설명(Today·Needs you·History) 기반 재현 — 실제 앱 녹화 오면 교체
 - 전화벨 효과음 CC BY 3.0(Freesound djfroyd) 크레딧 필요
