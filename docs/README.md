@@ -2,6 +2,8 @@
 
 c0mpiled-17: Seoul 해커톤(2026-11-09) Counter 팀 회의록. 전부 마크다운이라 clone 후 바로 읽을 수 있다.
 
+**무엇을 만들고 찍는지의 기준: [유스케이스](use-cases.md)** (UC-1~5)
+
 | 날짜 | 문서 | 내용 |
 |---|---|---|
 | 11/08 | [YC 해커톤 최종 회의](meeting-logs/261108_YC해커톤-최종회의.md) · [전사](meeting-logs/261108_YC해커톤-최종회의_transcript.md) | 팀 내 선발전 — 투표로 Counter 선정, 나온 질문·의견 |

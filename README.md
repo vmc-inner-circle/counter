@@ -42,4 +42,7 @@ Measured on 2026-11-09 with Claude Code: whole flow 26 s end to end (incl. ~5 s 
 |---|---|
 | `/` (`server.mjs`, `public/`, `data/`) | Product demo (build) |
 | [`video/`](video/README.md) | Demo video work — one folder per teammate (Korean) |
+| [`docs/use-cases.md`](docs/use-cases.md) | **Use cases UC-1~5 — the shared reference for build, demo clips, video and measurement (Korean)** |
 | [`docs/`](docs/README.md) | Meeting notes (Korean) |
+
+Before any work: `git pull --rebase origin main` — see [AGENTS.md](AGENTS.md).
