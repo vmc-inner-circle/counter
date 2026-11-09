@@ -8,11 +8,13 @@
 | v2 draft | 11/09 11:36 | (폐기) | 나레이션 없음 · BGM + 화면 텍스트 · 크림 바탕 모션그래픽 · 한국어판/영어판 각 89초 |
 | v2.1 draft | 11/09 12:2x | (v2.2로 대체) | 순형 피드백 6개 반영 — 나레이션 5줄, 워크플로우 도식, 혼내는 장면 삭제·체인 전환, 강점 3컷, 사장님 폰(시안 A), 슬로건 교체. 각 89.5초 |
 | **v2.2 draft** | 11/09 13:0x | [`Counter_v22_KO_draft.mp4`](Counter_v22_KO_draft.mp4) · [`Counter_v22_EN_draft.mp4`](Counter_v22_EN_draft.mp4) (30fps, 16:9, 89.5초) | 11:30 싱크 회의록 대조 1순위 4개 반영(아래). **v2.3과 비교 중** — 사장님 폰을 베젤째 오른쪽에 두는 버전 |
-| **v2.3 draft** | 11/09 13:2x | [`Counter_v23_KO_draft.mp4`](Counter_v23_KO_draft.mp4) · [`Counter_v23_EN_draft.mp4`](Counter_v23_EN_draft.mp4) (30fps, 16:9, 87.5초) | 순형 13:10 피드백: 사장님 폰을 베젤 없이 내용물만 1.6배 확대, 목록 구간 3초로 단축 · 오프닝의 '사용자가 에이전트 각각에게 시키는' 말풍선 삭제(사용자 한 마디 → 에이전트 셋 → 100곳 전화) |
+| v2.3 draft | 11/09 13:2x | [`Counter_v23_KO_draft.mp4`](Counter_v23_KO_draft.mp4) · [`Counter_v23_EN_draft.mp4`](Counter_v23_EN_draft.mp4) (30fps, 16:9, 87.5초) | 순형 13:10 피드백: 사장님 폰을 베젤 없이 내용물만 1.6배 확대, 목록 구간 3초로 단축 · 오프닝의 '사용자가 에이전트 각각에게 시키는' 말풍선 삭제(사용자 한 마디 → 에이전트 셋 → 100곳 전화) |
 
 레퍼런스: [Notion 3.0 한국 론칭 영상](https://youtu.be/rfU_yL-oc80) — 나레이션 없이 BGM, 흰 바탕, 큰 타이포, 캐릭터 말풍선, 실제 UI 카드.
 
-## 구성 v2.3 (87.5초)
+| **v2.5 draft** | 11/09 14:0x | [`Counter_v25_KO_draft.mp4`](Counter_v25_KO_draft.mp4) · [`Counter_v25_EN_draft.mp4`](Counter_v25_EN_draft.mp4) (30fps, 16:9, 87.5초) | v2.3 채택 후: 사장님을 토스풍 3D 캐릭터 3표정(허둥·평온·웃음)으로 교체, Counter 로고 마크 신설(C 획이 카운터 상판으로 이어지는 모노그램, [후보 4개](logo/candidates.jpg) 중 #4), Pickle 웃는 표정 정리. **최종본(60fps·모션블러)은 이 소스로 렌더 중** |
+
+## 구성 v2.5 (87.5초)
 
 | 구간 | 시간 | 내용 | 나레이션 |
 |---|---|---|---|
