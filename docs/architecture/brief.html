@@ -42,7 +42,7 @@ flowchart LR
   B --> URL
   T --> URL
   C --> URL
-  subgraph F["Counter 서버 (Fly.io · app/)"]
+  subgraph F["Counter 서버 (app/ · 로컬 실행, 호스팅 안 함)"]
     direction TB
     R{"누가 왔나?"}
     H["웹페이지<br/>질문 채팅 + 예약 폼 🆕"]
@@ -77,7 +77,7 @@ flowchart LR
     <tr><td>일반 채팅 (웹 열람만)</td><td class="ok">✅</td><td class="warn">⚠️ 미검증</td><td>마크다운 → 링크 따라가기 (막힐 수 있음)</td></tr>
     
   </table>
-  <div class="card"><b>요약:</b> 읽기는 누구나. 쓰기는 터미널·브라우저 에이전트까지 <b>설정 없이</b>. 손님이 쓰는 4종은 모두 브라우저형 → 웹페이지 예약 폼이 핵심. 실측 전엔 미검증.</div>
+  <div class="card"><b>요약:</b> 읽기는 누구나. 쓰기는 터미널·브라우저 에이전트까지 <b>설정 없이</b>. 손님이 쓰는 4종은 모두 브라우저형 → 웹페이지 예약 폼이 핵심. 실제 에이전트 실측은 하지 않기로 해 공개 자료 기준 추정(미검증).</div>
 </section>
 
 <section data-s="4">
@@ -117,9 +117,9 @@ sequenceDiagram
   <div class="tag">HTTP냐 MCP냐에서 나는 전송 차이: 밀리초 단위라 막대에 안 보인다 · 분해는 추정(미검증)</div>
 </div><br>
   <table>
-    <tr><th></th><th>지금</th><th>개선안</th></tr>
+    <tr><th></th><th>이전</th><th>반영 후</th></tr>
     <tr><td>왕복</td><td>문서 → ask → 대기 → book → 대기 = <b>5턴</b></td><td>문서 → ask(wait) → book(wait) = <b>3턴</b></td></tr>
-    <tr><td>예상</td><td>26초</td><td>약 20초 이하 <span class="pill">미검증 · 구현 후 재실측</span></td></tr>
+    <tr><td>예상</td><td>26초</td><td><b>28초</b> — 호출은 3번으로 줄었지만 시간은 그대로 <span class="pill">11/09 재실측 1회</span></td></tr>
   </table>
   <div class="card">전송 방식을 우리가 새로 만들어도 줄어드는 건 밀리초. <b>줄일 수 있는 건 턴 수뿐</b>이고, 이건 어느 입구로 와도 똑같이 적용된다.</div>
 </section>
@@ -151,27 +151,24 @@ stateDiagram-v2
     <tr><td>사장님 화면에 응답할 사람이 없으면 에이전트가 60초 뒤 멈춤</td><td>심사 시간 동안 팀원 1명이 폰으로 /admin 담당</td></tr>
     <tr><td>앞 심사위원이 슬롯을 잡아 다음 사람이 못 씀</td><td>/admin 초기화 버튼 (이미 있음)</td></tr>
     <tr><td>링크 미리보기·크롤러가 GET 예약 링크를 눌러 버림</td><td>승인 없이는 확정 안 됨 → 피해 없음</td></tr>
-    <tr><td>일반 채팅이 GET 링크를 안 따라감</td><td>배포 전 실측 → 안 되면 표에서 빼고 터미널·브라우저 경로로 안내</td></tr>
+    <tr><td>일반 채팅이 GET 링크를 안 따라감</td><td>실측 안 하기로 함 → 터미널·브라우저 경로로 안내</td></tr>
   </table>
 </section>
 
 <section data-s="8">
-  <h2><span class="num">7</span>다음 순서</h2>
+  <h2><span class="num">7</span>진행 상황</h2>
 <pre class="mermaid">
 flowchart LR
-  D["✅ 완료<br/>app/ 이동<br/>ADMIN_TOKEN"] --> W["① wait로<br/>3턴 만들기"]
-  W --> P["② 예약 폼<br/>+ GET 링크"]
-  P --> X["③ 터널로 공개 후<br/>3종 에이전트 실측<br/>~15분"]
-  X --> FLY["④ Fly.io 배포<br/>직전 확인받음"]
-  X -.->|"빈틈 있으면"| MCP["MCP 추가"]
+  D["✅ app/ 이동<br/>ADMIN_TOKEN"] --> W["✅ wait로<br/>호출 3번"]
+  W --> P["✅ 예약 폼<br/>+ 마크다운 링크"]
+  P --> C["✅ 시연 클립<br/>자동 녹화"]
+  X["✕ 실제 에이전트 실측<br/>✕ Fly.io 배포<br/>하지 않기로 함"]
   classDef done fill:#e3f4ea,stroke:#12804a
-  classDef gate fill:#fdecea,stroke:#b3261e
-  class D done
-  class FLY gate
+  classDef drop fill:#f2f2f2,stroke:#aaa,stroke-dasharray:4 3,color:#777
+  class D,W,P,C done
+  class X drop
 </pre>
-  <div class="card"><b>수민님이 정할 것 2개</b><br>
-  1. 이 순서로 진행 — <b>기본값: ㄱㄱ</b><br>
-  2. 심사위원이 질의할 대상 — <b>기본값: 피부과 데모 창구</b> (아니면 Counter 팀 자체 창구 <code>/s/counter</code> 추가)</div>
+  <div class="card">시연은 로컬 서버 + <code>app/demo/record.py</code> 자동 녹화 클립으로 한다. 공개 주소는 두지 않는다 (2026-11-09 최수민).</div>
 </section>
 
 <script>

@@ -10,7 +10,7 @@ and when it doesn't know something it asks staff once — then remembers.
 
 ```bash
 node app/server.mjs --reset     # Node 18+, no dependencies. PORT=3000 by default
-ADMIN_TOKEN=... node app/server.mjs   # when deployed: staff open /admin?key=<token> once
+ADMIN_TOKEN=... node app/server.mjs   # when exposed publicly (e.g. a tunnel): staff open /admin?key=<token> once
 ```
 
 | URL | Who | What |
@@ -42,7 +42,7 @@ Measured on 2026-11-09 with Claude Code: whole flow 24 s end to end (staff respo
 
 | Folder | What |
 |---|---|
-| [`app/`](app/) (`server.mjs`, `public/`, `data/`) | Product (build) — the only deployed code |
+| [`app/`](app/) (`server.mjs`, `public/`, `data/`) | Product (build) — all product code lives here |
 | [`video/`](video/README.md) | Demo video work — one folder per teammate (Korean) |
 | [`docs/use-cases.md`](docs/use-cases.md) | **Use cases UC-1~5 + demo scenarios — the shared reference for build, demo clips and video (Korean)** |
 | [`docs/measurement.md`](docs/measurement.md) | Phone vs Counter measurement plan (Korean) |
