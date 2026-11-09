@@ -35,7 +35,7 @@
 | 9 | 34–38 | 두 줄, 둘째 줄만 주황 (두 호흡) | Phones are for people. / __Counter is for agents.__ | 딸깍 | A |
 | 10 | 38–43 | 흐름 도식: 노드 카드 사람 → 에이전트 → **Counter** → 사장님, 화살표가 위에서 아래로 그려지고 꼬리표 점이 흐름 | One __front door__ for every agent. | 휙, 뿅 | **B flow-insert** |
 | 11 | 43–48 | 에이전트 아이콘 수십 개(위) → 선이 모여 Counter 카드(가운데) → 대부분 ✓로 끝남, 주황 점선 하나만 사장님 폰 카드로. 숫자 「47 answered · 1 needs you」 | Most end __here__. | 틱틱틱 | A (조순형 안과 같은 꼴) |
-| 12 | 48–54 | 사장님 앱 화면(실제 `/admin` 녹화) — 「Needs you 1」만 강조 박스 → 탭. 이어서 처음 듣는 질문 1건에 한 번 답하고 🧠 기억 켬 | Only what __needs you__. / Answer __once__. | 탭, 뿅 | **B screen-demo** (클립 #1) |
+| 12 | 48–54 | 사장님 앱 화면(실제 녹화 `uc2-answer` → `uc2-memory`) — 처음 듣는 질문 1건에 한 번 답하고 Remember, 다음 에이전트는 「Answered from memory」 — 강조 박스·줌 | Only what __needs you__. / Answer __once__. | 탭, 뿅 | **B screen-demo** (클립 #1) |
 | 13 | 54–60 | 효용 세 컷 빠르게: ① 사장님이 진짜 손님을 맞음(폰은 🔕) ② 에이전트에 ✓(끊기지 않음) ③ 국기 넷이 차례로 | Owners stay __free__. / Agents get __answers__. / Any __language__. | 뿅 ×3 | A |
 
 ## 결론 60–90초 — 앞으로의 방향·포부: 모두가 이기는 채널
@@ -55,7 +55,7 @@
 | 사장님 캐릭터 `owner.png` | 조순형 build/assets → `motion/assets/` | 있음 |
 | 에이전트 아이콘 | `../common/agents/` | 있음 |
 | Counter 로고 | 팀 확정 필요 — 조순형 안 주황 「C」(`counter_logo.png`) vs `app/public/counter.png` 마스코트 | **13:15 싱크에서 정함** |
-| 사장님 앱 화면 녹화(#12) | 최수민 — `/admin` 「Needs you」·승인·답하기 + 기억 | `../demo-clips.md` #1 에 요청 |
+| 사장님 앱 화면 녹화(#12) | [`../demo-clips/`](../demo-clips/) 자동 녹화(9:16, 시안 A) — `uc2-answer.mp4`(한 번 답 + Remember) → `uc2-memory.mp4`(다음 에이전트는 기억으로). 예약 승인(`uc3-approve`)은 효용으로 내세우지 않으므로 짧게만 | **있음** (12:36) |
 | 업종 일러스트(#14) | 사장님 캐릭터와 같은 손그림 톤으로 생성 필요(셰프·의사·공장·미용사) | 없음 — 생성 or 아이콘으로 대체 |
 | BGM·효과음 | `motion/assets/` | 있음 |
 | 서체 Pretendard(OFL) | 조순형 build/fonts | 있음 |
