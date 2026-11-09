@@ -1,0 +1,31 @@
+/* 시안 2 — Warm: 영상팀 모션그래픽 톤(Pretendard · 크림 #F6F5F0 · 주황 #FF6B3D)에 맞춘다. 컷이 바뀌어도 같은 영상처럼 보이게 */
+@font-face{font-family:P;src:url(/fonts/Pretendard-Regular.woff2);font-weight:400}
+@font-face{font-family:P;src:url(/fonts/Pretendard-Medium.woff2);font-weight:500}
+@font-face{font-family:P;src:url(/fonts/Pretendard-SemiBold.woff2);font-weight:600}
+@font-face{font-family:P;src:url(/fonts/Pretendard-Bold.woff2);font-weight:700}
+@font-face{font-family:P;src:url(/fonts/Pretendard-ExtraBold.woff2);font-weight:800}
+body.admin{--ink:#1B1A17;--sub:#5E5A52;--mut:#9C968B;--line:#E9E5DC;--bg:#EFEBE3;--blue:#1B1A17;--warn:#FF6B3D;--ok:#1F9D55;background:#F6F5F0;font-family:P,-apple-system,sans-serif}
+.hd{padding:22px 20px 12px}.hd h1{font-size:28px;font-weight:800;letter-spacing:-.02em}
+.seg button{background:#fff;border:1px solid var(--line)}.seg button.on{background:var(--ink);border-color:var(--ink)}
+.conv{background:#fff;margin:0 12px 8px;width:calc(100% - 24px);border-radius:18px;padding:14px}
+.conv+.conv{border-top:0}
+.conv.need{box-shadow:0 0 0 1.5px var(--warn)}
+.conv.need .time{color:var(--warn)}
+.conv b{font-weight:700}
+.th{background:#F6F5F0;border-bottom:1px solid var(--line)}.th .back{color:var(--ink)}
+.facts{border-bottom:0}.chip{background:#fff;border:1px solid var(--line)}
+.b.in{background:#fff;border:1px solid var(--line)}
+.b.out{background:var(--ink)}
+.lbl.wait{color:var(--warn)}
+.req{background:#fff;border:0;border-radius:20px;box-shadow:0 1px 0 var(--line),0 8px 24px rgba(27,26,23,.06)}
+.req .big{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.req.done .k{color:var(--ok)}
+.dock{background:#F6F5F0;border-top:1px solid var(--line)}
+.primary{background:var(--ink)}
+.dock .primary{height:52px;border-radius:999px;font-size:16.5px}
+.dock .ghost{background:#fff;border:1px solid var(--line);border-radius:999px}
+.send{background:var(--ink)}
+.inp textarea{background:#fff}
+.rem input:checked+.tog{background:var(--warn)}
+.tabs{background:#F6F5F0;border-top:1px solid var(--line)}.tabs button.on{color:var(--ink)}
+.badge{background:var(--warn)}

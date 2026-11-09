@@ -1,0 +1,22 @@
+/* 시안 3 — Dark: 영상에서 눈에 띄게. 어두운 바탕에 예약을 '티켓'처럼, Approve는 확정의 초록 */
+body.admin{--ink:#F2F4F7;--sub:#B4BCC8;--mut:#7D8693;--line:#232833;--bg:#171B23;--blue:#3B82F6;--ok:#22C55E;--warn:#F5A524;background:#0B0D12;color:var(--ink);color-scheme:dark}
+.hd h1{font-size:28px;font-weight:800;letter-spacing:-.02em}
+.seg button{background:var(--bg);color:var(--sub)}.seg button.on{background:var(--ink);color:#0B0D12}
+.conv+.conv{border-top:1px solid var(--line)}
+.conv:active{background:var(--bg)}
+.conv.need .time{color:var(--warn)}
+.conv.need p{color:var(--ink)}
+.th{background:#0B0D12;border-bottom:1px solid var(--line)}.th .back{color:var(--ink)}
+.facts{border-bottom:1px solid var(--line)}.chip{background:var(--bg);color:var(--sub)}
+.b.in{background:var(--bg);color:var(--ink)}.b.out{background:var(--blue)}
+.req{background:linear-gradient(180deg,#1B2130,#141924);border:1px solid #2A3242;border-radius:20px;position:relative;overflow:hidden}
+.req .big{font-size:28px;font-weight:800;letter-spacing:-.02em;color:#fff}
+.req .sub{color:var(--sub);border-top:1px dashed #33405A;margin-top:10px;padding-top:10px}
+.req.done{border-color:rgba(34,197,94,.5)}.req.done .big{color:var(--ok)}
+.dock{background:#0B0D12;border-top:1px solid var(--line)}
+.dock .primary{background:var(--ok);color:#06210F;height:54px;border-radius:16px;font-size:17px;box-shadow:0 8px 28px rgba(34,197,94,.35)}
+.dock .ghost{background:var(--bg);color:var(--sub)}
+.inp textarea{background:var(--bg);border-color:var(--line);color:var(--ink)}
+.send{background:var(--blue)}
+.tabs{background:#0B0D12;border-top:1px solid var(--line)}.tabs button{color:var(--mut)}.tabs button.on{color:var(--ink)}
+.empty{color:var(--mut)}

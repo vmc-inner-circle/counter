@@ -86,7 +86,7 @@ const pending = (t) => t.status === 'input-required';
 // 손님 1명(에이전트 + 손님 이름) = 대화 1개
 function conversations() {
   const m = new Map();
-  for (const t of [...S.tasks].sort((a, b) => a.createdAt.localeCompare(b.createdAt))) {
+  for (const t of [...S.tasks].reverse()) { // 서버가 최신순으로 주므로 뒤집으면 들어온 순서(같은 ms여도 정확)
     const key = `${t.agent}|${t.onBehalfOf}`;
     if (!m.has(key)) m.set(key, { key, agent: t.agent, guest: t.onBehalfOf || 'Guest', tasks: [] });
     m.get(key).tasks.push(t);

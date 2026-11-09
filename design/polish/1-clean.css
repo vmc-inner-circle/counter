@@ -1,0 +1,29 @@
+/* 시안 1 — Clean: 장식 없이 위계만. 1등 정보(손님 이름·예약 일시·Approve)만 키우고 나머지는 회색으로 내린다 */
+body.admin{--ink:#0B0F14;--sub:#5B6470;--mut:#9AA2AD;--line:#EEF0F3;--bg:#F2F3F5;--blue:#0A6CFF;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif;letter-spacing:-.01em}
+.hd{padding:22px 20px 12px}.hd h1{font-size:30px;font-weight:800;letter-spacing:-.03em}
+.seg button{background:none;padding:6px 2px;margin-right:14px;border-radius:0;font-size:15px;color:var(--mut)}
+.seg button.on{background:none;color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
+.conv{padding:14px 20px;gap:14px}.conv+.conv{border-top:0}
+.conv .av{width:50px;height:50px}
+.conv b{font-size:16.5px;font-weight:600}
+.conv p{font-size:14.5px;color:var(--mut)}
+.conv.need p{color:var(--ink);font-weight:500}
+.conv.need .time{color:var(--blue)}
+.conv.need .time:before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--blue);margin-right:6px;vertical-align:1px}
+.th{border-bottom:0;padding:14px 14px 6px}.th b{font-size:17px}
+.facts{border-bottom:1px solid var(--line);padding:6px 16px 14px}
+.chip{background:none;border:1px solid var(--line);color:var(--sub)}
+.b{font-size:15px;border-radius:20px;padding:10px 14px}
+.b.in{background:var(--bg)}.b.out{background:var(--blue)}
+.req{border:0;background:var(--bg);border-radius:22px;padding:18px}
+.req .k{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.req .big{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 0 2px}
+.req .sub{color:var(--sub)}
+.req.done{background:#E9F8EF}.req.done .big{color:var(--ink)}
+.dock{border-top:0;padding-top:6px}
+.dock .why{text-align:center}
+.dock .two{flex-direction:row-reverse}
+.dock .primary{height:54px;border-radius:16px;font-size:17px}
+.dock .ghost{background:none;color:var(--sub);font-weight:600;padding:0 18px}
+.inp textarea{background:var(--bg);border:0}
+.tabs{border-top:1px solid var(--line)}.tabs button.on{color:var(--ink)}
