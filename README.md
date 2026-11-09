@@ -36,6 +36,10 @@ Task states: `input-required` (waiting for staff) → `completed` / `rejected`.
 
 Measured on 2026-11-09 with Claude Code: whole flow 26 s end to end (incl. ~5 s staff response per step).
 
-## Team docs
+## Team
 
-Meeting notes (Korean): [`docs/`](docs/README.md)
+| Folder | What |
+|---|---|
+| `/` (`server.mjs`, `public/`, `data/`) | Product demo (build) |
+| [`video/`](video/README.md) | Demo video work — one folder per teammate (Korean) |
+| [`docs/`](docs/README.md) | Meeting notes (Korean) |
