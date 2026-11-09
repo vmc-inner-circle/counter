@@ -1,15 +1,4 @@
-# 황준식 안 — 시나리오 v4.2 (90초 = 서론 30 · 본론 30 · 결론 30)
-
-> **v4.2 (13:45) — 상시녹음 3 피드백 반영 + 마지막 장면 교체** (영상 = `counter_junshik_v4_16x9.mp4`)
-> - 색: 당근 팔레트 `#FF6F0F` (13:17 브랜드 변경)
-> - #3 사람 → 에이전트 화살표 · #6 848 아래 「2 in 3 hung up on the AI.」(기사 확인: 약 3분의 1만 AI와 통화를 이어감. 회의의 «100건»은 기사에서 확인 안 돼 쓰지 않음)
-> - #7 「Everyone loses」 각자 이유 한 줄: Shop «Drowning in robot calls» · Agent «Nobody picks up» · Customer «Can't get an answer» (people → customer)
-> - #8 Counter 가 에이전트 넷(왼쪽)과 사장님(오른쪽) **사이**에 등장
-> - #11 에이전트 문의가 Counter 에서 **초록 자동 완료**로 줄줄이 쌓이는 칸 + 사장님에게는 1건만
-> - #13 「Any language」 삭제 → 「Customers get what they asked.」
-> - #16 「Customers win」 + 각자 이긴 이유 한 줄(Back to their craft · Always answered · Get it done)
-> - #17(80–86) **지구본** — 여러 나라의 에이전트가 Counter 로 연결되고, Counter 에서 다시 업종(식당·병원·공장·미용실·숙소)으로 연결. 문구는 주어가 바뀜: OpenAI → Meta → xAI → Anthropic spreads agents. → **We build their Counter.** (회의 슬로건)
-> - #18 엔드카드 86–90
+# 황준식 안 — 시나리오 v4.1 (90초 = 서론 30 · 본론 30 · 결론 30)
 
 - 만든 때: 2026-11-09 12:55경 (황준식 지시 + Claude). v4 의 이야기를 **스타일 A+B**(황준식 승인)로 컷 단위로 다시 쓴 판. 이전 판은 git 기록에
 - 형식: **16:9 가로(1920×1080)** 모션 그래픽 (13:00 황준식 지시로 가로로) · 나레이션 없음, BGM + 효과음 · **화면 글자는 컷마다 한 줄**

@@ -14,7 +14,7 @@
 @font-face{font-family:P;src:url(assets/fonts/Pretendard-Medium.woff2) format("woff2");font-weight:500}
 @font-face{font-family:P;src:url(assets/fonts/Pretendard-SemiBold.woff2) format("woff2");font-weight:600}
 @font-face{font-family:P;src:url(assets/fonts/Pretendard-ExtraBold.woff2) format("woff2");font-weight:800}
-:root{--bg:#F6F5F0;--ink:#141414;--mut:#8A8A8A;--acc:#FF6F0F;--line:#E6E4DE;--ok:#1FA463}
+:root{--bg:#F6F5F0;--ink:#141414;--mut:#8A8A8A;--acc:#FF6B3D;--line:#E6E4DE;--ok:#1FA463}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#111;overflow:hidden}
 #stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:P,-apple-system,sans-serif;letter-spacing:-.01em}
@@ -24,7 +24,7 @@ html,body{height:100%;background:#111;overflow:hidden}
 .f.on{opacity:1}
 .up{transform:translateY(50px)}.up.on{transform:none}
 .pop{transform:scale(.4)}.pop.on{transform:scale(1)}
-.hl{background:linear-gradient(transparent 58%,rgba(255,111,15,.28) 58%);padding:0 .06em}
+.hl{background:linear-gradient(transparent 58%,rgba(255,107,61,.28) 58%);padding:0 .06em}
 .acc{color:var(--acc)}
 
 /* headline — one line per cut */
@@ -40,7 +40,7 @@ html,body{height:100%;background:#111;overflow:hidden}
 .a-dots{background-image:url(../../common/agents/dots.png);background-size:80%;background-repeat:no-repeat}
 .a-grok{background-image:url(../../common/agents/grok-bot.png)}
 .owner{background:url(assets/owner.png) center/cover;border-radius:50%}
-.logo{width:var(--s,200px);height:var(--s,200px);border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:800;font-size:calc(var(--s,200px)*.58);box-shadow:0 18px 50px rgba(255,111,15,.35);flex:none}
+.logo{width:var(--s,200px);height:var(--s,200px);border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:800;font-size:calc(var(--s,200px)*.58);box-shadow:0 18px 50px rgba(255,107,61,.35);flex:none}
 .bub{position:absolute;background:#fff;border:2px solid var(--line);border-radius:28px;padding:18px 28px;font-size:38px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.05);white-space:nowrap}
 .person{position:relative;width:var(--s,90px);height:var(--s,90px);border-radius:50%;background:#FFE3D3;border:3px solid var(--ink);overflow:hidden;flex:none}
 .person:before{content:"";position:absolute;left:32%;top:18%;width:36%;height:36%;border-radius:50%;background:#fff;border:3px solid var(--ink)}
@@ -63,10 +63,9 @@ html,body{height:100%;background:#111;overflow:hidden}
 .num{position:absolute;left:0;right:0;top:110px;text-align:center;font-size:110px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 
 /* C3 */
-.trio{position:absolute;left:0;right:0;top:300px;display:flex;justify-content:center;gap:260px}
+.trio{position:absolute;left:0;right:0;top:380px;display:flex;justify-content:center;gap:260px}
 .trio .col{display:flex;flex-direction:column;align-items:center;gap:30px;position:relative}
 .trio .bub{position:static}
-.arr{width:8px;height:70px;background:var(--ink);position:relative;margin:-10px 0}.arr:after{content:"";position:absolute;left:-12px;bottom:-14px;border:16px solid transparent;border-top:18px solid var(--ink);border-bottom:0}
 .go{transition:transform .9s cubic-bezier(.6,0,.6,1)}.go.on{transform:translateX(1400px)}
 
 /* C4 one shop, many agents */
@@ -86,13 +85,13 @@ html,body{height:100%;background:#111;overflow:hidden}
 .ownbig.stress{animation:shake .09s infinite alternate}
 
 /* C6 */
-.n848{position:absolute;left:0;right:0;top:270px;text-align:center;font-size:330px;font-weight:800;color:var(--acc);letter-spacing:-.05em;font-variant-numeric:tabular-nums;line-height:1}
+.n848{position:absolute;left:0;right:0;top:300px;text-align:center;font-size:330px;font-weight:800;color:var(--acc);letter-spacing:-.05em;font-variant-numeric:tabular-nums;line-height:1}
 .src{position:absolute;left:0;right:0;bottom:60px;text-align:center;font-size:24px;color:var(--mut)}
 
 /* C7 / C16 triptych */
-.tri{position:absolute;left:0;right:0;top:290px;display:flex;justify-content:center;gap:200px;align-items:center}
+.tri{position:absolute;left:0;right:0;top:330px;display:flex;justify-content:center;gap:200px;align-items:center}
 .tri .cell{position:relative;width:300px;height:300px;display:grid;place-items:center}
-.tri .lbl{position:absolute;top:320px;left:-60px;right:-60px;text-align:center;font-size:32px;font-weight:600;color:var(--mut);line-height:1.35}
+.tri .lbl{position:absolute;bottom:-70px;left:0;right:0;text-align:center;font-size:34px;font-weight:600;color:var(--mut)}
 
 /* C8 */
 .ph8{position:absolute;left:880px;top:330px;font-size:200px;transition:all .5s}
@@ -102,24 +101,18 @@ html,body{height:100%;background:#111;overflow:hidden}
 .lg8{position:absolute;left:720px;top:360px;--s:300px;transform:translateY(-1100px);transition:transform .7s cubic-bezier(.3,1.35,.5,1)}
 .lg8.on{transform:none}
 
-.c8row{position:absolute;left:0;right:0;top:330px;display:flex;align-items:center;justify-content:center;gap:40px}
-.c8ag{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.c8l{width:180px;height:8px;background:repeating-linear-gradient(90deg,var(--ink) 0 16px,transparent 16px 28px)}
 /* C10 flow */
 .flow{position:absolute;left:0;right:0;top:420px;display:flex;justify-content:center;align-items:center;gap:0}
 .node{width:260px;height:260px;border-radius:36px;background:#fff;border:3px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-size:30px;font-weight:600;color:var(--mut);opacity:0;transform:translateY(30px);transition:all .4s cubic-bezier(.2,.9,.3,1.2)}
 .node.on{opacity:1;transform:none}
-.node.hot{border-color:var(--acc);box-shadow:0 0 0 8px rgba(255,111,15,.12)}
+.node.hot{border-color:var(--acc);box-shadow:0 0 0 8px rgba(255,107,61,.12)}
 .link{width:150px;height:6px;background:repeating-linear-gradient(90deg,var(--ink) 0 14px,transparent 14px 26px);transform-origin:left;transform:scaleX(0);transition:transform .35s;position:relative}
 .link.on{transform:scaleX(1)}
 
 /* C11 converge */
-.c11top{position:absolute;left:120px;width:1060px;top:250px;display:grid;grid-template-columns:repeat(12,1fr);gap:16px;justify-items:center}
+.c11top{position:absolute;left:160px;right:160px;top:250px;display:grid;grid-template-columns:repeat(16,1fr);gap:16px;justify-items:center}
 .c11top .av{--s:62px;border-width:2px}
-.ccard{position:absolute;left:500px;top:620px;width:300px;height:110px;border-radius:24px;background:#fff;border:3px solid var(--acc);display:flex;align-items:center;gap:18px;padding:0 24px;font-size:36px;font-weight:800}
-.auto{position:absolute;left:1240px;top:250px;width:560px;height:560px;overflow:hidden}
-.arow{position:absolute;left:0;right:0;height:84px;border-radius:20px;background:#E9F7EF;border:2px solid #BFE7CF;display:flex;align-items:center;gap:16px;padding:0 18px;font-size:28px;font-weight:600;color:#14804A;transition:transform .35s}
-.arow .av{--s:56px;border-width:2px}
+.ccard{position:absolute;left:810px;top:600px;width:300px;height:110px;border-radius:24px;background:#fff;border:3px solid var(--acc);display:flex;align-items:center;gap:18px;padding:0 24px;font-size:36px;font-weight:800}
 .pcard{position:absolute;left:1360px;top:860px;width:320px;height:100px;border-radius:24px;background:#fff;border:3px dashed var(--acc);display:flex;align-items:center;gap:16px;padding:0 20px;font-size:30px;font-weight:600}
 .tick{position:absolute;left:150px;bottom:80px;font-size:44px;font-weight:800;font-variant-numeric:tabular-nums}
 .tick .o{color:var(--ok)}.tick .m{color:var(--acc);margin-left:30px}
@@ -143,12 +136,6 @@ svg.lines{position:absolute;inset:0;pointer-events:none}
 .dm{width:22px;height:22px;border-radius:50%;background:#DCD8CE;transition:background .2s,transform .2s}
 .dm.lit{background:var(--acc);transform:scale(1.25)}
 
-.globe{position:absolute;left:140px;top:290px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#FFE7D6,#FFC9A6 60%,#FFB081);border:4px solid var(--ink);overflow:hidden}
-.globe i{position:absolute;border-radius:45%;background:#FF9E66;opacity:.75}
-.globe:after{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-linear-gradient(0deg,transparent 0 64px,rgba(20,20,20,.12) 64px 66px)}
-.gag{position:absolute;--s:70px;border-width:3px;z-index:2}
-.i17{position:absolute;left:1440px;width:140px;height:140px;border-radius:32px;background:#fff;border:3px solid var(--line);display:grid;place-items:center;font-size:84px;opacity:0;transform:translateX(40px);transition:all .35s cubic-bezier(.2,.9,.3,1.2)}
-.i17.on{opacity:1;transform:none}
 /* C18 */
 #c18{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
 .wm{display:flex;align-items:center;gap:36px;font-size:150px;font-weight:800;letter-spacing:.12em;transform:translateY(-400px) scale(.6);opacity:0;transition:transform .8s cubic-bezier(.3,1.6,.45,1),opacity .2s}
@@ -157,7 +144,7 @@ svg.lines{position:absolute;inset:0;pointer-events:none}
 
 /* controls */
 #ctl{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;padding:10px 16px;background:rgba(10,14,22,.92);color:#cfd6e0;font:14px -apple-system,sans-serif;z-index:100}
-#ctl button{background:#FF6F0F;color:#fff;border:0;border-radius:8px;padding:6px 14px;font:inherit;cursor:pointer}
+#ctl button{background:#FF6B3D;color:#fff;border:0;border-radius:8px;padding:6px 14px;font:inherit;cursor:pointer}
 #ctl input[type=range]{flex:1}
 #ctl .t{font-variant-numeric:tabular-nums;min-width:60px}
 #ctl .hint{opacity:.6}
@@ -181,9 +168,9 @@ body.rec #ctl,body.hidectl #ctl{display:none}
   <!-- C3 7–11 everyone has an agent -->
   <section class="scene" id="c3" data-s="7" data-e="11">
     <div class="trio">
-      <div class="col"><div class="bub f pop" data-at="0.3">🏥 ♿ Thu</div><div class="person f pop" data-at="0" style="--s:150px"></div><div class="arr f" data-at="0.9"></div><div class="go" data-at="2.6"><div class="av a-muse f pop" data-at="1.2" style="--s:120px"></div></div></div>
-      <div class="col"><div class="bub f pop" data-at="0.5">🍜 × 4</div><div class="person f pop" data-at="0.1" style="--s:150px"></div><div class="arr f" data-at="1.1"></div><div class="go" data-at="2.75"><div class="av a-pickle f pop" data-at="1.4" style="--s:120px"></div></div></div>
-      <div class="col"><div class="bub f pop" data-at="0.7">🏨 2 nights</div><div class="person f pop" data-at="0.2" style="--s:150px"></div><div class="arr f" data-at="1.3"></div><div class="go" data-at="2.9"><div class="av a-dots f pop" data-at="1.6" style="--s:120px"></div></div></div>
+      <div class="col"><div class="bub f pop" data-at="0.3">🏥 ♿ Thu</div><div class="person f pop" data-at="0" style="--s:150px"></div><div class="go" data-at="2.6"><div class="av a-muse f pop" data-at="1.2" style="--s:120px"></div></div></div>
+      <div class="col"><div class="bub f pop" data-at="0.5">🍜 × 4</div><div class="person f pop" data-at="0.1" style="--s:150px"></div><div class="go" data-at="2.75"><div class="av a-pickle f pop" data-at="1.4" style="--s:120px"></div></div></div>
+      <div class="col"><div class="bub f pop" data-at="0.7">🏨 2 nights</div><div class="person f pop" data-at="0.2" style="--s:150px"></div><div class="go" data-at="2.9"><div class="av a-dots f pop" data-at="1.6" style="--s:120px"></div></div></div>
     </div>
   </section>
 
@@ -206,28 +193,23 @@ body.rec #ctl,body.hidectl #ctl{display:none}
   <!-- C6 22–26 848 -->
   <section class="scene" id="c6" data-s="22" data-e="26">
     <div class="n848 f pop" data-at="0.1" id="n848">0</div>
-    <div class="f up" data-at="1.4" style="position:absolute;left:0;right:0;top:680px;text-align:center;font-size:64px;font-weight:800">2 in 3 <span class="hl">hung up</span> on the AI.</div>
-    <div class="src f" data-at="0.6">Source: The San Francisco Standard, Oct 29, 2026 — Voygr placed 848 AI calls to local businesses; about 1 in 3 kept talking after hearing it was an AI</div>
+    <div class="src f" data-at="0.6">Source: The San Francisco Standard, Oct 29, 2026 — one AI agent called 848 local businesses in a few hours</div>
   </section>
 
   <!-- C7 26–30 everyone loses -->
   <section class="scene" id="c7" data-s="26" data-e="30">
     <div class="tri">
-      <div class="cell f pop" data-at="0.2"><div class="owner" style="width:280px;height:280px"></div><div class="badge b-x" style="right:10px;top:10px">✕</div><div class="lbl"><b style="color:#141414">Shop</b><br>Drowning in robot calls</div></div>
-      <div class="cell f pop" data-at="0.5"><div class="av a-pickle" style="--s:240px"></div><div class="badge b-x" style="right:20px;top:20px">✕</div><div class="lbl"><b style="color:#141414">Agent</b><br>Nobody picks up</div></div>
-      <div class="cell f pop" data-at="0.8"><div class="person" style="--s:240px"></div><div class="badge b-x" style="right:20px;top:20px">?</div><div class="lbl"><b style="color:#141414">Customer</b><br>Can't get an answer</div></div>
+      <div class="cell f pop" data-at="0.2"><div class="owner" style="width:280px;height:280px"></div><div class="badge b-x" style="right:10px;top:10px">✕</div><div class="lbl">Shop</div></div>
+      <div class="cell f pop" data-at="0.5"><div class="av a-pickle" style="--s:240px"></div><div class="badge b-x" style="right:20px;top:20px">✕</div><div class="lbl">Agent</div></div>
+      <div class="cell f pop" data-at="0.8"><div class="person" style="--s:240px"></div><div class="badge b-x" style="right:20px;top:20px">?</div><div class="lbl">Person</div></div>
     </div>
   </section>
 
-  <!-- C8 30–34 meet Counter: between agents and the owner -->
+  <!-- C8 30–34 meet Counter -->
   <section class="scene" id="c8" data-s="30" data-e="34">
-    <div class="c8row">
-      <div class="c8ag"><div class="av a-muse f pop" data-at="0.1" style="--s:120px"></div><div class="av a-pickle f pop" data-at="0.2" style="--s:120px"></div><div class="av a-dots f pop" data-at="0.3" style="--s:120px"></div><div class="av a-grok f pop" data-at="0.4" style="--s:120px"></div></div>
-      <div class="c8l f" data-at="1.3"></div>
-      <div class="lg8 logo" data-at="0.8" style="position:relative;left:0;top:0">C</div>
-      <div class="c8l f" data-at="1.6" style="opacity:.3"></div>
-      <div class="owner f" data-at="0.5" style="width:300px;height:300px"></div>
-    </div>
+    <div class="own8 owner f" data-at="0.6"></div>
+    <div class="ph8" data-at="0.5">☎<i></i></div>
+    <div class="lg8 logo" data-at="0.8">C</div>
   </section>
 
   <!-- C9 34–38 phones/people, counter/agents -->
@@ -251,8 +233,7 @@ body.rec #ctl,body.hidectl #ctl{display:none}
     <svg class="lines" id="lines11" viewBox="0 0 1920 1080"></svg>
     <div class="c11top" id="top11"></div>
     <div class="ccard f pop" data-at="0.2"><div class="logo" style="--s:70px">C</div>Counter</div>
-    <div class="pcard f pop" data-at="3.4"><div class="owner" style="width:64px;height:64px"></div>Needs you · 1</div>
-    <div class="auto" id="auto11"></div>
+    <div class="pcard f pop" data-at="2.6"><div class="owner" style="width:64px;height:64px"></div>Owner's phone</div>
     <div class="tick f" data-at="0.4"><span class="o">✓ <span id="ok11">0</span> answered</span><span class="m">👆 <span id="me11">0</span> needs you</span></div>
     <div class="ill">figures illustrative</div>
   </section>
@@ -267,7 +248,7 @@ body.rec #ctl,body.hidectl #ctl{display:none}
   <section class="scene" id="c13" data-s="54" data-e="60">
     <div class="panel" id="p13a"><div class="owner" style="width:360px;height:360px"></div><div style="font-size:200px">🙂</div><div style="font-size:120px;opacity:.5">🔕</div></div>
     <div class="panel" id="p13b"><div class="av a-muse" style="--s:220px"></div><div class="av a-pickle" style="--s:220px"></div><div class="av a-dots" style="--s:220px"></div><div class="badge b-ok" style="position:static;width:150px;height:150px;font-size:96px">✓</div></div>
-    <div class="panel" id="p13c"><div class="person" style="--s:260px"></div><div style="font-size:150px">🗓️</div><div class="badge b-ok" style="position:static;width:150px;height:150px;font-size:96px">✓</div></div>
+    <div class="panel" id="p13c" style="font-size:190px;gap:60px"><span class="pick" data-k="0">🇬🇧</span><span class="pick" data-k="1">🇨🇳</span><span class="pick" data-k="2">🇻🇳</span><span class="pick" data-k="3">🇯🇵</span></div>
   </section>
 
   <!-- C14 60–67 every shop focuses on its craft -->
@@ -290,24 +271,20 @@ body.rec #ctl,body.hidectl #ctl{display:none}
   <!-- C16 73–80 everyone wins -->
   <section class="scene" id="c16" data-s="73" data-e="80">
     <div class="tri">
-      <div class="cell f pop" data-at="0.2"><div class="owner" style="width:280px;height:280px"></div><div class="badge b-ok pick" data-k="0" style="right:10px;top:10px">✓</div><div class="lbl"><b style="color:#141414">Shops</b><br>Back to their craft</div></div>
+      <div class="cell f pop" data-at="0.2"><div class="owner" style="width:280px;height:280px"></div><div class="badge b-ok pick" data-k="0" style="right:10px;top:10px">✓</div><div class="lbl">Shops</div></div>
       <div class="cell f pop" data-at="0.3"><div class="logo" style="--s:200px">C</div></div>
-      <div class="cell f pop" data-at="0.4"><div class="av a-pickle" style="--s:240px"></div><div class="badge b-ok pick" data-k="1" style="right:20px;top:20px">✓</div><div class="lbl"><b style="color:#141414">Agents</b><br>Always answered</div></div>
-      <div class="cell f pop" data-at="0.5"><div class="person" style="--s:240px"></div><div class="badge b-ok pick" data-k="2" style="right:20px;top:20px">✓</div><div class="lbl"><b style="color:#141414">Customers</b><br>Get it done</div></div>
+      <div class="cell f pop" data-at="0.4"><div class="av a-pickle" style="--s:240px"></div><div class="badge b-ok pick" data-k="1" style="right:20px;top:20px">✓</div><div class="lbl">Agents</div></div>
+      <div class="cell f pop" data-at="0.5"><div class="person" style="--s:240px"></div><div class="badge b-ok pick" data-k="2" style="right:20px;top:20px">✓</div><div class="lbl">People</div></div>
     </div>
   </section>
 
-  <!-- C17 80–86 globe: agents from every country → Counter → every kind of shop -->
-  <section class="scene" id="c17" data-s="80" data-e="86">
-    <div class="globe f pop" data-at="0" id="globe"></div>
-    <div id="gag"></div>
-    <svg class="lines" id="lines17" viewBox="0 0 1920 1080"></svg>
-    <div class="logo f pop" data-at="1.2" style="position:absolute;left:870px;top:450px;--s:180px;z-index:3">C</div>
-    <div id="inds17"></div>
+  <!-- C17 80–85 front door everywhere -->
+  <section class="scene" id="c17" data-s="80" data-e="85">
+    <div class="dotmap" id="dots17"></div>
   </section>
 
   <!-- C18 85–90 end card -->
-  <section class="scene" id="c18" data-s="86" data-e="90.5">
+  <section class="scene" id="c18" data-s="85" data-e="90.5">
     <div class="wm" data-at="0.2"><div class="logo" style="--s:170px">C</div>COUNTER</div>
     <div class="tag f up" data-at="1.0">Every shop, ready for AI customers.</div>
   </section>
@@ -341,15 +318,12 @@ const HEADS = [
   [51.3, 54, '<span class="hl">Remembered</span><br>for every agent.', 'left'],
   [54.2, 56, 'Owners stay <span class="hl">free</span>.'],
   [56, 58, 'Agents get <span class="hl">answers</span>.'],
-  [58, 60, 'Customers get <span class="hl">what they asked</span>.'],
+  [58, 60, 'Any <span class="hl">language</span>.'],
   [60.2, 67, 'Every shop focuses on <span class="hl">its craft</span>.'],
   [67.2, 73, 'Agents <span class="hl">welcomed</span>, not hung up.'],
-  [73.2, 80, 'Shops win. Agents win. <span class="hl">Customers win.</span>'],
-  [80.2, 81.1, '<span class="hl">OpenAI</span> spreads agents.'],
-  [81.1, 82.0, '<span class="hl">Meta</span> spreads agents.'],
-  [82.0, 82.9, '<span class="hl">xAI</span> spreads agents.'],
-  [82.9, 83.8, '<span class="hl">Anthropic</span> spreads agents.'],
-  [83.8, 86, 'We build their <span class="hl">Counter</span>.'],
+  [73.2, 80, 'Shops win. Agents win. <span class="hl">People win.</span>'],
+  [80.2, 82.6, 'Tech spreads agents.'],
+  [82.6, 85, 'We build their <span class="hl">front door</span>.'],
 ];
 /*CUES*/const CUES = [
   [0.0, 'bgm_bright.mp3', 0.4, 90],
@@ -361,17 +335,17 @@ const HEADS = [
   [22.0, 'whoosh.ogg', 0.5], [22.1, 'impact.ogg', 0.9],
   [26.0, 'whoosh.ogg', 0.5], [26.2, 'tick.ogg', 0.8], [26.5, 'tick.ogg', 0.8], [26.8, 'tick.ogg', 0.8],
   [28.3, 'riser.ogg', 0.5],
-  [30.0, 'whoosh.ogg', 0.6], [30.2, 'pop.ogg', 0.5], [30.4, 'pop.ogg', 0.5], [30.8, 'impact.ogg', 1.0],
+  [30.0, 'whoosh.ogg', 0.6], [30.8, 'impact.ogg', 1.0],
   [34.0, 'whoosh.ogg', 0.5], [36.0, 'click.ogg', 0.9],
   [38.0, 'whoosh.ogg', 0.6], [38.2, 'pop.ogg', 0.5], [38.4, 'pop.ogg', 0.5], [38.6, 'pop.ogg', 0.5], [38.8, 'pop.ogg', 0.5],
-  [43.0, 'whoosh.ogg', 0.6], [43.8, 'pop.ogg', 0.4], [44.2, 'pop.ogg', 0.4], [44.6, 'pop.ogg', 0.4], [45.0, 'pop.ogg', 0.4], [43.6, 'tick.ogg', 0.7], [44.0, 'tick.ogg', 0.7], [44.4, 'tick.ogg', 0.7], [44.8, 'tick.ogg', 0.7], [45.2, 'tick.ogg', 0.7], [45.6, 'pop.ogg', 0.6],
+  [43.0, 'whoosh.ogg', 0.6], [43.6, 'tick.ogg', 0.7], [44.0, 'tick.ogg', 0.7], [44.4, 'tick.ogg', 0.7], [44.8, 'tick.ogg', 0.7], [45.2, 'tick.ogg', 0.7], [45.6, 'pop.ogg', 0.6],
   [48.0, 'whoosh.ogg', 0.6],
   [54.0, 'whoosh.ogg', 0.5], [54.3, 'pop.ogg', 0.6], [56.0, 'whoosh.ogg', 0.5], [56.3, 'pop.ogg', 0.6], [58.0, 'whoosh.ogg', 0.5], [58.2, 'pop.ogg', 0.5], [58.5, 'pop.ogg', 0.5], [58.8, 'pop.ogg', 0.5], [59.1, 'pop.ogg', 0.5],
   [60.0, 'whoosh.ogg', 0.6], [60.3, 'pop.ogg', 0.5], [61.0, 'pop.ogg', 0.5], [61.7, 'pop.ogg', 0.5], [62.4, 'pop.ogg', 0.5],
   [67.0, 'whoosh.ogg', 0.6],
   [73.0, 'whoosh.ogg', 0.6], [74.4, 'impact.ogg', 0.8], [75.6, 'impact.ogg', 0.8], [76.8, 'impact.ogg', 0.9],
-  [80.0, 'whoosh.ogg', 0.6], [80.2, 'tick.ogg', 0.8], [81.1, 'tick.ogg', 0.8], [82.0, 'tick.ogg', 0.8], [82.9, 'tick.ogg', 0.8], [82.6, 'pop.ogg', 0.5], [83.0, 'pop.ogg', 0.5], [83.8, 'impact.ogg', 0.9],
-  [86.0, 'whoosh.ogg', 0.6], [86.6, 'impact.ogg', 1.0],
+  [80.0, 'whoosh.ogg', 0.6], [82.4, 'riser.ogg', 0.5],
+  [85.0, 'whoosh.ogg', 0.6], [85.6, 'impact.ogg', 1.0],
 ];/*/CUES*/
 const AG = ['muse', 'pickle', 'dots', 'grok'];
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -394,19 +368,13 @@ const c5 = $('#curves5');
 for (let i = 0; i < 12; i++) { const a = (i / 12) * Math.PI * 2, el = mk('curve', '☎'); Object.assign(el.style, { left: 960 + Math.cos(a) * 430 - 25 + 'px', top: 580 + Math.sin(a) * 330 - 30 + 'px' }); el.dataset.a = a; c5.appendChild(el); }
 // C11 top avatars + lines
 const t11 = $('#top11');
-for (let i = 0; i < 36; i++) t11.appendChild(mk(`av a-${AG[i % 4]}`));
-const au = $('#auto11'), QQ = ['Wheelchair access?', 'Open Saturday?', 'Price for toning?', 'Parking?', 'Card or cash?', 'English OK?', 'Thu 3pm free?', 'How long?'];
-QQ.forEach((q, i) => { const r = mk('arow', `<div class="av a-${AG[i % 4]}"></div>✓ ${q}`); r.style.opacity = 0; au.appendChild(r); });
+for (let i = 0; i < 48; i++) t11.appendChild(mk(`av a-${AG[i % 4]}`));
 // C15 calm flyers (arrive at Counter, get ✓, leave)
 const f15 = $('#fly15'), FL15 = [];
 for (let k = 0; k < 10; k++) { const ang = Math.PI * (0.15 + 0.7 * (k % 2 ? 0 : 1)) + (rnd() - .5) * 1.2 + (k % 2 ? Math.PI : 0); const el = mk(`flyer av a-${AG[k % 4]}`); el.style.setProperty('--s', '90px'); el.classList.add('calm'); f15.appendChild(el); const ok = mk('badge b-ok', '✓'); ok.style.opacity = 0; ok.style.width = ok.style.height = '44px'; ok.style.fontSize = '28px'; f15.appendChild(ok); FL15.push({ el, ok, at: 0.5 + k * 0.5, sx: 960 + Math.cos(ang) * 1100, sy: 560 + Math.sin(ang) * 700 }); }
-// C17 globe agents + industries
-const gl = $('#globe'); [[60,90,180,120],[260,60,160,140],[120,260,200,150],[330,280,140,120],[220,400,170,90]].forEach(([x,y,w,h]) => { const i = document.createElement('i'); Object.assign(i.style, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' }); gl.appendChild(i); });
-const GA = [], gg = $('#gag');
-for (let k = 0; k < 14; k++) { const a = (k / 14) * Math.PI * 2, r = 230 + (k % 2) * 40, x = 400 + Math.cos(a) * r, y = 550 + Math.sin(a) * r; const el = mk(`gag av a-${AG[k % 4]} f pop`); el.dataset.at = (0.2 + k * 0.06).toFixed(2); Object.assign(el.style, { left: x - 35 + 'px', top: y - 35 + 'px' }); gg.appendChild(el); GA.push([x, y]); }
-const IND = ['🍽️', '🏥', '🏭', '✂️', '🏨'], ib = $('#inds17');
-IND.forEach((e, i) => { const d = mk('i17', e); d.style.top = 170 + i * 165 + 'px'; d.dataset.at = (2.6 + i * 0.18).toFixed(2); ib.appendChild(d); });
-$('#c17').querySelectorAll('.i17').forEach(() => {});
+// C17 dot map
+const d17 = $('#dots17'); for (let i = 0; i < 34 * 16; i++) d17.appendChild(mk('dm'));
+const LIT = [...Array(34 * 16).keys()].sort(() => rnd() - 0.5);
 
 // ---------- timeline ----------
 const scenes = $$('.scene').map((el) => ({ el, s: +el.dataset.s, e: +el.dataset.e, items: $$('[data-at]', el) }));
@@ -445,13 +413,10 @@ function render() {
     const svg = $('#lines11'); let h = '';
     const cells = $$('#top11 .av'), sr = $('#stage').getBoundingClientRect(), sc = sr.width / 1920;
     const shown = Math.floor(clamp((l11 - 0.4) / 2.0, 0, 1) * cells.length);
-    cells.forEach((c, i) => { if (i >= shown) return; const b = c.getBoundingClientRect(); const x = (b.left - sr.left) / sc + b.width / sc / 2, y = (b.top - sr.top) / sc + b.height / sc; h += `<path d="M${x} ${y} C ${x} ${y + 160}, 650 ${540}, 650 620" fill="none" stroke="#C9C5BB" stroke-width="2"/>`; });
-    if (l11 > 3.4) h += `<path d="M800 700 C 1000 760, 1300 800, 1420 860" fill="none" stroke="#FF6F0F" stroke-width="4" stroke-dasharray="12 10"/>`;
-    h += `<path d="M800 660 C 1000 620, 1150 560, 1240 520" fill="none" stroke="#1FA463" stroke-width="4"/>`;
+    cells.forEach((c, i) => { if (i >= shown) return; const b = c.getBoundingClientRect(); const x = (b.left - sr.left) / sc + b.width / sc / 2, y = (b.top - sr.top) / sc + b.height / sc; h += `<path d="M${x} ${y} C ${x} ${y + 180}, 960 ${520}, 960 600" fill="none" stroke="#C9C5BB" stroke-width="2"/>`; });
+    if (l11 > 2.6) h += `<path d="M1110 655 C 1300 700, 1400 760, 1500 860" fill="none" stroke="#FF6B3D" stroke-width="4" stroke-dasharray="12 10"/>`;
     svg.innerHTML = h;
-    $('#ok11').textContent = Math.max(0, shown - (l11 > 3.4 ? 1 : 0)); $('#me11').textContent = l11 > 3.4 ? 1 : 0;
-    const rows = $$('#auto11 .arow'), nr = Math.floor(clamp((l11 - 0.6) / 3.6, 0, 1) * rows.length);
-    rows.forEach((r, i) => { const k = nr - 1 - i; r.style.opacity = k >= 0 ? 1 : 0; r.style.transform = `translateY(${k * 96}px)`; });
+    $('#ok11').textContent = Math.max(0, shown - (l11 > 2.6 ? 1 : 0)); $('#me11').textContent = l11 > 2.6 ? 1 : 0;
   }
   // C12 real clip: uc2-answer 48–51.3, uc2-memory 51.3–54
   if (t >= ST.c12 && t < ST.c13) {
@@ -463,6 +428,7 @@ function render() {
   // C13 sub-panels
   const l13 = t - ST.c13;
   ['#p13a', '#p13b', '#p13c'].forEach((id, i) => { const on = l13 >= i * 2 && l13 < i * 2 + 2; const p = $(id); p.style.opacity = on ? 1 : 0; p.style.transform = on ? 'none' : 'scale(.92)'; p.style.transition = 'opacity .25s,transform .35s'; });
+  $$('#p13c .pick').forEach((e) => e.classList.toggle('on', l13 >= 4.2 + +e.dataset.k * 0.3));
   // C15 calm
   const l15 = t - ST.c15;
   for (const f of FL15) { const p = l15 - f.at; const tx = 960, ty = 820;
@@ -471,13 +437,9 @@ function render() {
     f.ok.style.opacity = p > 0.7 && p < 1.4 ? 1 : 0; f.ok.style.transform = `translate(${tx + (f.sx > 960 ? 110 : -100)}px,${ty - 120}px)`; }
   // C16 checks
   const l16 = t - ST.c16; $$('#c16 .pick').forEach((e) => e.classList.toggle('on', l16 >= 1.4 + +e.dataset.k * 1.2));
-  // C17 lines: globe agents → Counter → industries
-  if (t >= ST.c17 && t < ST.c18) { const l = t - ST.c17; let h = '';
-    const na = Math.floor(clamp((l - 1.3) / 1.0, 0, 1) * GA.length);
-    GA.slice(0, na).forEach(([x, y]) => { h += `<path d="M${x} ${y} C ${x + 200} ${y}, 760 540, 870 540" fill="none" stroke="#FF6F0F" stroke-width="3" opacity=".55"/>`; });
-    const ni = Math.floor(clamp((l - 2.6) / 1.0, 0, 1) * IND.length);
-    for (let i = 0; i < ni; i++) { const y = 240 + i * 165; h += `<path d="M1050 540 C 1250 540, 1300 ${y}, 1440 ${y}" fill="none" stroke="#1FA463" stroke-width="4"/>`; }
-    $('#lines17').innerHTML = h; }
+  // C17 dots
+  const l17 = t - ST.c17, nlit = Math.floor(clamp(l17 / 4.2, 0, 1) ** 1.6 * LIT.length);
+  $$('#dots17 .dm').forEach((d, i) => d.classList.toggle('lit', LIT.indexOf(i) < nlit));
   // headline
   const h = HEADS.find(([a, b]) => t >= a && t < b), key = h ? h[2] : '';
   if (key !== headKey) { headKey = key; head.classList.add('hide'); if (h) { head.innerHTML = h[2]; head.className = 'hide ' + (h[3] || ''); requestAnimationFrame(() => head.classList.remove('hide')); } }
