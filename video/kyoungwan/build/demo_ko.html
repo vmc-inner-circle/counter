@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>Counter · 90s</title>
+<style>
+@font-face{font-family:P;src:url(fonts/Pretendard-Regular.woff2) format("woff2");font-weight:400}
+@font-face{font-family:P;src:url(fonts/Pretendard-Medium.woff2) format("woff2");font-weight:500}
+@font-face{font-family:P;src:url(fonts/Pretendard-SemiBold.woff2) format("woff2");font-weight:600}
+@font-face{font-family:P;src:url(fonts/Pretendard-Bold.woff2) format("woff2");font-weight:700}
+@font-face{font-family:P;src:url(fonts/Pretendard-ExtraBold.woff2) format("woff2");font-weight:800}
+html,body{margin:0;background:#111;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;background:#F6F5F0;overflow:hidden;transform-origin:0 0;
+  font-family:P,"PingFang SC","Apple SD Gothic Neo","Hiragino Sans",sans-serif;color:#141414;letter-spacing:-0.01em}
+.scene{position:absolute;inset:0;display:none}
+.cam{position:absolute;inset:0;transform-origin:960px 540px;will-change:transform}
+.abs{position:absolute;white-space:nowrap}
+.title{font-weight:700;font-size:44px;letter-spacing:-0.025em;text-align:center;left:0;right:0;top:0}
+.hl{position:absolute;height:1em;background:#FF6B3D;opacity:.18;border-radius:8px;transform-origin:left center}
+.bubble{position:absolute;background:#fff;border:1.5px solid #E6E4DE;border-radius:26px;padding:22px 32px;font-size:36px;font-weight:500;
+  box-shadow:0 6px 24px rgba(20,20,20,.06);max-width:720px;white-space:normal;line-height:1.35;transform-origin:left bottom}
+.bubble .tr{display:block;font-size:20px;font-weight:400;color:#8A8A8A;margin-top:8px;line-height:1.3}
+.bubble.acc{background:#FFF4EF;border-color:#FFB89E}
+.bubble.dark{background:#141414;color:#fff;border-color:#141414}
+.avatar{position:absolute;border-radius:50%;background:#fff;box-shadow:0 8px 28px rgba(20,20,20,.10);overflow:hidden;transform-origin:center bottom}
+.avatar img{width:100%;height:100%;display:block}
+.name{position:absolute;font-size:26px;font-weight:600;color:#8A8A8A;white-space:nowrap;text-align:center}
+.panel{position:absolute;left:0;top:0;width:1920px;height:1080px;background:#FF6B3D}
+.ui{position:absolute;left:260px;top:120px;width:1400px;height:840px;background:#fff;border-radius:28px;box-shadow:0 30px 80px rgba(60,20,0,.25);overflow:hidden}
+.ui .hdr{position:absolute;left:0;top:0;right:0;height:92px;border-bottom:1.5px solid #EEECE7;display:flex;align-items:center;padding:0 40px;gap:16px;font-size:28px;font-weight:600;color:#444}
+.ui .hdr .dot{width:14px;height:14px;border-radius:50%;background:#FF6B3D}
+.ui .hdr .lang{margin-left:auto;font-size:20px;font-weight:500;color:#8A8A8A;background:#F3F2EE;border-radius:999px;padding:6px 16px}
+.msg{position:absolute;display:flex;gap:18px;align-items:flex-end;transform-origin:left bottom}
+.msg .av{position:relative;width:72px;height:72px;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.08);flex:none}
+.msg .av img{width:100%;height:100%;display:block}
+.msg .bx{background:#F3F2EE;border-radius:24px 24px 24px 6px;padding:24px 30px;font-size:34px;font-weight:500;max-width:860px;line-height:1.4;white-space:normal;min-height:38px}
+.msg.right{flex-direction:row-reverse;transform-origin:right bottom}
+.msg.right .bx{background:#FFF1EA;border-radius:24px 24px 6px 24px}
+.msg .bx .tr{display:block;font-size:22px;color:#8A8A8A;font-weight:400;margin-top:10px}
+.msg .av.c{background:#141414;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:30px;letter-spacing:-0.02em}
+.caret{display:inline-block;width:3px;height:1em;background:#141414;vertical-align:-0.15em;margin-left:2px}
+.think{display:inline-flex;gap:8px;align-items:center;height:38px}
+.think i{width:12px;height:12px;border-radius:50%;background:#FF6B3D;display:block}
+.badge{position:absolute;background:#1F9D55;color:#fff;font-weight:700;font-size:26px;border-radius:999px;padding:14px 26px 14px 20px;display:flex;gap:12px;align-items:center;box-shadow:0 10px 30px rgba(31,157,85,.3);transform-origin:center}
+.badge svg{width:28px;height:28px}
+.push{position:absolute;width:520px;background:#fff;border-radius:26px;box-shadow:0 20px 60px rgba(0,0,0,.18);padding:26px 28px;transform-origin:center bottom}
+.push .t{font-size:20px;color:#8A8A8A;font-weight:600;display:flex;gap:10px;align-items:center}
+.push .t i{width:12px;height:12px;border-radius:50%;background:#FF6B3D;display:block}
+.push .b{font-size:28px;font-weight:600;margin:14px 0 20px;line-height:1.3;white-space:normal}
+.push .btns{display:flex;gap:12px}
+.push .btn{flex:1;text-align:center;border-radius:16px;padding:16px 0;font-size:24px;font-weight:700;background:#F3F2EE;color:#555}
+.push .btn.ok{background:#FF6B3D;color:#fff}
+.ph{position:absolute;width:56px;height:56px}
+.cursor{position:absolute;width:34px;height:46px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
+.ripple{position:absolute;border:3px solid #FF6B3D;border-radius:50%;transform:translate(-50%,-50%)}
+.wm{font-weight:800;letter-spacing:.16em;color:#141414;text-align:center;left:0;right:0}
+.sub{font-weight:500;color:#8A8A8A;text-align:center;left:0;right:0}
+.mini{position:absolute;width:460px;height:320px;background:#fff;border-radius:24px;box-shadow:0 20px 50px rgba(0,0,0,.12);overflow:hidden}
+.mini .l{position:absolute;left:28px;top:24px;font-size:20px;color:#8A8A8A;font-weight:600}
+.mini .q{position:absolute;left:28px;top:70px;width:300px;height:54px;border-radius:16px;background:#F3F2EE}
+.mini .a{position:absolute;right:28px;top:140px;width:330px;height:54px;border-radius:16px;background:#FFF1EA}
+.mini .ok{position:absolute;left:28px;bottom:26px;background:#1F9D55;color:#fff;font-weight:700;font-size:20px;border-radius:999px;padding:10px 18px}
+#ctl{position:fixed;left:0;right:0;bottom:0;background:#222;color:#ddd;font:14px P,sans-serif;padding:8px 12px;display:flex;gap:12px;align-items:center}
+#ctl input{flex:1}
+</style></head><body>
+<div id="stage"></div>
+<div id="ctl"><button id="pp">play</button><span id="tm">0.00</span><input id="sc" type="range" min="0" max="1" step="0.001" value="0"></div>
+<script>
+// ===== beat sheet (seconds) =====
+// A1 0.0 wordmark, cursor click 1.6 (click) | A2 2.2 title "이제 손님은 에이전트입니다" types, push, highlight 4.4
+// B1 6.5 three agents pop (pop x3) | B2 11.5 "100곳에 동시에 전화" + phone grid (ring builds) | B3 16 owner flustered (busy tone)
+// B4 22 scolding message, pickle cries (ring stops) | B5 27 "가게도, 에이전트도 전화가 괴롭다" (riser 28.5->31.3)
+// C0 31.3 COUNTER reveal (impact) | C1 36 derm EN Muse (whoosh in) | C2 48 restaurant ZH Pickle + owner tap 55.5 (click) | C3 60 stay VI Dots
+// C4 71 pull back three cards | D1 75 owner happy (pop x3) | D2 79 pickle happy | D3 83 tagline | D4 86.5 end card, fade 88.4
+const LANG = 'ko';
+const W = 1920, H = 1080, DUR = 89;
+window.VIDEO = { w: W, h: H, duration: DUR };
+const ACC = '#FF6B3D';
+
+// ===== copy =====
+const COPY = {
+ko: {
+  a2: '이제 손님은 에이전트입니다.', a2hl: '에이전트',
+  b1: [['Muse', '주말 예약 다 잡아 줘'], ['Pickle', '엄마 생신 저녁 자리 알아봐'], ['Dots', '회사 근처 피부과, 토요일']],
+  b2: '100곳에 동시에 전화합니다.', b2hl: '동시에',
+  b3a: '또 AI야?', b3b: '예약인지 스팸인지 모르겠어…',
+  b4: '허락도 안 했는데 왜 네 맘대로 전화해?', b4r: '…',
+  b5: '가게도, 에이전트도 전화가 괴롭다.', b5hl: '괴롭다',
+  c0: '매장마다 존재하는 에이전트', c0wm: 'COUNTER',
+  c1h: '소이 피부과 · Counter', c1lang: 'English',
+  c1q: 'Hi! Is Thursday 3 pm open for one Rejuran session? Price and duration?', c1qt: '목요일 3시 리쥬란 1회 가능한가요? 가격이랑 시간도요.',
+  c1a: 'Thursday 3 pm is open. About 40 minutes, price as listed. Whether it suits you is for the doctor to advise.', c1at: '목 3시 가능해요. 약 40분, 가격은 가격표대로. 적합 여부는 원장님이 안내해요.',
+  c1ok: '예약 확정 · 목 15:00',
+  c2h: '한옥집 식당 · Counter', c2lang: '中文',
+  c2q: '今晚7点，6位，可以订位吗？有儿童椅吗？', c2qt: '오늘 저녁 7시 6명 가능한가요? 아기 의자 있나요?',
+  c2a: '7点可以。6位需要老板确认，请稍等。儿童椅有。', c2at: '7시 가능해요. 6명은 사장님 확인이 필요해 잠시만요. 아기 의자 있어요.',
+  c2pt: 'Counter · 한옥집 식당', c2pb: '6명 예약 요청 · 오늘 19:00 · 중국어', c2no: '거절', c2yes: '수락', c2ok: '예약 확정 · 6명 · 19:00',
+  c3h: '남산 게스트하우스 · Counter', c3lang: 'Tiếng Việt',
+  c3q: 'Cho em hỏi, nhận phòng lúc 11 giờ đêm được không? Có gửi vali trước được không?', c3qt: '밤 11시 체크인 되나요? 짐 먼저 맡길 수 있나요?',
+  c3a: 'Được ạ. Nhận phòng đến 1 giờ sáng, gửi vali từ 10 giờ sáng.', c3at: '가능합니다. 새벽 1시까지 체크인, 짐은 오전 10시부터 보관해요.',
+  c3ok: '예약 확정 · 23:00 체크인',
+  c4: '영어, 중국어, 베트남어. 전화 한 통 없이.', c4hl: '전화 한 통 없이',
+  d1: '오늘 문의 18건, 내가 받은 전화 0통.', d2a: '잘했어.', d2b: 'Counter랑 얘기하면 안 혼나요.',
+  d3a: 'Every shop,', d3b: 'ready for AI customers.', d4: 'cntr.to', d4b: 'Team mafia · c0mpiled-17 Seoul · 2026.11',
+  owner: '사장님', guest: '손님', mock: '예시 화면 · 숫자는 가상',
+},
+en: {
+  a2: 'Your next customer is an AI agent.', a2hl: 'AI agent',
+  b1: [['Muse', 'Book my whole weekend'], ['Pickle', "Dinner for mom's birthday"], ['Dots', 'Derm clinic near work, Saturday']],
+  b2: 'They call 100 shops at once.', b2hl: 'at once',
+  b3a: 'Another bot?', b3b: "Booking or spam? Can't tell anymore…",
+  b4: 'Who told you to call people on your own?', b4r: '…',
+  b5: 'Shops hate it. Agents hate it too.', b5hl: 'hate it',
+  c0: 'An agent at every shop', c0wm: 'COUNTER',
+  c1h: 'Soy Dermatology · Counter', c1lang: 'English',
+  c1q: 'Hi! Is Thursday 3 pm open for one Rejuran session? Price and duration?', c1qt: '',
+  c1a: 'Thursday 3 pm is open. About 40 minutes, price as listed. Whether it suits you is for the doctor to advise.', c1at: '',
+  c1ok: 'Confirmed · Thu 15:00',
+  c2h: 'Hanok House · Counter', c2lang: '中文',
+  c2q: '今晚7点，6位，可以订位吗？有儿童椅吗？', c2qt: 'Table for 6 at 7 tonight? Do you have a high chair?',
+  c2a: '7点可以。6位需要老板确认，请稍等。儿童椅有。', c2at: '7 pm works. A party of 6 needs the owner\'s OK, one moment. High chair: yes.',
+  c2pt: 'Counter · Hanok House', c2pb: 'Booking request · 6 guests · 19:00 · Chinese', c2no: 'Decline', c2yes: 'Accept', c2ok: 'Confirmed · 6 guests · 19:00',
+  c3h: 'Namsan Guesthouse · Counter', c3lang: 'Tiếng Việt',
+  c3q: 'Cho em hỏi, nhận phòng lúc 11 giờ đêm được không? Có gửi vali trước được không?', c3qt: 'Can I check in at 11 pm? Can I drop my bags earlier?',
+  c3a: 'Được ạ. Nhận phòng đến 1 giờ sáng, gửi vali từ 10 giờ sáng.', c3at: 'Yes. Check-in until 1 am, bag drop from 10 am.',
+  c3ok: 'Confirmed · 23:00 check-in',
+  c4: 'English, Chinese, Vietnamese. Not one phone call.', c4hl: 'Not one phone call',
+  d1: '18 requests today. Calls I answered: zero.', d2a: 'Nice work.', d2b: 'Talking to Counter, nobody yells at me.',
+  d3a: 'Every shop,', d3b: 'ready for AI customers.', d4: 'cntr.to', d4b: 'Team mafia · c0mpiled-17 Seoul · 2026.11',
+  owner: 'Owner', guest: 'Customer', mock: 'Mock screen · figures illustrative',
+}}[LANG];
+
+// ===== helpers (from the skill) =====
+function spring(t, w = 14, z = 0.82) { if (t <= 0) return 0; if (z >= 1) return 1 - Math.exp(-w * t) * (1 + w * t); const wd = w * Math.sqrt(1 - z * z); return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = x => (x = clamp(x), x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const eo = x => 1 - Math.pow(1 - clamp(x), 3);
+const lerp = (a, b, k) => a + (b - a) * k;
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const kf = keys => t => { if (t <= keys[0][0]) return keys[0][1]; for (let i = 1; i < keys.length; i++) { const [a, va] = keys[i - 1], [b, vb, e = ease] = keys[i]; if (t <= b) return lerp(va, vb, e((t - a) / (b - a))); } return keys[keys.length - 1][1]; };
+const rng = s => () => (s = (s + 0x6D2B79F5) | 0, s = Math.imul(s ^ (s >>> 15), 1 | s), s ^= s + Math.imul(s ^ (s >>> 7), 61 | s), ((s ^ (s >>> 14)) >>> 0) / 4294967296);
+const pop = (t, t0, w = 16, z = 0.7) => spring(t - t0, w, z);              // overshoot pop 0->1
+const fadeIn = (t, t0, d = 0.3) => eo(seg(t, t0, t0 + d));
+const typed = (s, t, t0, cps = 26) => s.slice(0, Math.max(0, Math.floor((t - t0) * cps)));
+const typeDur = (s, cps = 26) => s.length / cps;
+
+// ===== DOM builders =====
+const stage = document.getElementById('stage');
+const el = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; (parent || stage).appendChild(e); return e; };
+const scene = (name, a, b) => { const s = el('div', 'scene', stage); s.dataset.name = name; s.a = a; s.b = b; s.cam = el('div', 'cam', s); return s; };
+const setCam = (s, scale = 1, x = 0, y = 0) => { s.cam.style.transform = `translate(${x}px,${y}px) scale(${scale})`; };
+const show = (e, on) => { e.style.display = on ? (e.classList.contains('scene') ? 'block' : '') : 'none'; };
+const xf = (e, { x = 0, y = 0, s = 1, r = 0, o = 1 } = {}) => { e.style.transform = `translate(${x}px,${y}px) scale(${s}) rotate(${r}deg)`; e.style.opacity = o; };
+const CURSOR_SVG = `<svg viewBox="0 0 34 46"><path d="M3 2 L31 24 L19 26 L26 42 L20 44 L13 28 L3 36 Z" fill="#141414" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
+const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>`;
+const PHONE_SVG = (c = '#C9C6BD') => `<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>`;
+const avatar = (parent, src, size, x, y) => { const a = el('div', 'avatar', parent, `<img src="assets/${src}">`); a.style.width = a.style.height = size + 'px'; a.style.left = x + 'px'; a.style.top = y + 'px'; return a; };
+// face overlay for pickle: mode 'sad' | 'tense' | 'happy'
+const face = (parent, size, x, y) => { const f = el('div', 'abs', parent); f.style.left = x + 'px'; f.style.top = y + 'px'; f.style.width = f.style.height = size + 'px'; f.style.pointerEvents = 'none'; f.innerHTML = `<svg viewBox="0 0 100 100" style="width:100%;height:100%">
+  <g class="sad"><path d="M30 33 l14 6" stroke="#141414" stroke-width="4" stroke-linecap="round"/><path d="M70 33 l-14 6" stroke="#141414" stroke-width="4" stroke-linecap="round"/><path class="tear" d="M66 54 q6 10 0 14 q-6 -4 0 -14z" fill="#5AA9FF"/><path d="M42 72 q8 -5 16 0" stroke="#141414" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+  <g class="tense"><path d="M74 40 q5 8 0 12 q-5 -4 0 -12z" fill="#5AA9FF"/><path d="M43 72 h14" stroke="#141414" stroke-width="4" stroke-linecap="round"/></g>
+  <g class="happy"><path d="M38 68 q12 12 24 0" stroke="#141414" stroke-width="4.5" fill="none" stroke-linecap="round"/><circle cx="28" cy="60" r="5" fill="#FF9B8A" opacity=".8"/><circle cx="72" cy="60" r="5" fill="#FF9B8A" opacity=".8"/></g></svg>`; return f; };
+const setFace = (f, mode, tearP = 0) => { for (const m of ['sad', 'tense', 'happy']) f.querySelector('.' + m).style.display = m === mode ? '' : 'none'; const tear = f.querySelector('.tear'); if (tear) { tear.style.transform = `translate(0,${tearP * 22}px)`; tear.style.opacity = tearP > 0 ? 1 : 0; } };
+const bubble = (parent, cls, x, y) => { const b = el('div', 'bubble ' + (cls || ''), parent); b.style.left = x + 'px'; b.style.top = y + 'px'; return b; };
+const titleLine = (parent, y) => { const w = el('div', 'abs', parent); w.style.left = '0'; w.style.right = '0'; w.style.top = y + 'px'; w.style.textAlign = 'center'; const t = el('span', '', w); t.style.position = 'relative'; t.style.display = 'inline-block'; t.style.fontWeight = '700'; t.style.fontSize = '58px'; t.style.letterSpacing = '-0.025em'; t.style.padding = '0 .1em'; t.hl = el('span', 'hl', t); t.hl.style.left = '0'; t.hl.style.top = '0.08em'; t.hl.style.zIndex = '-1'; t.txt = el('span', '', t); return t; };
+// typed title with highlight sweep behind a key phrase
+const setTitle = (T, full, t, t0, { hlWord, hlT, cps = 22 } = {}) => {
+  if (T.fitted !== full) { T.style.fontSize = '58px'; T.txt.textContent = full; const w = T.offsetWidth; if (w > 1640) T.style.fontSize = (58 * 1640 / w).toFixed(1) + 'px'; T.fitted = full; }
+  const n = Math.floor(Math.max(0, t - t0) * cps); T.txt.textContent = full.slice(0, n); T.style.opacity = t >= t0 ? 1 : 0;
+  if (hlWord && hlT != null && t >= hlT - 0.01) { const i = full.indexOf(hlWord); if (i >= 0 && n >= i + hlWord.length) { const meas = T.txt; const r = document.createRange(); const tn = meas.firstChild; if (tn) { r.setStart(tn, i); r.setEnd(tn, i + hlWord.length); const rb = r.getBoundingClientRect(), pb = T.getBoundingClientRect(); const k = pb.width ? (T.offsetWidth / pb.width) : 1; T.hl.style.left = ((rb.left - pb.left) * k - 6) + 'px'; T.hl.style.width = ((rb.width) * k + 12) + 'px'; T.hl.style.transform = `scaleX(${eo(seg(t, hlT, hlT + 0.5))})`; T.hl.style.display = ''; } } else T.hl.style.display = 'none'; } else T.hl.style.display = 'none';
+};
+const stageBg = el('div', 'abs', stage); stageBg.style.inset = '0'; stageBg.style.background = '#F6F5F0';
+
+// ===== scenes =====
+// ---- A1 wordmark + cursor
+const A1 = scene('A1', 0, 2.3);
+const a1wm = el('div', 'abs wm', A1.cam, 'COUNTER'); a1wm.style.top = '505px'; a1wm.style.fontSize = '46px';
+const a1cur = el('div', 'cursor', A1.cam, CURSOR_SVG); const a1rip = el('div', 'ripple', A1.cam);
+// ---- A2 title
+const A2 = scene('A2', 2.2, 6.7); const a2T = titleLine(A2.cam, 505);
+// ---- B1 agents
+const B1 = scene('B1', 6.5, 11.7);
+const b1 = COPY.b1.map(([nm, msg], i) => { const x = 290 + i * 520; const av = avatar(B1.cam, ['muse_avatar.png', 'pickle_avatar.png', 'dots_avatar.png'][i], 280, x, 440); const bb = bubble(B1.cam, '', x - 60, 270); bb.textContent = msg; const nmE = el('div', 'name', B1.cam, nm); nmE.style.left = (x - 60) + 'px'; nmE.style.width = '400px'; nmE.style.top = '740px'; return { av, bb, nmE, x }; });
+// ---- B2 phone grid + title
+const B2 = scene('B2', 11.5, 16.2); const b2grid = el('div', 'abs', B2.cam); b2grid.style.inset = '0';
+const b2ph = []; for (let r = 0; r < 5; r++) for (let c = 0; c < 10; c++) { const p = el('div', 'ph', b2grid, PHONE_SVG('#BDB9AE')); p.style.width = p.style.height = '72px'; p.style.left = (190 + c * 170) + 'px'; p.style.top = (140 + r * 200) + 'px'; b2ph.push(p); }
+const b2T = titleLine(B2.cam, 505); const b2bg = el('div', 'abs', B2.cam); b2bg.style.left = '0'; b2bg.style.right = '0'; b2bg.style.top = '470px'; b2bg.style.height = '130px'; b2bg.style.background = 'rgba(246,245,240,.92)'; B2.cam.insertBefore(b2bg, b2T.parentElement);
+// ---- B3 owner flustered
+const B3 = scene('B3', 16, 22.2);
+const b3owner = el('img', 'abs', B3.cam); b3owner.src = 'assets/owner.png'; b3owner.style.width = '600px'; b3owner.style.left = '560px'; b3owner.style.top = '300px'; b3owner.style.transformOrigin = 'center bottom';
+const b3rain = []; { const r = rng(7); for (let i = 0; i < 26; i++) { const p = el('div', 'ph', B3.cam, PHONE_SVG('#FF6B3D')); p.x0 = 200 + r() * 1500; p.t0 = r() * 4.5; p.rot = (r() - .5) * 90; p.sp = 0.8 + r() * 0.6; p.style.width = p.style.height = '48px'; b3rain.push(p); } }
+const b3b1 = bubble(B3.cam, '', 1150, 380); b3b1.textContent = COPY.b3a; const b3b2 = bubble(B3.cam, '', 1150, 520); b3b2.textContent = COPY.b3b;
+const b3sweat = el('div', 'abs', B3.cam, `<svg viewBox="0 0 40 60" style="width:40px;height:60px"><path d="M20 4 q14 24 0 30 q-14 -6 0 -30z" fill="#5AA9FF"/></svg>`); b3sweat.style.left = '960px'; b3sweat.style.top = '360px';
+const b3name = el('div', 'name', B3.cam, COPY.owner); b3name.style.left = '560px'; b3name.style.width = '600px'; b3name.style.top = '930px';
+// ---- B4 scolding
+const B4 = scene('B4', 22, 27.2);
+const b4card = el('div', 'abs', B4.cam); Object.assign(b4card.style, { left: '560px', top: '250px', width: '800px', height: '520px', background: '#fff', borderRadius: '36px', boxShadow: '0 30px 80px rgba(20,20,20,.10)', border: '1.5px solid #E6E4DE' });
+const b4hdr = el('div', 'abs', B4.cam, COPY.guest); Object.assign(b4hdr.style, { left: '560px', width: '800px', textAlign: 'center', top: '278px', fontSize: '22px', fontWeight: '600', color: '#8A8A8A' });
+const b4msg = bubble(B4.cam, 'dark', 600, 350); b4msg.style.maxWidth = '660px'; b4msg.style.fontSize = '36px';
+const b4av = avatar(B4.cam, 'pickle_avatar.png', 190, 1200, 640); const b4face = face(B4.cam, 190, 1200, 640);
+const b4rep = bubble(B4.cam, '', 1040, 600); b4rep.textContent = COPY.b4r; b4rep.style.fontSize = '34px';
+// ---- B5 both suffer
+const B5 = scene('B5', 27, 31.6); const b5T = titleLine(B5.cam, 505);
+const b5owner = el('img', 'abs', B5.cam); b5owner.src = 'assets/owner.png'; b5owner.style.width = '300px'; b5owner.style.left = '200px'; b5owner.style.top = '600px';
+const b5pk = avatar(B5.cam, 'pickle_avatar.png', 160, 1480, 640); const b5face = face(B5.cam, 160, 1480, 640);
+// ---- C0 reveal
+const C0 = scene('C0', 31.2, 36.4);
+const c0wm = el('div', 'abs wm', C0.cam, COPY.c0wm); c0wm.style.top = '400px'; c0wm.style.fontSize = '150px'; c0wm.style.letterSpacing = '.12em'; c0wm.style.transformOrigin = 'center';
+const c0line = el('div', 'abs', C0.cam); Object.assign(c0line.style, { left: '0', right: '0', top: '600px', height: '8px', textAlign: 'center' }); const c0bar = el('div', '', c0line); Object.assign(c0bar.style, { display: 'inline-block', width: '360px', height: '8px', background: ACC, borderRadius: '4px', transformOrigin: 'center' });
+const c0sub = el('div', 'abs sub', C0.cam, COPY.c0); c0sub.style.top = '640px'; c0sub.style.fontSize = '40px';
+const c0ow = el('img', 'abs', C0.cam); c0ow.src = 'assets/owner.png'; c0ow.style.width = '220px'; c0ow.style.left = '280px'; c0ow.style.top = '760px';
+const c0pk = avatar(C0.cam, 'pickle_avatar.png', 140, 1480, 820); const c0face = face(C0.cam, 140, 1480, 820);
+// ---- chat scenario builder
+function chatScene(name, a, b, cfg) {
+  const S = scene(name, a, b); const panel = el('div', 'panel', S.cam); const ui = el('div', 'ui', panel);
+  ui.innerHTML = `<div class="hdr"><span class="dot"></span><span>${cfg.h}</span><span class="lang">${cfg.lang}</span></div>`;
+  const q = el('div', 'msg', ui, `<div class="av"><img src="assets/${cfg.av}"></div><div class="bx"><span class="tx"></span><span class="caret"></span><span class="tr"></span></div>`); q.style.left = '40px'; q.style.top = '130px';
+  const th = el('div', 'msg right', ui, `<div class="av c">C</div><div class="bx"><span class="think"><i></i><i></i><i></i></span></div>`); th.style.right = '40px'; th.style.top = '430px';
+  const an = el('div', 'msg right', ui, `<div class="av c">C</div><div class="bx"><span class="tx"></span><span class="caret"></span><span class="tr"></span></div>`); an.style.right = '40px'; an.style.top = '430px';
+  const ok = el('div', 'badge', ui, `${CHECK_SVG}<span>${cfg.ok}</span>`); ok.style.right = '48px'; ok.style.top = cfg.okTop || '690px';
+  const mock = el('div', 'abs', panel, COPY.mock); Object.assign(mock.style, { right: '40px', bottom: '28px', fontSize: '20px', color: 'rgba(255,255,255,.75)' });
+  const qface = cfg.face ? face(q.querySelector('.av'), 72, 0, 0) : null;
+  return Object.assign(S, { panel, ui, q, th, an, ok, qface, cfg });
+}
+const C1 = chatScene('C1', 36, 48.2, { h: COPY.c1h, lang: COPY.c1lang, av: 'muse_avatar.png', q: COPY.c1q, qt: COPY.c1qt, a: COPY.c1a, at: COPY.c1at, ok: COPY.c1ok });
+const C2 = chatScene('C2', 47.6, 60.2, { h: COPY.c2h, lang: COPY.c2lang, av: 'pickle_avatar.png', q: COPY.c2q, qt: COPY.c2qt, a: COPY.c2a, at: COPY.c2at, ok: COPY.c2ok, face: true, okTop: '690px', cps: 10 });
+const c2push = el('div', 'push', C2.ui, `<div class="t"><i></i>${COPY.c2pt}</div><div class="b">${COPY.c2pb}</div><div class="btns"><div class="btn">${COPY.c2no}</div><div class="btn ok">${COPY.c2yes}</div></div>`); c2push.style.left = '40px'; c2push.style.top = '590px';
+const c2cur = el('div', 'cursor', C2.ui, CURSOR_SVG); const c2rip = el('div', 'ripple', C2.ui);
+const C3 = chatScene('C3', 59.6, 71.4, { h: COPY.c3h, lang: COPY.c3lang, av: 'dots_avatar.png', q: COPY.c3q, qt: COPY.c3qt, a: COPY.c3a, at: COPY.c3at, ok: COPY.c3ok });
+// ---- C4 pull back
+const C4 = scene('C4', 71, 75.4); const c4T = titleLine(C4.cam, 250);
+const c4cards = ['English', '中文', 'Tiếng Việt'].map((l, i) => { const m = el('div', 'mini', C4.cam, `<div class="l">${l}</div><div class="q"></div><div class="a"></div><div class="ok">✓</div>`); m.style.left = (210 + i * 520) + 'px'; m.style.top = '430px'; m.style.transformOrigin = 'center'; return m; });
+// ---- D1 owner happy
+const D1 = scene('D1', 75, 79.3);
+const d1owner = el('img', 'abs', D1.cam); d1owner.src = 'assets/owner.png'; d1owner.style.width = '600px'; d1owner.style.left = '560px'; d1owner.style.top = '300px'; d1owner.style.transformOrigin = 'center bottom';
+const d1checks = [0, 1, 2].map(i => { const c = el('div', 'badge', D1.cam, CHECK_SVG); c.style.padding = '12px'; c.style.left = (770 + i * 100) + 'px'; c.style.top = '220px'; c.style.borderRadius = '50%'; return c; });
+const d1b = bubble(D1.cam, '', 1150, 400); d1b.textContent = COPY.d1; d1b.style.maxWidth = '600px';
+const d1name = el('div', 'name', D1.cam, COPY.owner); d1name.style.left = '560px'; d1name.style.width = '600px'; d1name.style.top = '930px';
+// ---- D2 pickle happy
+const D2 = scene('D2', 79, 83.3);
+const d2av = avatar(D2.cam, 'pickle_avatar.png', 300, 810, 420); const d2face = face(D2.cam, 300, 810, 420);
+const d2a = bubble(D2.cam, 'dark', 600, 340); d2a.textContent = COPY.d2a; d2a.style.fontSize = '36px';
+const d2b = bubble(D2.cam, 'acc', 1130, 480); d2b.textContent = COPY.d2b; d2b.style.maxWidth = '560px';
+const d2name = el('div', 'name', D2.cam, 'Pickle'); d2name.style.left = '810px'; d2name.style.width = '300px'; d2name.style.top = '740px';
+// ---- D3 tagline
+const D3 = scene('D3', 83, 86.8);
+const d3a = el('div', 'abs', D3.cam, COPY.d3a); const d3b = el('div', 'abs', D3.cam, COPY.d3b);
+for (const [e, y] of [[d3a, 380], [d3b, 520]]) Object.assign(e.style, { left: '0', right: '0', top: y + 'px', textAlign: 'center', fontSize: '110px', fontWeight: '800', letterSpacing: '-0.04em' });
+// ---- D4 end card
+const D4 = scene('D4', 86.5, DUR + 1);
+const d4wm = el('div', 'abs wm', D4.cam, 'COUNTER'); d4wm.style.top = '470px'; d4wm.style.fontSize = '72px';
+const d4url = el('div', 'abs sub', D4.cam, COPY.d4); d4url.style.top = '590px'; d4url.style.fontSize = '34px'; d4url.setAttribute('data-todo', '도메인 가칭');
+const d4team = el('div', 'abs sub', D4.cam, COPY.d4b); d4team.style.top = '960px'; d4team.style.fontSize = '24px';
+const fadeLayer = el('div', 'abs', stage); Object.assign(fadeLayer.style, { inset: '0', background: '#F6F5F0', pointerEvents: 'none', opacity: 0 });
+const SCENES = [A1, A2, B1, B2, B3, B4, B5, C0, C1, C2, C3, C4, D1, D2, D3, D4];
+
+// ===== per-scene renderers =====
+function renderChat(S, t, t0, opts = {}) {
+  const { q, an, th, ok, cfg } = S; const tl = t - t0; const cps = cfg.cps || 26;
+  const qd = typeDur(cfg.q, cps), aStart = qd + 0.9 + 1.0, ad = typeDur(cfg.a, cps), okT = aStart + ad + (opts.okDelay ?? 0.5);
+  // question
+  const qs = pop(tl, 0.0); xf(q, { s: 0.9 + 0.1 * qs, o: clamp(qs * 1.5) }); const qtx = q.querySelector('.tx'), qtr = q.querySelector('.tr'), qc = q.querySelector('.caret');
+  qtx.textContent = typed(cfg.q, tl, 0.1, cps); qc.style.display = (tl > 0.1 && tl < 0.1 + qd) && Math.floor(tl * 3) % 2 === 0 ? '' : 'none'; if (tl >= 0.1 + qd) qc.style.display = 'none';
+  qtr.textContent = cfg.qt; qtr.style.display = cfg.qt ? '' : 'none'; qtr.style.opacity = fadeIn(tl, 0.1 + qd + 0.1);
+  // thinking
+  const thOn = tl > qd + 0.9 && tl < aStart; show(th, thOn); if (thOn) { xf(th, { s: 0.9 + 0.1 * pop(tl, qd + 0.9), o: clamp(pop(tl, qd + 0.9) * 1.5) }); th.querySelectorAll('i').forEach((d, i) => d.style.transform = `translateY(${-6 * Math.max(0, Math.sin((tl * 7 - i * 1.0)))}px)`); }
+  // answer
+  const aOn = tl >= aStart; show(an, aOn); if (aOn) { const as = pop(tl, aStart); xf(an, { s: 0.9 + 0.1 * as, o: clamp(as * 1.5) }); const atx = an.querySelector('.tx'), atr = an.querySelector('.tr'), ac = an.querySelector('.caret'); atx.textContent = typed(cfg.a, tl, aStart + 0.05, cps); ac.style.display = (tl < aStart + ad) && Math.floor(tl * 3) % 2 === 0 ? '' : 'none'; atr.textContent = cfg.at; atr.style.display = cfg.at ? '' : 'none'; atr.style.opacity = fadeIn(tl, aStart + ad + 0.1); }
+  // ok badge
+  const okOn = tl >= okT; show(ok, okOn); if (okOn) xf(ok, { s: pop(tl, okT, 18, 0.6), o: clamp(pop(tl, okT) * 2) });
+  // camera: push toward the active bubble
+  let s = 1, x = 0, y = 0;
+  if (tl < qd + 0.6) { const k = ease(seg(tl, 0.2, 1.2)); s = lerp(1, 1.12, k); x = lerp(0, 110, k); y = lerp(0, 120, k); }
+  else if (tl < okT) { const k = ease(seg(tl, qd + 0.6, qd + 1.5)); s = 1.12; x = lerp(110, -90, k); y = lerp(120, -10, k); }
+  else { const k = ease(seg(tl, okT, okT + 0.9)); s = lerp(1.12, 1, k); x = lerp(-90, 0, k); y = lerp(-10, 0, k); }
+  return { s, x, y, qd, aStart, ad, okT };
+}
+function render(t) {
+  for (const S of SCENES) show(S, t >= S.a && t < S.b);
+  fadeLayer.style.opacity = 0;
+  // ---- A1
+  if (A1.style.display !== 'none') { const tl = t; xf(a1wm, { o: fadeIn(tl, 0.1, 0.6), s: 1 + 0.0 }); const cx = kf([[0.6, 1500], [1.5, 1010, ease]])(tl), cy = kf([[0.6, 900], [1.5, 560, ease]])(tl); a1cur.style.left = cx + 'px'; a1cur.style.top = cy + 'px'; a1cur.style.opacity = tl > 0.6 ? 1 : 0; const press = tl > 1.6 && tl < 1.75 ? 0.94 : 1; a1wm.style.transform = `scale(${press})`; const rp = seg(tl, 1.65, 2.1); a1rip.style.left = '990px'; a1rip.style.top = '528px'; a1rip.style.width = a1rip.style.height = (20 + 90 * eo(rp)) + 'px'; a1rip.style.opacity = rp > 0 && rp < 1 ? 1 - rp : 0; setCam(A1, 1, 0, 0); a1wm.style.opacity = Math.min(fadeIn(tl, 0.1, 0.6), 1 - seg(tl, 1.95, 2.25)); }
+  // ---- A2
+  if (A2.style.display !== 'none') { const tl = t - 2.2; setTitle(a2T, COPY.a2, t, 2.5, { hlWord: COPY.a2hl, hlT: 4.5 }); const k = ease(seg(tl, 1.4, 3.0)); setCam(A2, lerp(1, 1.55, k), 0, 0); A2.cam.style.opacity = 1 - seg(t, 6.3, 6.65); }
+  // ---- B1
+  if (B1.style.display !== 'none') { b1.forEach((o, i) => { const t0 = 6.8 + i * 1.1; const p = pop(t, t0); xf(o.av, { s: p, o: clamp(p * 2), y: 0 }); const bp = pop(t, t0 + 0.3); xf(o.bb, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2), y: -8 * (1 - bp) }); o.nmE.style.opacity = fadeIn(t, t0 + 0.2); }); setCam(B1, lerp(1, 1.06, seg(t, 6.5, 11.5)), 0, 0); B1.cam.style.opacity = 1 - seg(t, 11.3, 11.65); }
+  // ---- B2
+  if (B2.style.display !== 'none') { const tl = t - 11.5; b2ph.forEach((p, i) => { const order = [22, 23, 21, 24, 12, 32, 13, 33, 20, 25][i] !== undefined ? i : i; const t0 = 1.4 + (i === 24 ? 0 : 0.25 + (Math.abs((i % 10) - 4.5) + Math.abs(Math.floor(i / 10) - 2)) * 0.22); const pp = pop(tl, t0, 18, 0.7); xf(p, { s: pp, o: clamp(pp * 2) }); }); setTitle(b2T, COPY.b2, t, 11.8, { hlWord: COPY.b2hl, hlT: 14.2 }); setCam(B2, lerp(1, 1.18, seg(tl, 0.5, 4.5)), 0, 0); B2.cam.style.opacity = 1 - seg(t, 15.85, 16.15); }
+  // ---- B3
+  if (B3.style.display !== 'none') { const tl = t - 16; const p = pop(tl, 0.15, 12, 0.8); xf(b3owner, { s: p, o: clamp(p * 2), r: Math.sin(tl * 18) * 1.6 * seg(tl, 0.8, 1.2) }); b3rain.forEach(ph => { const u = (tl - ph.t0) * ph.sp; const y = -80 + u * 420; ph.style.left = ph.x0 + 'px'; ph.style.top = y + 'px'; ph.style.opacity = u > 0 && y < 1100 ? 0.9 : 0; ph.style.transform = `rotate(${ph.rot + u * 60}deg)`; }); const p1 = pop(tl, 1.0), p2 = pop(tl, 3.2); xf(b3b1, { s: 0.8 + 0.2 * p1, o: clamp(p1 * 2) }); xf(b3b2, { s: 0.8 + 0.2 * p2, o: clamp(p2 * 2) }); b3sweat.style.opacity = fadeIn(tl, 1.4); b3sweat.style.transform = `translateY(${6 * Math.sin(tl * 6)}px)`; b3name.style.opacity = fadeIn(tl, 0.5); setCam(B3, lerp(1, 1.08, seg(tl, 0, 6)), 0, 0); B3.cam.style.opacity = 1 - seg(t, 21.85, 22.15); }
+  // ---- B4
+  if (B4.style.display !== 'none') { const tl = t - 22; const cp = pop(tl, 0.1, 12, 0.85); xf(b4card, { s: 0.94 + 0.06 * cp, o: clamp(cp * 2) }); b4hdr.style.opacity = clamp(cp * 2); b4msg.textContent = typed(COPY.b4, tl, 0.6, 22); b4msg.style.opacity = tl > 0.55 ? 1 : 0; const ap = pop(tl, 0.3); xf(b4av, { s: ap, o: clamp(ap * 2) }); b4face.style.opacity = clamp(ap * 2); const sadT = 0.6 + typeDur(COPY.b4, 22) + 0.4; setFace(b4face, tl >= sadT ? 'sad' : 'tense', seg(tl, sadT + 0.3, sadT + 1.6)); const rp = pop(tl, sadT + 0.5); xf(b4rep, { s: 0.8 + 0.2 * rp, o: clamp(rp * 2) }); setCam(B4, lerp(1, 1.1, seg(tl, 0, 5)), 0, 0); B4.cam.style.opacity = 1 - seg(t, 26.85, 27.15); }
+  // ---- B5
+  if (B5.style.display !== 'none') { const tl = t - 27; setTitle(b5T, COPY.b5, t, 27.3, { hlWord: COPY.b5hl, hlT: 29.2 }); b5owner.style.opacity = 0.9 * fadeIn(tl, 0.2); b5pk.style.opacity = b5face.style.opacity = fadeIn(tl, 0.4); setFace(b5face, 'sad', 1); setCam(B5, lerp(1, 1.3, seg(tl, 0.8, 4.4)), 0, 0); B5.cam.style.opacity = 1 - seg(t, 31.2, 31.55); }
+  // ---- C0
+  if (C0.style.display !== 'none') { const tl = t - 31.2; const p = pop(tl, 0.1, 10, 0.7); xf(c0wm, { s: 0.6 + 0.4 * p, o: clamp(p * 2) }); c0bar.style.transform = `scaleX(${eo(seg(tl, 0.7, 1.4))})`; c0sub.style.opacity = fadeIn(tl, 1.2, 0.5); c0sub.style.transform = `translateY(${10 * (1 - eo(seg(tl, 1.2, 1.7)))}px)`; const op = pop(tl, 2.4), pp = pop(tl, 2.7); xf(c0ow, { s: op, o: clamp(op * 2) }); xf(c0pk, { s: pp, o: clamp(pp * 2) }); c0face.style.opacity = clamp(pp * 2); setFace(c0face, 'tense'); setCam(C0, lerp(1, 1.05, seg(tl, 0, 5)), 0, 0); }
+  // ---- C1
+  if (C1.style.display !== 'none') { const tl = t - 36; const inK = eo(seg(tl, 0, 0.7)); const r = renderChat(C1, t, 36.8); setCam(C1, r.s, r.x + (1 - inK) * -1920, r.y); C1.cam.style.opacity = 1; }
+  // ---- C2 (slides in from right while C1 leaves)
+  if (C2.style.display !== 'none') { const tl = t - 47.6; const inK = eo(seg(tl, 0, 0.7)); const r = renderChat(C2, t, 48.4, { okDelay: 3.4 }); if (C1.style.display !== 'none') { C1.cam.style.transform = `translate(${-1920 * inK}px,0)`; } // push card interplay
+    const pT = r.aStart + r.ad + 0.4, tapT = pT + 1.9; const pp = pop(tl, pT - 0.0 + 0.0, 14, 0.8); show(c2push, tl >= pT); xf(c2push, { s: 0.92 + 0.08 * pp, o: clamp(pp * 2), y: 20 * (1 - pp) }); const cx = kf([[pT + 0.3, 760], [tapT - 0.1, 448, ease]])(tl), cy = kf([[pT + 0.3, 540], [tapT - 0.1, 810, ease]])(tl); show(c2cur, tl >= pT + 0.3 && tl < tapT + 0.6); c2cur.style.left = cx + 'px'; c2cur.style.top = cy + 'px'; const okBtn = c2push.querySelector('.btn.ok'); okBtn.style.transform = tl > tapT && tl < tapT + 0.14 ? 'scale(0.95)' : ''; const rp = seg(tl, tapT, tapT + 0.45); c2rip.style.left = '432px'; c2rip.style.top = '800px'; c2rip.style.width = c2rip.style.height = (16 + 90 * eo(rp)) + 'px'; c2rip.style.opacity = rp > 0 && rp < 1 ? 1 - rp : 0; if (tl > tapT + 0.3) { c2push.style.opacity = 1 - seg(tl, tapT + 0.3, tapT + 0.7); } const okT2 = tapT + 0.5; show(C2.ok, tl >= okT2); if (tl >= okT2) xf(C2.ok, { s: pop(tl, okT2, 18, 0.6), o: clamp(pop(tl, okT2) * 2) }); setFace(C2.qface, tl >= okT2 ? 'happy' : 'tense'); C2.qface.style.opacity = 1;
+    let s = r.s, x = r.x, y = r.y; if (tl >= pT - 0.2 && tl < okT2 + 0.9) { const k = ease(seg(tl, pT - 0.2, pT + 0.7)); s = lerp(1.12, 1.16, k); x = lerp(-90, 250, k); y = lerp(-10, -40, k); if (tl > okT2) { const k2 = ease(seg(tl, okT2, okT2 + 0.9)); s = lerp(1.16, 1, k2); x = lerp(250, 0, k2); y = lerp(-40, 0, k2); } }
+    setCam(C2, s, x + (1 - inK) * 1920, y); }
+  // ---- C3 (wipes up)
+  if (C3.style.display !== 'none') { const tl = t - 59.6; const inK = eo(seg(tl, 0, 0.7)); const r = renderChat(C3, t, 60.4); if (C2.style.display !== 'none') { C2.cam.style.transform = `translate(0,${-1080 * inK}px)`; } setCam(C3, r.s, r.x, r.y + (1 - inK) * 1080); }
+  // ---- C4
+  if (C4.style.display !== 'none') { const tl = t - 71; setTitle(c4T, COPY.c4, t, 71.6, { hlWord: COPY.c4hl, hlT: 73.6 }); c4cards.forEach((m, i) => { const p = pop(tl, 0.2 + i * 0.18, 12, 0.8); xf(m, { s: 0.7 + 0.3 * p, o: clamp(p * 2), y: 30 * (1 - p) }); }); setCam(C4, lerp(1, 1.04, seg(tl, 0, 4)), 0, 0); if (C3.style.display !== 'none') C3.cam.style.opacity = 1 - seg(tl, 0, 0.35); C4.cam.style.opacity = Math.min(fadeIn(tl, 0.0, 0.3), 1 - seg(t, 75.05, 75.35)); }
+  // ---- D1
+  if (D1.style.display !== 'none') { const tl = t - 75; const p = pop(tl, 0.15, 12, 0.8); xf(d1owner, { s: p, o: clamp(p * 2) }); d1checks.forEach((c, i) => { const q = pop(tl, 0.7 + i * 0.3, 18, 0.6); xf(c, { s: q, o: clamp(q * 2) }); }); const bp = pop(tl, 1.5); xf(d1b, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2) }); d1name.style.opacity = fadeIn(tl, 0.5); setCam(D1, lerp(1, 1.06, seg(tl, 0, 4)), 0, 0); D1.cam.style.opacity = 1 - seg(t, 78.95, 79.25); }
+  // ---- D2
+  if (D2.style.display !== 'none') { const tl = t - 79; const p = pop(tl, 0.1, 12, 0.8); xf(d2av, { s: p, o: clamp(p * 2) }); d2face.style.opacity = clamp(p * 2); setFace(d2face, tl < 1.2 ? 'tense' : 'happy'); const a = pop(tl, 0.5), b = pop(tl, 1.7); xf(d2a, { s: 0.8 + 0.2 * a, o: clamp(a * 2) }); xf(d2b, { s: 0.8 + 0.2 * b, o: clamp(b * 2) }); d2name.style.opacity = fadeIn(tl, 0.4); const bounce = tl > 1.2 ? Math.abs(Math.sin((tl - 1.2) * 6)) * 14 * Math.exp(-(tl - 1.2) * 1.2) : 0; d2av.style.transform = `translateY(${-bounce}px) scale(${p})`; d2face.style.transform = `translateY(${-bounce}px)`; setCam(D2, lerp(1, 1.05, seg(tl, 0, 4)), 0, 0); D2.cam.style.opacity = 1 - seg(t, 82.95, 83.25); }
+  // ---- D3
+  if (D3.style.display !== 'none') { const tl = t - 83; const a = eo(seg(tl, 0.2, 0.9)), b = eo(seg(tl, 0.9, 1.6)); xf(d3a, { o: a, y: 24 * (1 - a) }); xf(d3b, { o: b, y: 24 * (1 - b) }); setCam(D3, lerp(1, 1.08, seg(tl, 0, 3.8)), 0, 0); D3.cam.style.opacity = 1 - seg(t, 86.45, 86.75); }
+  // ---- D4
+  if (D4.style.display !== 'none') { const tl = t - 86.5; d4wm.style.opacity = fadeIn(tl, 0.1, 0.6); d4url.style.opacity = fadeIn(tl, 0.6, 0.5); d4team.style.opacity = fadeIn(tl, 0.9, 0.5); setCam(D4, 1, 0, 0); }
+  fadeLayer.style.opacity = seg(t, DUR - 0.6, DUR);
+}
+window.seek = t => render(((t % DUR) + DUR) % DUR);
+
+// ===== audio =====
+const SFX = {};
+async function loadBuf(ctx, name) { if (!SFX[name]) { const ab = await (await fetch('assets/' + name)).arrayBuffer(); SFX[name] = ab; } return await ctx.decodeAudioData(SFX[name].slice(0)); }
+window.buildAudio = async function (ctx) {
+  const out = ctx.createGain(); out.gain.value = 1; out.connect(ctx.destination);
+  const play = (buf, t, g = 1, { rate = 1, fadeOut = 0, dur = 0 } = {}) => { const s = ctx.createBufferSource(); s.buffer = buf; s.playbackRate.value = rate; const gn = ctx.createGain(); gn.gain.setValueAtTime(g, t); if (fadeOut && dur) { gn.gain.setValueAtTime(g, t + dur - fadeOut); gn.gain.linearRampToValueAtTime(0.0001, t + dur); } s.connect(gn); gn.connect(out); s.start(t); if (dur) s.stop(t + dur + 0.05); };
+  const [bgm, click, popB, whoosh, impact, tick, riser, ring, busy] = await Promise.all(['bgm_bright.mp3', 'click.ogg', 'pop.ogg', 'whoosh.ogg', 'impact.ogg', 'tick.ogg', 'riser.ogg', 'sfx_ring_many.mp3', 'sfx_busy_tone.mp3'].map(n => loadBuf(ctx, n)));
+  // music bed with a dip during the scolding scene and a fade at the end
+  const mg = ctx.createGain(); mg.gain.setValueAtTime(0.0001, 0); mg.gain.exponentialRampToValueAtTime(0.75, 1.2); mg.gain.setValueAtTime(0.75, 21.5); mg.gain.linearRampToValueAtTime(0.42, 22.6); mg.gain.setValueAtTime(0.42, 30.6); mg.gain.linearRampToValueAtTime(0.8, 31.6); mg.gain.setValueAtTime(0.8, DUR - 2.2); mg.gain.linearRampToValueAtTime(0.0001, DUR - 0.1);
+  const ms = ctx.createBufferSource(); ms.buffer = bgm; ms.connect(mg); mg.connect(out); ms.start(0); ms.stop(DUR);
+  // cues
+  play(click, 1.6, 0.8);
+  [6.8, 7.9, 9.0].forEach(t => play(popB, t, 0.55)); [7.1, 8.2, 9.3].forEach(t => play(tick, t, 0.35));
+  play(ring, 12.9, 0.0001, {}); { const rg = ctx.createGain(); rg.gain.setValueAtTime(0.0001, 12.9); rg.gain.exponentialRampToValueAtTime(0.5, 15.0); rg.gain.setValueAtTime(0.5, 20.5); rg.gain.linearRampToValueAtTime(0.0001, 22.3); const rs = ctx.createBufferSource(); rs.buffer = ring; rs.loop = true; rs.connect(rg); rg.connect(out); rs.start(12.9); rs.stop(22.4); }
+  play(busy, 17.2, 0.25, { dur: 3.5, fadeOut: 1.0 });
+  play(popB, 17.0, 0.5); play(popB, 19.2, 0.5);
+  play(tick, 24.3, 0.5, { rate: 0.7 }); // the tear
+  play(riser, 28.3, 0.5, { dur: 3.0 }); play(impact, 31.3, 0.9);
+  [36.0, 47.6, 59.6, 71.0].forEach(t => play(whoosh, t - 0.07, 0.7));
+  // typing ticks for chat scenes
+  const typeTicks = (t0, s, cps = 26) => { const n = s.length; const step = cps < 16 ? 1 : 2; for (let i = 0; i < n; i += step) play(tick, t0 + i / cps, 0.16, { rate: 1.6 + ((i * 7) % 5) * 0.08 }); };
+  const chatCues = (t0, cfg, okDelay = 0.5) => { const cps = cfg.cps || 26; const qd = typeDur(cfg.q, cps), aStart = qd + 0.9 + 1.0, ad = typeDur(cfg.a, cps), okT = aStart + ad + okDelay; play(popB, t0, 0.5); typeTicks(t0 + 0.1, cfg.q, cps); play(popB, t0 + aStart, 0.5); typeTicks(t0 + aStart + 0.05, cfg.a, cps); return { okT: t0 + okT, aEnd: t0 + aStart + ad }; };
+  const c1 = chatCues(36.8, C1.cfg); play(popB, c1.okT, 0.8, { rate: 1.2 });
+  const c2 = chatCues(48.4, C2.cfg, 3.4); const pT = c2.aEnd + 0.4, tapT = pT + 1.9; play(popB, pT, 0.7, { rate: 0.9 }); play(click, tapT, 0.9); play(popB, tapT + 0.5, 0.8, { rate: 1.2 });
+  const c3 = chatCues(60.4, C3.cfg); play(popB, c3.okT, 0.8, { rate: 1.2 });
+  [71.2, 71.38, 71.56].forEach(t => play(popB, t, 0.4, { rate: 1.1 }));
+  [75.7, 76.0, 76.3].forEach(t => play(popB, t, 0.6, { rate: 1.25 })); play(popB, 76.5, 0.5);
+  play(popB, 79.5, 0.5); play(popB, 80.7, 0.5); play(tick, 80.2, 0.5, { rate: 1.4 });
+  play(whoosh, 83.1, 0.4, { rate: 0.8 }); play(impact, 86.6, 0.5, { rate: 1.3 });
+};
+
+// ===== preview controls =====
+const render_ = location.search.includes('render');
+if (render_) { document.getElementById('ctl').style.display = 'none'; document.body.style.background = '#F6F5F0'; }
+else { const fit = () => { const k = Math.min(innerWidth / W, (innerHeight - 40) / H); stage.style.transform = `scale(${k})`; }; addEventListener('resize', fit); fit();
+  let buf, ac, src, startAt = 0, offset = 0, playing = false; const pp = document.getElementById('pp'), sc = document.getElementById('sc'), tm = document.getElementById('tm');
+  async function play() { ac ??= new AudioContext(); if (!buf) { pp.textContent = '…'; const off = new OfflineAudioContext(2, Math.ceil(48000 * DUR), 48000); await buildAudio(off); buf = await off.startRendering(); } src = ac.createBufferSource(); src.buffer = buf; src.connect(ac.destination); src.start(0, offset % DUR); startAt = ac.currentTime; playing = true; pp.textContent = 'pause'; }
+  function pause() { if (!playing) return; offset += ac.currentTime - startAt; src.stop(); playing = false; pp.textContent = 'play'; }
+  const now = () => playing ? (offset + ac.currentTime - startAt) % DUR : offset;
+  pp.onclick = () => playing ? pause() : play(); sc.oninput = () => { const was = playing; if (was) pause(); offset = sc.value * DUR; if (was) play(); };
+  (function loop() { const t = now(); seek(t); tm.textContent = t.toFixed(2); if (playing) sc.value = t / DUR; requestAnimationFrame(loop); })(); }
+seek(0);
+</script></body></html>

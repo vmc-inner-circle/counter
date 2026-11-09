@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>Counter · 90s · v2.1</title>
+<style>
+@font-face{font-family:P;src:url(fonts/Pretendard-Regular.woff2) format("woff2");font-weight:400}
+@font-face{font-family:P;src:url(fonts/Pretendard-Medium.woff2) format("woff2");font-weight:500}
+@font-face{font-family:P;src:url(fonts/Pretendard-SemiBold.woff2) format("woff2");font-weight:600}
+@font-face{font-family:P;src:url(fonts/Pretendard-Bold.woff2) format("woff2");font-weight:700}
+@font-face{font-family:P;src:url(fonts/Pretendard-ExtraBold.woff2) format("woff2");font-weight:800}
+html,body{margin:0;background:#111;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;background:#F6F5F0;overflow:hidden;transform-origin:0 0;
+  font-family:P,"PingFang SC","Apple SD Gothic Neo","Hiragino Sans",sans-serif;color:#141414;letter-spacing:-0.01em}
+.scene{position:absolute;inset:0;display:none}
+.cam{position:absolute;inset:0;transform-origin:960px 540px;will-change:transform}
+.abs{position:absolute;white-space:nowrap}
+.hl{position:absolute;height:1em;background:#FF6B3D;opacity:.18;border-radius:8px;transform-origin:left center}
+.bubble{position:absolute;background:#fff;border:1.5px solid #E6E4DE;border-radius:26px;padding:22px 32px;font-size:36px;font-weight:500;
+  box-shadow:0 6px 24px rgba(20,20,20,.06);max-width:720px;white-space:normal;line-height:1.35;transform-origin:left bottom}
+.bubble.acc{background:#FFF4EF;border-color:#FFB89E}
+.bubble.dark{background:#141414;color:#fff;border-color:#141414}
+.avatar{position:absolute;border-radius:50%;background:#fff;box-shadow:0 8px 28px rgba(20,20,20,.10);overflow:hidden;transform-origin:center bottom}
+.avatar img{width:100%;height:100%;display:block;object-fit:cover}
+.name{position:absolute;font-size:26px;font-weight:600;color:#8A8A8A;white-space:nowrap;text-align:center}
+.ph{position:absolute;width:56px;height:56px}
+.cursor{position:absolute;width:34px;height:46px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));z-index:9}
+.ripple{position:absolute;border:3px solid #FF6B3D;border-radius:50%;transform:translate(-50%,-50%);z-index:9}
+.wm{font-weight:800;letter-spacing:.16em;color:#141414;text-align:center;left:0;right:0}
+.sub{font-weight:500;color:#8A8A8A;text-align:center;left:0;right:0}
+.node{position:absolute;display:flex;flex-direction:column;align-items:center;gap:14px;transform-origin:center}
+.node .circ{width:150px;height:150px;border-radius:50%;background:#fff;box-shadow:0 10px 30px rgba(20,20,20,.10);overflow:hidden;display:grid;place-items:center}
+.node .circ img{width:100%;height:100%;object-fit:cover}
+.node .circ.c{background:#FF6B3D;color:#fff;font-weight:800;font-size:64px;letter-spacing:-.02em}
+.node .circ.u{background:#fff;color:#141414;font-weight:700;font-size:54px}
+.node .lab{font-size:26px;font-weight:600;color:#6F6F6F}
+.chip{position:absolute;font-size:22px;font-weight:600;background:#fff;border:1.5px solid #E6E4DE;border-radius:999px;padding:6px 14px;color:#444;white-space:nowrap}
+.link{position:absolute;height:4px;background:#D9D6CD;border-radius:2px;transform-origin:left center}
+.flowdot{position:absolute;width:14px;height:14px;border-radius:50%;background:#FF6B3D;transform:translate(-50%,-50%)}
+svg.wire{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visible}
+.tiny{position:absolute;width:44px;height:44px;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.08);transform:translate(-50%,-50%)}
+.tiny img{width:100%;height:100%;object-fit:cover}
+.cnode{position:absolute;width:300px;background:#fff;border-radius:22px;box-shadow:0 14px 40px rgba(20,20,20,.10);padding:18px 22px;transform:translate(-50%,-50%);display:flex;align-items:center;gap:14px}
+.cnode .c{width:48px;height:48px;border-radius:12px;background:#FF6B3D;color:#fff;font-weight:800;font-size:26px;display:grid;place-items:center;flex:none}
+.cnode b{display:block;font-size:24px;font-weight:700}
+.cnode small{display:block;font-size:18px;color:#8A8A8A;font-weight:500}
+.okpop{position:absolute;width:40px;height:40px;border-radius:50%;background:#1F9D55;transform:translate(-50%,-50%);display:grid;place-items:center}
+.okpop svg{width:22px;height:22px}
+.cnt{position:absolute;font-size:24px;font-weight:600;color:#6F6F6F;white-space:nowrap}
+.cnt b{color:#141414;font-weight:800;font-size:30px}
+.big{position:absolute;left:0;right:0;text-align:center;font-weight:800;letter-spacing:-0.04em;white-space:nowrap}
+.badge{position:absolute;background:#1F9D55;color:#fff;font-weight:700;font-size:26px;border-radius:999px;padding:14px 26px 14px 20px;display:flex;gap:12px;align-items:center;box-shadow:0 10px 30px rgba(31,157,85,.3);transform-origin:center}
+.badge svg{width:28px;height:28px}
+/* ===== phone (design/inbox 시안 A) ===== */
+.phone{position:absolute;width:390px;height:800px;background:#fff;border-radius:44px;border:10px solid #10151C;overflow:hidden;transform-origin:center;
+  font:15px/1.45 P,-apple-system,"Inter",sans-serif;color:#0F1B2A;letter-spacing:0}
+.phone .status{height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 26px;font-size:14px;font-weight:600}
+.phone .screen{position:absolute;left:0;top:44px;right:0;bottom:0;background:#fff;overflow:hidden}
+.ph-hd{padding:6px 20px 10px}.ph-hd h1{font-size:26px;margin:0;font-weight:800;letter-spacing:-.02em}
+.seg{display:flex;gap:6px;padding:0 16px 10px}.seg span{font-size:13.5px;padding:7px 12px;border-radius:999px;background:#F4F6F9;color:#4A5563;font-weight:600}.seg span.on{background:#0F1B2A;color:#fff}
+.row{display:flex;gap:12px;padding:12px 20px;align-items:flex-start;position:relative}.row+.row{border-top:1px solid #E8ECF1}
+.row .av{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:none;background:#EEF1F5}
+.row .m{flex:1;min-width:0}.row .t{display:flex;justify-content:space-between;gap:8px}.row b{font-size:15.5px}
+.row .via{font-size:12.5px;color:#8A94A3}.row p{margin:2px 0 0;font-size:14px;color:#4A5563;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row.need p{color:#0F1B2A;font-weight:600}.row .time{font-size:12px;color:#8A94A3;white-space:nowrap}.need .time{color:#1D78C6;font-weight:600}
+.ptabs{position:absolute;left:0;right:0;bottom:0;display:flex;border-top:1px solid #E8ECF1;padding:8px 0 22px;background:#fff}.ptabs span{flex:1;text-align:center;font-size:12px;color:#8A94A3;font-weight:600}.ptabs span.on{color:#0F1B2A}
+.th{display:flex;gap:10px;align-items:center;padding:4px 14px 10px;border-bottom:1px solid #E8ECF1}.th .back{font-size:22px;color:#1D78C6;padding:0 4px}.th b{display:block;font-size:16px}.th small{font-size:12.5px;color:#8A94A3}
+.th .av{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.facts{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid #E8ECF1}.pchip{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;padding:3px 9px;border-radius:999px;background:#F4F6F9;color:#4A5563}
+.msgs{padding:14px 14px;display:flex;flex-direction:column;gap:10px}.sys{align-self:center;font-size:12px;color:#8A94A3}
+.b{max-width:80%;padding:9px 13px;border-radius:18px;font-size:14.5px;white-space:normal}.b.in{align-self:flex-start;background:#F4F6F9;border-bottom-left-radius:6px}.b.out{align-self:flex-end;background:#1D78C6;color:#fff;border-bottom-right-radius:6px}
+.lbl{font-size:11.5px;color:#8A94A3}.lbl.r{align-self:flex-end}
+.req{align-self:stretch;border:1px solid #E8ECF1;border-radius:16px;padding:14px}.req .k{font-size:12.5px;color:#8A94A3}.req .bg{font-size:20px;font-weight:700;margin:2px 0}.req .s{color:#4A5563}
+.dock{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #E8ECF1;padding:12px 14px 26px}.dock .why{font-size:12.5px;color:#8A94A3;margin-bottom:8px}.dock .two{display:flex;gap:8px}
+.btn{border:0;border-radius:12px;padding:13px 16px;font-weight:600;font-size:15px;text-align:center}.btn.pri{background:#1D78C6;color:#fff;flex:1}.btn.sec{background:#F4F6F9;color:#0F1B2A;padding:13px 20px}
+.comp{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #E8ECF1;padding:10px 14px 26px}
+.sugg{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}.sugg span{font-size:13px;border:1px solid #E8ECF1;border-radius:999px;padding:5px 11px}
+.inp{display:flex;gap:8px;align-items:center}.inp div{flex:1;border:1px solid #E8ECF1;border-radius:20px;padding:9px 14px;color:#8A94A3;font-size:14.5px;min-height:38px;white-space:normal}.inp div.on{color:#0F1B2A;border-color:#1D78C6}
+.inp .send{background:#1D78C6;color:#fff;border-radius:50%;width:38px;height:38px;display:grid;place-items:center;font-weight:700;flex:none}
+.rem{display:flex;align-items:center;gap:8px;font-size:13.5px;margin-top:9px;color:#4A5563}.tog{width:34px;height:20px;border-radius:10px;background:#1D78C6;position:relative;flex:none}.tog:after{content:"";position:absolute;right:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+.toast{position:absolute;left:14px;right:14px;top:60px;background:#12A15F;color:#fff;border-radius:14px;padding:12px 14px;font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(18,161,95,.3)}
+#ctl{position:fixed;left:0;right:0;bottom:0;background:#222;color:#ddd;font:14px P,sans-serif;padding:8px 12px;display:flex;gap:12px;align-items:center}#ctl input{flex:1}
+</style></head><body>
+<div id="stage"></div>
+<div id="ctl"><button id="pp">play</button><span id="tm">0.00</span><input id="sc" type="range" min="0" max="1" step="0.001" value="0"></div>
+<script>
+// ===== beat sheet (s) — v2.1 =====
+// A1 0 wordmark+click | A2 2.2 hook title, VO n1 @2.6 | B1 6.6 agents get errands (pop×3) | B2 11.4 "100곳 동시 전화" phone grid (ring builds)
+// B3 15.6 owner flustered, phones rain (busy tone) | B4 22.4 owner slides right, chain user→Pickle→Counter→owner builds, VO n2 @24.2, COUNTER wordmark @27.6
+// C1 31 workflow: 42 agents → 3 Counters → owner phone; VO n3 @32 | C2 45 owner phone (시안 A): list → thread → Approve @49 → question → answer+remember @54–57 → memory payoff @59; VO n4 @50.5
+// D1 62 "받은 전화 0통" | D2 66 "모든 에이전트·언어·24시간" | D3 70 "확정은 사장님이" | E1 74 owner happy | E2 79 pickle happy | E3 83 slogan, VO n5 @83.4 | E4 87 end card
+const LANG = 'ko';
+const W = 1920, H = 1080, DUR = 89.5;
+window.VIDEO = { w: W, h: H, duration: DUR };
+const ACC = '#FF6B3D';
+const COPY = {
+ko: {
+  a2: '이제 손님은 에이전트입니다.', a2hl: '에이전트',
+  b1: [['Muse', '주말 예약 다 잡아 줘'], ['Pickle', '엄마 생신 저녁 자리 알아봐'], ['Dots', '회사 근처 피부과, 토요일']],
+  b2: '100곳에 동시에 전화합니다.', b2hl: '동시에',
+  b3a: '또 AI야?', b3b: '예약인지 스팸인지 모르겠어…',
+  b4t: '그래서, 매장마다 에이전트를 둡니다.', b4hl: '매장마다', b4n: ['사용자', 'Pickle', 'Counter', '사장님'], b4u: '엄마 생신 저녁 자리 알아봐', b4c: '매장마다 존재하는 에이전트',
+  c1t: '수백 개의 문의를 Counter가 받습니다.', c1t2: '사장님께는 확인이 필요한 것만.', c1hl: '확인이 필요한 것만', c1shops: [['소이 피부과', 'Counter'], ['한옥집 식당', 'Counter'], ['남산 게스트하우스', 'Counter']], c1a: '즉답', c1b: '사장님 확인', c1owner: '사장님 폰',
+  c2k: ['탭 한 번.', '모르는 질문은 한 번만.', '다음부턴 Counter가 기억.'], c2s: ['승인 전엔 아무것도 예약되지 않습니다', '답하면 Counter가 에이전트에게 전합니다', '같은 질문에 사장님을 두 번 부르지 않습니다'],
+  d1: '받은 전화, 0통.', d1s: '오늘 에이전트 문의 18건', d2: '모든 에이전트, 모든 언어, 24시간.', d2s: 'Muse · Pickle · Dots · Claude', d3: '확정은 언제나 사장님이.', d3s: 'Nothing is booked until you approve.',
+  e1: '오늘 문의 18건, 내가 받은 전화 0통.', e2: 'Counter랑 얘기하면 바로 답이 와요.', e3a: 'Phones are for people.', e3b: 'Counter is for agents.',
+  e4: 'cntr.to', e4b: 'Team mafia · c0mpiled-17 Seoul · 2026.11', owner: '사장님', mock: '예시 화면 · 숫자는 가상',
+},
+en: {
+  a2: 'Your next customer is an AI agent.', a2hl: 'AI agent',
+  b1: [['Muse', 'Book my whole weekend'], ['Pickle', "Dinner for mom's birthday"], ['Dots', 'Derm clinic near work, Saturday']],
+  b2: 'They call 100 shops at once.', b2hl: 'at once',
+  b3a: 'Another bot?', b3b: "Booking or spam? Can't tell anymore…",
+  b4t: 'So, every shop gets an agent of its own.', b4hl: 'every shop', b4n: ['User', 'Pickle', 'Counter', 'Owner'], b4u: "Dinner for mom's birthday", b4c: 'An agent at every shop',
+  c1t: 'Counter takes the hundreds of requests.', c1t2: 'The owner sees only what needs a decision.', c1hl: 'only what needs a decision', c1shops: [['Soy Dermatology', 'Counter'], ['Hanok House', 'Counter'], ['Namsan Guesthouse', 'Counter']], c1a: 'answered', c1b: 'needs owner', c1owner: "Owner's phone",
+  c2k: ['One tap.', 'Answer once.', 'Counter remembers.'], c2s: ['Nothing is booked until you approve', 'Counter relays your answer to the agent', 'The same question never reaches you twice'],
+  d1: 'Calls answered: zero.', d1s: '18 agent requests today', d2: 'Every agent. Every language. 24/7.', d2s: 'Muse · Pickle · Dots · Claude', d3: 'You always have the final say.', d3s: 'Nothing is booked until you approve.',
+  e1: '18 requests today. Calls I answered: zero.', e2: 'With Counter, I get answers right away.', e3a: 'Phones are for people.', e3b: 'Counter is for agents.',
+  e4: 'cntr.to', e4b: 'Team mafia · c0mpiled-17 Seoul · 2026.11', owner: 'Owner', mock: 'Mock screen · figures illustrative',
+}}[LANG];
+// phone content (English UI, as in design/inbox 시안 A)
+const PH = {
+  store: 'Soi Dermatology', needs: 'Needs you · 2', all: 'All · 4',
+  rows: [['off_muse.png', 'Emma Clarke', 'via Muse · 🇬🇧 UK', 'Booking: Rejuran Healer, Tue 15:00 — approve?', 'now', true],
+         ['off_pickle.png', 'Wang Fang', 'via Pickle · 🇨🇳 China', '“Can I bring my 7-year-old son to wait…”', '1m', true],
+         ['C', 'Haruto Sato', 'via Claude', 'Answered from memory: Ms. Sato speaks Japanese…', '1m', false],
+         ['off_dots.png', 'Nguyen Thi Lan', 'via Dots · 🇻🇳 Vietnam', 'Confirmed · Laser Toning, Wed 13:00', '2m', false]],
+  th: ['Emma Clarke', 'via Muse · +44 7700 900123'], facts: ['🇬🇧 UK', '♿ Uses a wheelchair'],
+  sys1: 'Muse read your store info · 11:24', req: ['Booking request · slot held for Muse', 'Tue, Nov 10 · 15:00', 'Rejuran Healer (full face) · ₩350,000'],
+  why: 'Nothing is booked until you approve.', decline: 'Decline', approve: 'Approve', toast: 'Approved · Muse got confirmation #A-1027',
+  q: 'Is there a female doctor available?', qlbl: 'Not in your store info · Muse is waiting', sugg: ['Yes', 'Please ask at the desk'],
+  ans: 'Yes — Dr. Kim sees patients Tue & Thu.', placeholder: 'Reply to Muse…', rem: 'Remember for next time', saved: 'You answered in 9s · saved to memory',
+  sys2: 'Dots asked the same · answered from memory · 0s',
+};
+
+// ===== helpers =====
+function spring(t, w = 14, z = 0.82) { if (t <= 0) return 0; if (z >= 1) return 1 - Math.exp(-w * t) * (1 + w * t); const wd = w * Math.sqrt(1 - z * z); return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = x => (x = clamp(x), x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const eo = x => 1 - Math.pow(1 - clamp(x), 3);
+const lerp = (a, b, k) => a + (b - a) * k;
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const kf = keys => t => { if (t <= keys[0][0]) return keys[0][1]; for (let i = 1; i < keys.length; i++) { const [a, va] = keys[i - 1], [b, vb, e = ease] = keys[i]; if (t <= b) return lerp(va, vb, e((t - a) / (b - a))); } return keys[keys.length - 1][1]; };
+const rng = s => () => (s = (s + 0x6D2B79F5) | 0, s = Math.imul(s ^ (s >>> 15), 1 | s), s ^= s + Math.imul(s ^ (s >>> 7), 61 | s), ((s ^ (s >>> 14)) >>> 0) / 4294967296);
+const pop = (t, t0, w = 16, z = 0.7) => spring(t - t0, w, z);
+const fadeIn = (t, t0, d = 0.3) => eo(seg(t, t0, t0 + d));
+const typed = (s, t, t0, cps = 26) => s.slice(0, Math.max(0, Math.floor((t - t0) * cps)));
+const stage = document.getElementById('stage');
+const el = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; (parent || stage).appendChild(e); return e; };
+const scene = (name, a, b) => { const s = el('div', 'scene', stage); s.dataset.name = name; s.a = a; s.b = b; s.cam = el('div', 'cam', s); return s; };
+const setCam = (s, scale = 1, x = 0, y = 0) => { s.cam.style.transform = `translate(${x}px,${y}px) scale(${scale})`; };
+const show = (e, on) => { e.style.display = on ? (e.classList.contains('scene') ? 'block' : '') : 'none'; };
+const xf = (e, { x = 0, y = 0, s = 1, r = 0, o = 1 } = {}) => { e.style.transform = `translate(${x}px,${y}px) scale(${s}) rotate(${r}deg)`; e.style.opacity = o; };
+const CURSOR_SVG = `<svg viewBox="0 0 34 46"><path d="M3 2 L31 24 L19 26 L26 42 L20 44 L13 28 L3 36 Z" fill="#141414" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
+const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>`;
+const PHONE_SVG = (c = '#BDB9AE') => `<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>`;
+const USER_SVG = `<svg viewBox="0 0 24 24" width="70" height="70" fill="none" stroke="#141414" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>`;
+const avatar = (parent, src, size, x, y) => { const a = el('div', 'avatar', parent, `<img src="assets/${src}">`); a.style.width = a.style.height = size + 'px'; a.style.left = x + 'px'; a.style.top = y + 'px'; return a; };
+const face = (parent, size, x, y) => { const f = el('div', 'abs', parent); f.style.left = x + 'px'; f.style.top = y + 'px'; f.style.width = f.style.height = size + 'px'; f.style.pointerEvents = 'none'; f.innerHTML = `<svg viewBox="0 0 100 100" style="width:100%;height:100%">
+  <g class="tense"><path d="M74 40 q5 8 0 12 q-5 -4 0 -12z" fill="#5AA9FF"/><path d="M43 72 h14" stroke="#141414" stroke-width="4" stroke-linecap="round"/></g>
+  <g class="happy"><path d="M38 68 q12 12 24 0" stroke="#141414" stroke-width="4.5" fill="none" stroke-linecap="round"/><circle cx="28" cy="60" r="5" fill="#FF9B8A" opacity=".8"/><circle cx="72" cy="60" r="5" fill="#FF9B8A" opacity=".8"/></g></svg>`; return f; };
+const setFace = (f, mode) => { for (const m of ['tense', 'happy']) f.querySelector('.' + m).style.display = m === mode ? '' : 'none'; };
+const bubble = (parent, cls, x, y) => { const b = el('div', 'bubble ' + (cls || ''), parent); b.style.left = x + 'px'; b.style.top = y + 'px'; return b; };
+const titleLine = (parent, y, size = 58) => { const w = el('div', 'abs', parent); w.style.left = '0'; w.style.right = '0'; w.style.top = y + 'px'; w.style.textAlign = 'center'; const t = el('span', '', w); t.style.position = 'relative'; t.style.display = 'inline-block'; t.style.fontWeight = '700'; t.style.fontSize = size + 'px'; t.base = size; t.style.letterSpacing = '-0.025em'; t.style.padding = '0 .1em'; t.hl = el('span', 'hl', t); t.hl.style.left = '0'; t.hl.style.top = '0.08em'; t.hl.style.zIndex = '-1'; t.txt = el('span', '', t); return t; };
+const setTitle = (T, full, t, t0, { hlWord, hlT, cps = 22 } = {}) => {
+  if (T.fitted !== full) { T.style.fontSize = T.base + 'px'; T.txt.textContent = full; const w = T.offsetWidth; if (w > 1640) T.style.fontSize = (T.base * 1640 / w).toFixed(1) + 'px'; T.fitted = full; }
+  const n = Math.floor(Math.max(0, t - t0) * cps); T.txt.textContent = full.slice(0, n); T.style.opacity = t >= t0 ? 1 : 0;
+  if (hlWord && hlT != null && t >= hlT - 0.01) { const i = full.indexOf(hlWord); if (i >= 0 && n >= i + hlWord.length) { const r = document.createRange(); const tn = T.txt.firstChild; if (tn) { r.setStart(tn, i); r.setEnd(tn, i + hlWord.length); const rb = r.getBoundingClientRect(), pb = T.getBoundingClientRect(); const k = pb.width ? (T.offsetWidth / pb.width) : 1; T.hl.style.left = ((rb.left - pb.left) * k - 6) + 'px'; T.hl.style.width = ((rb.width) * k + 12) + 'px'; T.hl.style.transform = `scaleX(${eo(seg(t, hlT, hlT + 0.5))})`; T.hl.style.display = ''; } } else T.hl.style.display = 'none'; } else T.hl.style.display = 'none';
+};
+const stageBg = el('div', 'abs', stage); stageBg.style.inset = '0'; stageBg.style.background = '#F6F5F0';
+
+// ===== scenes =====
+const A1 = scene('A1', 0, 2.3);
+const a1wm = el('div', 'abs wm', A1.cam, 'COUNTER'); a1wm.style.top = '505px'; a1wm.style.fontSize = '46px';
+const a1cur = el('div', 'cursor', A1.cam, CURSOR_SVG); const a1rip = el('div', 'ripple', A1.cam);
+const A2 = scene('A2', 2.2, 6.8); const a2T = titleLine(A2.cam, 505);
+const B1 = scene('B1', 6.6, 11.6);
+const b1 = COPY.b1.map(([nm, msg], i) => { const x = 290 + i * 520; const av = avatar(B1.cam, ['muse_avatar.png', 'pickle_avatar.png', 'dots_avatar.png'][i], 280, x, 440); const bb = bubble(B1.cam, '', x - 60, 270); bb.textContent = msg; const nmE = el('div', 'name', B1.cam, nm); nmE.style.left = (x - 60) + 'px'; nmE.style.width = '400px'; nmE.style.top = '740px'; return { av, bb, nmE }; });
+const B2 = scene('B2', 11.4, 15.8); const b2grid = el('div', 'abs', B2.cam); b2grid.style.inset = '0';
+const b2ph = []; for (let r = 0; r < 5; r++) for (let c = 0; c < 10; c++) { const p = el('div', 'ph', b2grid, PHONE_SVG('#BDB9AE')); p.style.width = p.style.height = '72px'; p.style.left = (190 + c * 170) + 'px'; p.style.top = (140 + r * 200) + 'px'; b2ph.push(p); }
+const b2bg = el('div', 'abs', B2.cam); Object.assign(b2bg.style, { left: '0', right: '0', top: '470px', height: '130px', background: 'rgba(246,245,240,.92)' }); const b2T = titleLine(B2.cam, 505);
+// B3 + B4 share one scene so the owner can slide instead of cutting
+const B3 = scene('B3', 15.6, 31.2);
+const b3rain = []; { const r = rng(7); for (let i = 0; i < 26; i++) { const p = el('div', 'ph', B3.cam, PHONE_SVG('#FF6B3D')); p.x0 = 200 + r() * 1500; p.t0 = r() * 4.5; p.rot = (r() - .5) * 90; p.sp = 0.8 + r() * 0.6; p.style.width = p.style.height = '48px'; b3rain.push(p); } }
+const b3owner = el('img', 'abs', B3.cam); b3owner.src = 'assets/owner.png'; b3owner.style.width = '600px'; b3owner.style.left = '560px'; b3owner.style.top = '300px'; b3owner.style.transformOrigin = 'center bottom';
+const b3b1 = bubble(B3.cam, '', 1150, 380); b3b1.textContent = COPY.b3a; const b3b2 = bubble(B3.cam, '', 1150, 520); b3b2.textContent = COPY.b3b;
+const b3sweat = el('div', 'abs', B3.cam, `<svg viewBox="0 0 40 60" style="width:40px;height:60px"><path d="M20 4 q14 24 0 30 q-14 -6 0 -30z" fill="#5AA9FF"/></svg>`); b3sweat.style.left = '960px'; b3sweat.style.top = '360px';
+const b3name = el('div', 'name', B3.cam, COPY.owner); b3name.style.left = '560px'; b3name.style.width = '600px'; b3name.style.top = '930px';
+// chain nodes (B4): user, pickle, counter; owner is b3owner moved right
+const b4T = titleLine(B3.cam, 150);
+const chainX = [330, 700, 1070]; const chainY = 520;
+const b4nodes = [USER_SVG, null, 'C'].map((v, i) => { const n = el('div', 'node', B3.cam); n.style.left = (chainX[i] - 75) + 'px'; n.style.top = (chainY - 75) + 'px'; const c = el('div', 'circ' + (i === 2 ? ' c' : i === 0 ? ' u' : ''), n, i === 1 ? `<img src="assets/pickle_avatar.png">` : v); el('div', 'lab', n, COPY.b4n[i]); return n; });
+const b4ownerLab = el('div', 'name', B3.cam, COPY.b4n[3]); b4ownerLab.style.left = '1240px'; b4ownerLab.style.width = '440px'; b4ownerLab.style.top = '830px';
+const b4links = [0, 1, 2].map(i => { const l = el('div', 'link', B3.cam); const x0 = chainX[i] + 80, x1 = (i < 2 ? chainX[i + 1] - 80 : 1300); l.style.left = x0 + 'px'; l.style.top = (chainY - 2) + 'px'; l.style.width = (x1 - x0) + 'px'; l.x0 = x0; l.x1 = x1; return l; });
+const b4dots = [0, 1, 2].map(() => el('div', 'flowdot', B3.cam));
+const b4uchip = el('div', 'chip', B3.cam, COPY.b4u); b4uchip.style.left = '230px'; b4uchip.style.top = '380px';
+const b4wm = el('div', 'abs wm', B3.cam, 'COUNTER'); b4wm.style.top = '230px'; b4wm.style.fontSize = '120px'; b4wm.style.letterSpacing = '.12em'; b4wm.style.transformOrigin = 'center';
+const b4sub = el('div', 'abs sub', B3.cam, COPY.b4c); b4sub.style.top = '395px'; b4sub.style.fontSize = '34px';
+// C1 workflow
+const C1 = scene('C1', 31, 45.3);
+const c1T = titleLine(C1.cam, 70, 50);
+const c1agents = []; { const srcs = ['off_muse.png', 'off_pickle.png', 'off_dots.png', 'off_grok-bot.png']; const r = rng(3); for (let i = 0; i < 42; i++) { const col = i % 14, row = Math.floor(i / 14); const x = 170 + col * 122 + (row % 2) * 30, y = 200 + row * 76; const a = el('div', 'tiny', C1.cam, `<img src="assets/${srcs[i % 4]}">`); a.style.left = x + 'px'; a.style.top = y + 'px'; a.x = x; a.y = y; a.seed = r(); c1agents.push(a); } }
+const c1wire = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); c1wire.setAttribute('class', 'wire'); c1wire.setAttribute('viewBox', '0 0 1920 1080'); C1.cam.appendChild(c1wire);
+const c1shopPos = [[480, 640], [960, 640], [1440, 640]];
+const c1shops = COPY.c1shops.map(([n, s], i) => { const c = el('div', 'cnode', C1.cam, `<div class="c">C</div><div><b>${n}</b><small>${s}</small></div>`); c.style.left = c1shopPos[i][0] + 'px'; c.style.top = c1shopPos[i][1] + 'px'; return c; });
+const c1ownerPos = [1440, 930];
+const c1owner = el('div', 'cnode', C1.cam, `<img src="assets/owner.png" style="width:56px;height:56px;object-fit:cover;object-position:top;border-radius:50%;background:#fff;flex:none"><div><b>${COPY.c1owner}</b><small>${COPY.c1b}</small></div>`); c1owner.style.left = c1ownerPos[0] + 'px'; c1owner.style.top = c1ownerPos[1] + 'px'; c1owner.style.width = '320px';
+const c1oks = []; const c1flows = [];
+{ const r = rng(11); for (let i = 0; i < 28; i++) { const a = c1agents[Math.floor(r() * 42)]; const shop = Math.floor(r() * 3); const t0 = 1.2 + i * 0.32; const toOwner = (i % 7 === 3); c1flows.push({ a, shop, t0, toOwner, ok: el('div', 'okpop', C1.cam, CHECK_SVG), dot: el('div', 'flowdot', C1.cam) }); } }
+const c1cntA = el('div', 'cnt', C1.cam); c1cntA.style.left = '150px'; c1cntA.style.top = '990px';
+const c1cntB = el('div', 'cnt', C1.cam); c1cntB.style.left = '150px'; c1cntB.style.top = '1030px';
+const c1lines = c1flows.map(f => { const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('fill', 'none'); p.setAttribute('stroke', '#D9D6CD'); p.setAttribute('stroke-width', '2'); c1wire.appendChild(p); return p; });
+const c1olines = [0, 1, 2].map(() => { const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('fill', 'none'); p.setAttribute('stroke', '#FF6B3D'); p.setAttribute('stroke-width', '3'); p.setAttribute('stroke-dasharray', '10 10'); c1wire.appendChild(p); return p; });
+// C2 owner phone (시안 A)
+const C2 = scene('C2', 45, 62.3);
+const c2keys = COPY.c2k.map((k, i) => { const e = el('div', 'abs', C2.cam); Object.assign(e.style, { left: '120px', top: '400px', fontSize: '80px', fontWeight: '800', letterSpacing: '-0.04em', whiteSpace: 'normal', width: '900px', lineHeight: '1.1' }); e.textContent = k; return e; });
+const c2subs = COPY.c2s.map((k, i) => { const e = el('div', 'abs', C2.cam); Object.assign(e.style, { left: '124px', top: '610px', fontSize: '32px', fontWeight: '500', color: '#8A8A8A', whiteSpace: 'normal', width: '900px' }); e.textContent = k; return e; });
+const phone = el('div', 'phone', C2.cam); phone.style.left = '1200px'; phone.style.top = '120px';
+phone.innerHTML = `<div class="status"><span>11:27</span><span>●●● 100%</span></div>`;
+const scrList = el('div', 'screen', phone); scrList.innerHTML = `<div class="ph-hd"><h1>${PH.store}</h1></div><div class="seg"><span class="on">${PH.needs}</span><span>${PH.all}</span></div>` + PH.rows.map(([src, nm, via, p, tm, need]) => `<div class="row${need ? ' need' : ''}">${src.length === 1 ? `<span class="av" style="display:grid;place-items:center;background:#D97757;color:#fff;font-weight:700">${src}</span>` : `<img class="av" src="assets/${src}">`}<div class="m"><div class="t"><b>${nm}</b><span class="time">${tm}</span></div><div class="via">${via}</div><p>${p}</p></div></div>`).join('') + `<div class="ptabs"><span class="on">Inbox</span><span>Memory</span><span>Store info</span></div>`;
+const scrTh = el('div', 'screen', phone);
+scrTh.innerHTML = `<div class="th"><span class="back">‹</span><img class="av" src="assets/off_muse.png"><div><b>${PH.th[0]}</b><small>${PH.th[1]}</small></div></div><div class="facts">${PH.facts.map(f => `<span class="pchip">${f}</span>`).join('')}</div>
+<div class="msgs"><div class="sys">${PH.sys1}</div><div class="req" id="req"><div class="k">${PH.req[0]}</div><div class="bg">${PH.req[1]}</div><div class="s">${PH.req[2]}</div></div><div class="lbl r" id="okl" style="display:none">Approved · 11:27</div>
+<div class="b in" id="qb" style="display:none">${PH.q}</div><div class="lbl" id="ql" style="display:none">${PH.qlbl}</div><div class="b out" id="ab" style="display:none">${PH.ans}</div><div class="lbl r" id="sl" style="display:none">${PH.saved}</div><div class="sys" id="s2" style="display:none">${PH.sys2}</div></div>
+<div class="dock" id="dock"><div class="why">${PH.why}</div><div class="two"><div class="btn sec">${PH.decline}</div><div class="btn pri" id="apr">${PH.approve}</div></div></div>
+<div class="comp" id="comp" style="display:none"><div class="sugg">${PH.sugg.map(s => `<span>${s}</span>`).join('')}</div><div class="inp"><div id="inp">${PH.placeholder}</div><span class="send">↑</span></div><div class="rem"><span class="tog"></span>${PH.rem}</div></div>
+<div class="toast" id="toast" style="display:none">${PH.toast}</div>`;
+const Q = s => scrTh.querySelector(s);
+const c2cur = el('div', 'cursor', C2.cam, CURSOR_SVG); const c2rip = el('div', 'ripple', C2.cam);
+const c2mock = el('div', 'abs', C2.cam, COPY.mock); Object.assign(c2mock.style, { right: '40px', bottom: '28px', fontSize: '20px', color: '#8A8A8A' });
+// D benefits
+const D = scene('D', 62, 74.3);
+const dBig = [0, 1, 2].map(() => { const e = el('div', 'big', D.cam); e.style.top = '430px'; e.style.fontSize = '96px'; return e; });
+const dSub = [0, 1, 2].map(() => { const e = el('div', 'abs sub', D.cam); e.style.top = '570px'; e.style.fontSize = '34px'; return e; });
+dBig[0].textContent = COPY.d1; dSub[0].textContent = COPY.d1s; dBig[1].textContent = COPY.d2; dSub[1].textContent = COPY.d2s; dBig[2].textContent = COPY.d3; dSub[2].textContent = COPY.d3s;
+const dPh = el('div', 'abs', D.cam); dPh.style.left = '0'; dPh.style.right = '0'; dPh.style.top = '280px'; dPh.style.textAlign = 'center'; dPh.innerHTML = `<span style="display:inline-block;width:96px;height:96px">${PHONE_SVG('#FF6B3D')}</span>`;
+const dAv = ['muse_avatar.png', 'pickle_avatar.png', 'dots_avatar.png'].map((s, i) => avatar(D.cam, s, 110, 800 + i * 160, 260));
+const dTap = el('div', 'abs', D.cam, `<svg viewBox="0 0 24 24" width="96" height="96" fill="none" stroke="#FF6B3D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V5a2 2 0 0 1 4 0v6"/><path d="M13 10V8a2 2 0 0 1 4 0v3"/><path d="M17 11a2 2 0 0 1 4 0v4a7 7 0 0 1-7 7h-2a7 7 0 0 1-6-3.4L3 15a2 2 0 0 1 3-2.6l3 2.6"/></svg>`); dTap.style.left = '912px'; dTap.style.top = '270px';
+// E1 owner happy, E2 pickle happy, E3 slogan, E4 end
+const E1 = scene('E1', 74, 79.3);
+const e1owner = el('img', 'abs', E1.cam); e1owner.src = 'assets/owner.png'; e1owner.style.width = '600px'; e1owner.style.left = '560px'; e1owner.style.top = '300px'; e1owner.style.transformOrigin = 'center bottom';
+const e1checks = [0, 1, 2].map(i => { const c = el('div', 'badge', E1.cam, CHECK_SVG); c.style.padding = '12px'; c.style.left = (770 + i * 100) + 'px'; c.style.top = '220px'; c.style.borderRadius = '50%'; return c; });
+const e1b = bubble(E1.cam, '', 1150, 400); e1b.textContent = COPY.e1; e1b.style.maxWidth = '600px';
+const e1name = el('div', 'name', E1.cam, COPY.owner); e1name.style.left = '560px'; e1name.style.width = '600px'; e1name.style.top = '930px';
+const E2 = scene('E2', 79, 83.3);
+const e2av = avatar(E2.cam, 'pickle_avatar.png', 300, 810, 420); const e2face = face(E2.cam, 300, 810, 420);
+const e2b = bubble(E2.cam, 'acc', 1130, 480); e2b.textContent = COPY.e2; e2b.style.maxWidth = '560px';
+const e2name = el('div', 'name', E2.cam, 'Pickle'); e2name.style.left = '810px'; e2name.style.width = '300px'; e2name.style.top = '740px';
+const E3 = scene('E3', 83, 87.3);
+const e3a = el('div', 'big', E3.cam, COPY.e3a); const e3b = el('div', 'big', E3.cam, COPY.e3b); e3a.style.top = '380px'; e3b.style.top = '520px'; e3a.style.fontSize = e3b.style.fontSize = '110px'; e3b.style.color = ACC;
+const E4 = scene('E4', 87, DUR + 1);
+const e4wm = el('div', 'abs wm', E4.cam, 'COUNTER'); e4wm.style.top = '470px'; e4wm.style.fontSize = '72px';
+const e4url = el('div', 'abs sub', E4.cam, COPY.e4); e4url.style.top = '590px'; e4url.style.fontSize = '34px'; e4url.setAttribute('data-todo', '도메인 가칭');
+const e4team = el('div', 'abs sub', E4.cam, COPY.e4b); e4team.style.top = '960px'; e4team.style.fontSize = '24px';
+const fadeLayer = el('div', 'abs', stage); Object.assign(fadeLayer.style, { inset: '0', background: '#F6F5F0', pointerEvents: 'none', opacity: 0 });
+const SCENES = [A1, A2, B1, B2, B3, C1, C2, D, E1, E2, E3, E4];
+
+// ===== render =====
+const curve = (x0, y0, x1, y1) => `M${x0} ${y0} C ${x0} ${(y0 + y1) / 2}, ${x1} ${(y0 + y1) / 2}, ${x1} ${y1}`;
+const onCurve = (x0, y0, x1, y1, u) => { const mx = (y0 + y1) / 2; const a = 1 - u; return [a*a*a*x0 + 3*a*a*u*x0 + 3*a*u*u*x1 + u*u*u*x1, a*a*a*y0 + 3*a*a*u*mx + 3*a*u*u*mx + u*u*u*y1]; };
+function render(t) {
+  for (const S of SCENES) show(S, t >= S.a && t < S.b);
+  // A1
+  if (A1.style.display !== 'none') { const tl = t; const cx = kf([[0.6, 1500], [1.5, 1010, ease]])(tl), cy = kf([[0.6, 900], [1.5, 560, ease]])(tl); a1cur.style.left = cx + 'px'; a1cur.style.top = cy + 'px'; a1cur.style.opacity = tl > 0.6 ? 1 : 0; a1wm.style.transform = `scale(${tl > 1.6 && tl < 1.75 ? 0.94 : 1})`; const rp = seg(tl, 1.65, 2.1); a1rip.style.left = '990px'; a1rip.style.top = '528px'; a1rip.style.width = a1rip.style.height = (20 + 90 * eo(rp)) + 'px'; a1rip.style.opacity = rp > 0 && rp < 1 ? 1 - rp : 0; a1wm.style.opacity = Math.min(fadeIn(tl, 0.1, 0.6), 1 - seg(tl, 1.95, 2.25)); setCam(A1); }
+  // A2
+  if (A2.style.display !== 'none') { const tl = t - 2.2; setTitle(a2T, COPY.a2, t, 2.5, { hlWord: COPY.a2hl, hlT: 4.5 }); setCam(A2, lerp(1, 1.55, ease(seg(tl, 1.4, 3.0)))); A2.cam.style.opacity = 1 - seg(t, 6.4, 6.75); }
+  // B1
+  if (B1.style.display !== 'none') { b1.forEach((o, i) => { const t0 = 6.9 + i * 1.1; const p = pop(t, t0); xf(o.av, { s: p, o: clamp(p * 2) }); const bp = pop(t, t0 + 0.3); xf(o.bb, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2), y: -8 * (1 - bp) }); o.nmE.style.opacity = fadeIn(t, t0 + 0.2); }); setCam(B1, lerp(1, 1.06, seg(t, 6.6, 11.6))); B1.cam.style.opacity = 1 - seg(t, 11.2, 11.55); }
+  // B2
+  if (B2.style.display !== 'none') { const tl = t - 11.4; b2ph.forEach((p, i) => { const t0 = 1.4 + (i === 24 ? 0 : 0.25 + (Math.abs((i % 10) - 4.5) + Math.abs(Math.floor(i / 10) - 2)) * 0.22); const pp = pop(tl, t0, 18, 0.7); xf(p, { s: pp, o: clamp(pp * 2) }); }); setTitle(b2T, COPY.b2, t, 11.7, { hlWord: COPY.b2hl, hlT: 14.1 }); setCam(B2, lerp(1, 1.18, seg(tl, 0.5, 4.4))); B2.cam.style.opacity = 1 - seg(t, 15.45, 15.75); }
+  // B3 + B4
+  if (B3.style.display !== 'none') { const tl = t - 15.6; const slide = ease(seg(tl, 6.8, 8.0)); // 22.4 -> 23.6
+    const p = pop(tl, 0.15, 12, 0.8); const ox = lerp(560, 1250, slide), oscale = lerp(1, 0.78, slide);
+    b3owner.style.left = ox + 'px'; b3owner.style.transform = `scale(${p * oscale}) rotate(${Math.sin(tl * 18) * 1.6 * seg(tl, 0.8, 1.2) * (1 - slide)}deg)`; b3owner.style.opacity = clamp(p * 2);
+    b3rain.forEach(ph => { const u = (tl - ph.t0) * ph.sp; const y = -80 + u * 420; ph.style.left = ph.x0 + 'px'; ph.style.top = y + 'px'; ph.style.opacity = (u > 0 && y < 1100 ? 0.9 : 0) * (1 - slide); ph.style.transform = `rotate(${ph.rot + u * 60}deg)`; });
+    const p1 = pop(tl, 1.0), p2 = pop(tl, 3.2); xf(b3b1, { s: 0.8 + 0.2 * p1, o: clamp(p1 * 2) * (1 - slide * 2) }); xf(b3b2, { s: 0.8 + 0.2 * p2, o: clamp(p2 * 2) * (1 - slide * 2) });
+    b3sweat.style.opacity = fadeIn(tl, 1.4) * (1 - slide * 2); b3sweat.style.transform = `translateY(${6 * Math.sin(tl * 6)}px)`; b3name.style.opacity = fadeIn(tl, 0.5) * (1 - slide * 2);
+    b4ownerLab.style.opacity = fadeIn(tl, 8.0); b4ownerLab.style.left = (ox - 20) + 'px'; b4ownerLab.style.width = '640px'; b4ownerLab.style.top = '930px';
+    // chain appears left -> right after the slide
+    setTitle(b4T, COPY.b4t, t, 23.2, { hlWord: COPY.b4hl, hlT: 25.2 });
+    const t4 = tl - 7.6; // chain clock starts 23.2
+    b4nodes.forEach((n, i) => { const q = pop(t4, 0.6 + i * 0.9, 12, 0.75); xf(n, { s: q, o: clamp(q * 2) }); });
+    b4links.forEach((l, i) => { const q = eo(seg(t4, 1.0 + i * 0.9, 1.6 + i * 0.9)); l.style.transform = `scaleX(${q})`; l.style.opacity = q > 0 ? 1 : 0; });
+    b4dots.forEach((d, i) => { const l = b4links[i]; const u = ((t4 - 1.6 - i * 0.9) * 0.9) % 1; const on = t4 > 1.6 + i * 0.9; d.style.opacity = on ? 1 : 0; d.style.left = lerp(l.x0, l.x1, clamp(u)) + 'px'; d.style.top = chainY + 'px'; });
+    const uq = pop(t4, 0.9); xf(b4uchip, { s: 0.8 + 0.2 * uq, o: clamp(uq * 2), y: -6 * (1 - uq) });
+    const wq = pop(t4, 4.4, 10, 0.7); xf(b4wm, { s: 0.7 + 0.3 * wq, o: clamp(wq * 2) }); b4sub.style.opacity = fadeIn(t4, 5.0, 0.5);
+    // counter node pulses once the wordmark lands
+    if (t4 > 4.4) { const pu = 1 + 0.08 * Math.max(0, Math.sin((t4 - 4.4) * 6)) * Math.exp(-(t4 - 4.4) * 1.5); b4nodes[2].style.transform = `scale(${pu})`; }
+    setCam(B3, 1 + 0.06 * seg(tl, 0, 6.8) * (1 - slide) + 0.04 * seg(t4, 2, 8)); B3.cam.style.opacity = 1 - seg(t, 30.85, 31.15); }
+  // C1 workflow
+  if (C1.style.display !== 'none') { const tl = t - 31;
+    setTitle(c1T, tl < 7.2 ? COPY.c1t : COPY.c1t2, t, tl < 7.2 ? 31.3 : 38.2, tl < 7.2 ? {} : { hlWord: COPY.c1hl, hlT: 40.3 });
+    c1agents.forEach((a, i) => { const q = pop(tl, 0.2 + a.seed * 1.2, 14, 0.75); a.style.transform = `translate(-50%,-50%) scale(${q})`; a.style.opacity = clamp(q * 2); });
+    c1shops.forEach((c, i) => { const q = pop(tl, 1.0 + i * 0.2, 12, 0.8); c.style.transform = `translate(-50%,-50%) scale(${q})`; c.style.opacity = clamp(q * 2); });
+    const oq = pop(tl, 6.8, 12, 0.8); c1owner.style.transform = `translate(-50%,-50%) scale(${oq})`; c1owner.style.opacity = clamp(oq * 2);
+    let nA = 0, nB = 0;
+    c1flows.forEach((f, i) => { const [sx, sy] = c1shopPos[f.shop]; const u = seg(tl, f.t0, f.t0 + 0.9); const line = c1lines[i]; line.setAttribute('d', curve(f.a.x, f.a.y + 22, sx, sy - 44)); line.style.opacity = tl > f.t0 ? 0.9 : 0;
+      const [dx, dy] = onCurve(f.a.x, f.a.y + 22, sx, sy - 44, eo(u)); f.dot.style.left = dx + 'px'; f.dot.style.top = dy + 'px'; f.dot.style.opacity = tl > f.t0 && u < 1 ? 1 : 0;
+      const okT = f.t0 + 0.9; const okq = pop(tl, okT, 18, 0.6);
+      if (f.toOwner && tl > 6.6) { // owner-bound: orange dot continues down to owner after 6.6
+        const u2 = seg(tl, Math.max(okT, 6.9) + (i % 3) * 0.5, Math.max(okT, 6.9) + (i % 3) * 0.5 + 0.9); const [ox, oy] = onCurve(sx, sy + 44, c1ownerPos[0], c1ownerPos[1] - 44, eo(u2)); if (u2 > 0 && u2 < 1) { f.dot.style.opacity = 1; f.dot.style.left = ox + 'px'; f.dot.style.top = oy + 'px'; f.dot.style.background = ACC; }
+        f.ok.style.opacity = 0; if (tl > okT) nB++;
+      } else { f.ok.style.left = (sx + 110 + (i % 5) * 0) + 'px'; f.ok.style.top = (sy - 60) + 'px'; f.ok.style.transform = `translate(-50%,-50%) scale(${okq})`; f.ok.style.opacity = tl > okT && tl < okT + 1.2 ? 1 - seg(tl, okT + 0.7, okT + 1.2) : 0; if (tl > okT) nA++; }
+    });
+    c1olines.forEach((p, i) => { const [sx, sy] = c1shopPos[i]; p.setAttribute('d', curve(sx, sy + 44, c1ownerPos[0], c1ownerPos[1] - 44)); p.style.opacity = tl > 6.9 ? eo(seg(tl, 6.9, 7.6)) * 0.9 : 0; });
+    c1cntA.innerHTML = `<b>${nA}</b> ${COPY.c1a}`; c1cntB.innerHTML = `<b style="color:${ACC}">${nB}</b> ${COPY.c1b}`; c1cntA.style.opacity = fadeIn(tl, 2.2); c1cntB.style.opacity = fadeIn(tl, 7.4);
+    setCam(C1, lerp(1, 1.04, seg(tl, 0, 14))); C1.cam.style.opacity = Math.min(fadeIn(tl, 0, 0.35), 1 - seg(t, 44.95, 45.25)); }
+  // C2 owner phone
+  if (C2.style.display !== 'none') { const tl = t - 45;
+    const tapRow = 1.6, thIn = 2.0, tapApr = 4.0, toastT = 4.4, qT = 7.0, typeT = 8.0, sendT = 10.6, savedT = 11.0, s2T = 13.6;
+    const pq = pop(tl, 0.1, 10, 0.85); phone.style.transform = `scale(${1.25 * (0.9 + 0.1 * pq)})`; phone.style.opacity = clamp(pq * 2);
+    const sl = eo(seg(tl, thIn, thIn + 0.45)); scrList.style.transform = `translateX(${-120 * sl}px)`; scrList.style.opacity = 1 - sl; scrTh.style.transform = `translateX(${390 * (1 - sl)}px)`; scrTh.style.display = tl > thIn - 0.05 ? '' : 'none';
+    // approve
+    const apr = Q('#apr'); apr.style.transform = tl > tapApr && tl < tapApr + 0.14 ? 'scale(0.96)' : ''; apr.style.background = tl > tapApr ? '#12A15F' : '#1D78C6';
+    Q('#dock').style.display = tl < toastT + 1.2 ? '' : 'none'; Q('#toast').style.display = tl > toastT && tl < toastT + 2.2 ? '' : 'none'; Q('#toast').style.opacity = Math.min(fadeIn(tl, toastT), 1 - seg(tl, toastT + 1.8, toastT + 2.2));
+    Q('#okl').style.display = tl > toastT ? '' : 'none';
+    // question arrives
+    Q('#qb').style.display = tl > qT ? '' : 'none'; Q('#ql').style.display = tl > qT + 0.3 && tl < sendT ? '' : 'none'; Q('#comp').style.display = tl > qT + 0.6 && tl < sendT + 0.2 ? '' : 'none';
+    const inp = Q('#inp'); const typedAns = typed(PH.ans, tl, typeT, 18); inp.textContent = tl > typeT ? typedAns : PH.placeholder; inp.className = tl > typeT ? 'on' : '';
+    Q('#ab').style.display = tl > sendT ? '' : 'none'; Q('#sl').style.display = tl > savedT ? '' : 'none'; Q('#s2').style.display = tl > s2T ? '' : 'none';
+    // cursor: tap row (1.6), tap approve (4.0), tap send (10.6)
+    const PX = 1240 + 10, PY = 120 + 10; // phone inner origin (before scale) — scale 1.1 around center handled approx
+    const pts = [[0.4, 1900, 1000], [tapRow - 0.1, 1420, 255], [tapApr - 0.1, 1500, 970], [typeT - 0.3, 1410, 930], [sendT - 0.1, 1592, 932], [sendT + 0.8, 1900, 1050]];
+    const cx = kf(pts.map(([a, b]) => [a, b]))(tl), cy = kf(pts.map(([a, , c]) => [a, c]))(tl); c2cur.style.left = cx + 'px'; c2cur.style.top = cy + 'px'; c2cur.style.opacity = tl > 0.4 && tl < sendT + 1.0 ? 1 : 0;
+    const rips = [[tapRow, 1420, 255], [tapApr, 1500, 970], [sendT, 1592, 932]]; let ro = 0; rips.forEach(([tt, x, y]) => { const rp = seg(tl, tt, tt + 0.45); if (rp > 0 && rp < 1) { c2rip.style.left = x + 'px'; c2rip.style.top = y + 'px'; c2rip.style.width = c2rip.style.height = (16 + 80 * eo(rp)) + 'px'; ro = 1 - rp; } }); c2rip.style.opacity = ro;
+    // left keylines
+    const ks = [[tapApr - 0.2, qT - 0.2], [qT + 0.4, s2T - 0.4], [s2T, 99]];
+    c2keys.forEach((k, i) => { const [a, b] = ks[i]; const o = Math.min(fadeIn(tl, a, 0.4), 1 - seg(tl, b - 0.3, b)); xf(k, { o, y: 20 * (1 - fadeIn(tl, a, 0.5)) }); c2subs[i].style.opacity = o * fadeIn(tl, a + 0.3, 0.4); });
+    setCam(C2, lerp(1, 1.04, seg(tl, 0, 17))); C2.cam.style.opacity = Math.min(fadeIn(tl, 0, 0.3), 1 - seg(t, 61.95, 62.25)); }
+  // D benefits
+  if (D.style.display !== 'none') { const tl = t - 62; const idx = tl < 4 ? 0 : tl < 8 ? 1 : 2; const lt = tl - idx * 4;
+    dBig.forEach((e, i) => { const on = i === idx; const o = on ? Math.min(fadeIn(lt, 0.15, 0.4), 1 - seg(lt, 3.7, 4.0)) : 0; xf(e, { o, y: 16 * (1 - fadeIn(lt, 0.15, 0.5)) }); dSub[i].style.opacity = on ? Math.min(fadeIn(lt, 0.6, 0.4), 1 - seg(lt, 3.7, 4.0)) : 0; });
+    const iq = Math.min(pop(lt, 0.05, 12, 0.75), 1) * (1 - seg(lt, 3.7, 4.0)); dPh.style.opacity = idx === 0 ? iq : 0; dPh.style.transform = `scale(${0.8 + 0.2 * iq})`;
+    dAv.forEach((a, i) => { const q = pop(lt, 0.1 + i * 0.15, 14, 0.7); xf(a, { s: q, o: idx === 1 ? clamp(q * 2) * (1 - seg(lt, 3.7, 4.0)) : 0 }); });
+    dTap.style.opacity = idx === 2 ? iq : 0; dTap.style.transform = `scale(${0.8 + 0.2 * iq})`;
+    setCam(D, 1 + 0.05 * (lt / 4)); D.cam.style.opacity = 1 - seg(t, 73.95, 74.25); }
+  // E1
+  if (E1.style.display !== 'none') { const tl = t - 74; const p = pop(tl, 0.15, 12, 0.8); xf(e1owner, { s: p, o: clamp(p * 2) }); e1checks.forEach((c, i) => { const q = pop(tl, 0.7 + i * 0.3, 18, 0.6); xf(c, { s: q, o: clamp(q * 2) }); }); const bp = pop(tl, 1.5); xf(e1b, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2) }); e1name.style.opacity = fadeIn(tl, 0.5); setCam(E1, lerp(1, 1.06, seg(tl, 0, 5))); E1.cam.style.opacity = 1 - seg(t, 78.95, 79.25); }
+  // E2
+  if (E2.style.display !== 'none') { const tl = t - 79; const p = pop(tl, 0.1, 12, 0.8); e2face.style.opacity = clamp(p * 2); setFace(e2face, tl < 0.8 ? 'tense' : 'happy'); const b = pop(tl, 1.2); xf(e2b, { s: 0.8 + 0.2 * b, o: clamp(b * 2) }); e2name.style.opacity = fadeIn(tl, 0.4); const bounce = tl > 0.8 ? Math.abs(Math.sin((tl - 0.8) * 6)) * 14 * Math.exp(-(tl - 0.8) * 1.2) : 0; e2av.style.transform = `translateY(${-bounce}px) scale(${p})`; e2av.style.opacity = clamp(p * 2); e2face.style.transform = `translateY(${-bounce}px)`; setCam(E2, lerp(1, 1.05, seg(tl, 0, 4))); E2.cam.style.opacity = 1 - seg(t, 82.95, 83.25); }
+  // E3
+  if (E3.style.display !== 'none') { const tl = t - 83; const a = eo(seg(tl, 0.2, 0.9)), b = eo(seg(tl, 1.1, 1.8)); xf(e3a, { o: a, y: 24 * (1 - a) }); xf(e3b, { o: b, y: 24 * (1 - b) }); setCam(E3, lerp(1, 1.08, seg(tl, 0, 4.3))); E3.cam.style.opacity = 1 - seg(t, 86.95, 87.25); }
+  // E4
+  if (E4.style.display !== 'none') { const tl = t - 87; e4wm.style.opacity = fadeIn(tl, 0.1, 0.6); e4url.style.opacity = fadeIn(tl, 0.6, 0.5); e4team.style.opacity = fadeIn(tl, 0.9, 0.5); setCam(E4); }
+  fadeLayer.style.opacity = seg(t, DUR - 0.6, DUR);
+}
+window.seek = t => render(((t % DUR) + DUR) % DUR);
+
+// ===== audio =====
+const SFX = {};
+async function loadBuf(ctx, name) { if (!SFX[name]) { const ab = await (await fetch('assets/' + name)).arrayBuffer(); SFX[name] = ab; } return await ctx.decodeAudioData(SFX[name].slice(0)); }
+const VO_T = { n1: 2.6, n2: 24.2, n3: 32.0, n4: 50.6, n5: 83.4 };
+window.buildAudio = async function (ctx) {
+  const out = ctx.createGain(); out.connect(ctx.destination);
+  const play = (buf, t, g = 1, { rate = 1, fadeOut = 0, dur = 0 } = {}) => { const s = ctx.createBufferSource(); s.buffer = buf; s.playbackRate.value = rate; const gn = ctx.createGain(); gn.gain.setValueAtTime(g, t); if (fadeOut && dur) { gn.gain.setValueAtTime(g, t + dur - fadeOut); gn.gain.linearRampToValueAtTime(0.0001, t + dur); } s.connect(gn); gn.connect(out); s.start(t); if (dur) s.stop(t + dur + 0.05); };
+  const names = ['bgm_bright.mp3', 'click.ogg', 'pop.ogg', 'whoosh.ogg', 'impact.ogg', 'tick.ogg', 'riser.ogg', 'sfx_ring_many.mp3', 'sfx_busy_tone.mp3', ...Object.keys(VO_T).map(k => `vo/${LANG}_${k}.wav`)];
+  const B = {}; await Promise.all(names.map(async n => { B[n] = await loadBuf(ctx, n); }));
+  const [bgm, click, popB, whoosh, impact, tick, riser, ring, busy] = names.slice(0, 9).map(n => B[n]);
+  // music bed, ducked under narration
+  const mg = ctx.createGain(); mg.gain.setValueAtTime(0.0001, 0); mg.gain.exponentialRampToValueAtTime(0.7, 1.2);
+  const vos = Object.entries(VO_T).map(([k, t0]) => ({ t0, d: B[`vo/${LANG}_${k}.wav`].duration }));
+  for (const { t0, d } of vos) { mg.gain.setValueAtTime(0.7, Math.max(0.01, t0 - 0.4)); mg.gain.linearRampToValueAtTime(0.32, t0 - 0.05); mg.gain.setValueAtTime(0.32, t0 + d + 0.1); mg.gain.linearRampToValueAtTime(0.7, t0 + d + 0.7); }
+  mg.gain.setValueAtTime(0.7, DUR - 2.2); mg.gain.linearRampToValueAtTime(0.0001, DUR - 0.1);
+  const ms = ctx.createBufferSource(); ms.buffer = bgm; ms.connect(mg); mg.connect(out); ms.start(0); ms.stop(DUR);
+  for (const [k, t0] of Object.entries(VO_T)) play(B[`vo/${LANG}_${k}.wav`], t0, 1.0);
+  // cues
+  play(click, 1.6, 0.8);
+  [6.9, 8.0, 9.1].forEach(t => play(popB, t, 0.55));
+  { const rg = ctx.createGain(); rg.gain.setValueAtTime(0.0001, 12.8); rg.gain.exponentialRampToValueAtTime(0.45, 15.0); rg.gain.setValueAtTime(0.45, 21.6); rg.gain.linearRampToValueAtTime(0.0001, 23.0); const rs = ctx.createBufferSource(); rs.buffer = ring; rs.loop = true; rs.connect(rg); rg.connect(out); rs.start(12.8); rs.stop(23.1); }
+  play(busy, 16.8, 0.22, { dur: 3.5, fadeOut: 1.0 }); play(popB, 16.6, 0.5); play(popB, 18.8, 0.5);
+  play(whoosh, 22.4, 0.6); [23.8, 24.7, 25.6].forEach(t => play(popB, t, 0.5)); play(impact, 27.6, 0.8);
+  play(whoosh, 30.95, 0.5); for (let i = 0; i < 28; i++) play(tick, 31 + 1.2 + i * 0.32 + 0.9, 0.22, { rate: 1.4 + (i % 4) * 0.1 }); [37.9, 38.4, 38.9].forEach(t => play(popB, t, 0.4, { rate: 0.9 }));
+  play(whoosh, 44.95, 0.5); play(click, 45 + 1.6, 0.7); play(whoosh, 45 + 2.0, 0.35, { rate: 1.3 }); play(click, 45 + 4.0, 0.9); play(popB, 45 + 4.4, 0.8, { rate: 1.2 }); play(popB, 45 + 7.0, 0.6, { rate: 0.9 });
+  for (let i = 0; i < PH.ans.length; i += 2) play(tick, 45 + 8.0 + i / 18, 0.15, { rate: 1.7 }); play(click, 45 + 10.6, 0.7); play(popB, 45 + 11.0, 0.6, { rate: 1.2 }); play(popB, 45 + 13.6, 0.6, { rate: 1.3 });
+  [62.1, 66.1, 70.1].forEach(t => play(whoosh, t, 0.4, { rate: 1.1 })); [66.2, 66.35, 66.5].forEach(t => play(popB, t, 0.4));
+  [74.7, 75.0, 75.3].forEach(t => play(popB, t, 0.6, { rate: 1.25 })); play(popB, 75.5, 0.5); play(popB, 80.2, 0.5); play(tick, 79.8, 0.5, { rate: 1.4 });
+  play(whoosh, 83.1, 0.4, { rate: 0.8 }); play(impact, 87.1, 0.5, { rate: 1.3 });
+};
+
+// ===== preview =====
+if (location.search.includes('render')) { document.getElementById('ctl').style.display = 'none'; document.body.style.background = '#F6F5F0'; }
+else { const fit = () => { const k = Math.min(innerWidth / W, (innerHeight - 40) / H); stage.style.transform = `scale(${k})`; }; addEventListener('resize', fit); fit();
+  let buf, ac, src, startAt = 0, offset = 0, playing = false; const pp = document.getElementById('pp'), sc = document.getElementById('sc'), tm = document.getElementById('tm');
+  async function play() { ac ??= new AudioContext(); if (!buf) { pp.textContent = '…'; const off = new OfflineAudioContext(2, Math.ceil(48000 * DUR), 48000); await buildAudio(off); buf = await off.startRendering(); } src = ac.createBufferSource(); src.buffer = buf; src.connect(ac.destination); src.start(0, offset % DUR); startAt = ac.currentTime; playing = true; pp.textContent = 'pause'; }
+  function pause() { if (!playing) return; offset += ac.currentTime - startAt; src.stop(); playing = false; pp.textContent = 'play'; }
+  const now = () => playing ? (offset + ac.currentTime - startAt) % DUR : offset;
+  pp.onclick = () => playing ? pause() : play(); sc.oninput = () => { const was = playing; if (was) pause(); offset = sc.value * DUR; if (was) play(); };
+  (function loop() { const t = now(); seek(t); tm.textContent = t.toFixed(2); if (playing) sc.value = t / DUR; requestAnimationFrame(loop); })(); }
+seek(0);
+</script></body></html>
