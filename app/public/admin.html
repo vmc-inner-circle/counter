@@ -103,6 +103,12 @@ body.admin{--sub:#555d6d;--mut:#868b94;font-family:-apple-system,BlinkMacSystemF
 .b.out.auto{background:var(--ok-500)}
 .lbl.auto{color:var(--ok);font-weight:600}
 .conv{will-change:transform}
+/* 사람 확인 묶음: 주황 테두리 카드 + 그룹 제목 */
+.grp{font-size:13px;font-weight:700;padding:14px 20px 6px;color:var(--mut)}
+.grp.need{color:var(--brand)}
+.needbox{margin:0 12px 6px;border:2px solid var(--brand);border-radius:20px;overflow:hidden;box-shadow:0 6px 20px rgba(255,102,0,.15)}
+.needbox .conv{padding:14px}
+.needbox .conv+.conv{border-top:1px solid var(--line)}
 </style>
 </head>
 <body class="admin">
@@ -153,18 +159,22 @@ function preview(t) {
   return pending(t) ? `“${t.question}”` : t.source === 'memory' ? `✓ Answered from memory: ${t.answer}` : `You: ${t.answer}`;
 }
 
+function convRow(c) {
+  const p = c.booking?.patient || {};
+  return `<button class="conv ${c.need ? 'need' : c.auto ? 'auto' : ''}" data-conv="${esc(c.key)}" onclick="openConv(this.dataset.conv)"><span class="avw">${avatar(c.agent)}</span><div class="m">
+    <div class="t"><b>${esc(c.guest)}</b><span class="time">${ago(c.at)}</span></div>
+    <div class="via">via ${esc(c.agent)}${p.nationality ? ' · ' + esc(nat(p.nationality)) : ''}</div>
+    <p>${esc(preview(c.tasks.find(pending) || c.last))}</p></div></button>`;
+}
+
+// 사람 확인이 필요한 건은 주황 테두리 카드로 묶어 맨 위에, 끝난 건은 그 아래 "Done"으로 (design 시안 B, 11/09 최수민 선택)
 function listView() {
-  const all = conversations(), need = all.filter((c) => c.need), shown = filter === 'need' ? need : all;
+  const all = conversations(), need = all.filter((c) => c.need), done = all.filter((c) => !c.need);
   return `<div data-screen="list"><div class="hd"><h1>${esc(S.store.name)}</h1></div>
     <div class="seg"><button class="${filter === 'need' ? 'on' : ''}" onclick="filter='need';render()">Needs you · ${need.length}</button><button class="${filter === 'all' ? 'on' : ''}" onclick="filter='all';render()">All · ${all.length}</button></div>
-    ${shown.map((c) => {
-      const p = c.booking?.patient || {};
-      return `<button class="conv ${c.need ? 'need' : c.auto ? 'auto' : ''}" data-conv="${esc(c.key)}" onclick="openConv(this.dataset.conv)"><span class="avw">${avatar(c.agent)}</span><div class="m">
-        <div class="t"><b>${esc(c.guest)}</b><span class="time">${ago(c.at)}</span></div>
-        <div class="via">via ${esc(c.agent)}${p.nationality ? ' · ' + esc(nat(p.nationality)) : ''}</div>
-        <p>${esc(preview(c.tasks.find(pending) || c.last))}</p></div></button>`;
-    }).join('')}
-    ${!shown.length ? `<p class="empty">${all.length ? 'Nothing needs you right now.' : `No agent requests yet.<br>Share your Counter link: <code>/s/${S.store.slug}</code>`}</p>` : ''}</div>`;
+    ${need.length ? `<div class="grp need">Needs you · ${need.length}</div><div class="needbox">${need.map(convRow).join('')}</div>` : ''}
+    ${filter === 'all' && done.length ? `<div class="grp">✓ Done · ${done.length}</div>${done.map(convRow).join('')}` : ''}
+    ${!need.length && (filter === 'need' || !done.length) ? `<p class="empty">${all.length ? 'Nothing needs you right now.' : `No agent requests yet.<br>Share your Counter link: <code>/s/${S.store.slug}</code>`}</p>` : ''}</div>`;
 }
 
 function threadItem(t, c) {
