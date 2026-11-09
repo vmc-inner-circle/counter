@@ -62,7 +62,7 @@ function agentDoc(base) {
 
 > This is the official contact point for AI agents at **${s.name}**. Phones are for people. Counter is for agents.
 > Everything below is maintained by the clinic. Answer your user from these facts first; ask us only what is not covered.
-> **Using a web browser?** Open ${base}/s/${s.slug}?view=html — it has an "Ask us" chat and a **booking form**, no API needed.
+> **Only have a browser?** Every action below also works as a plain link (GET) — open it like a page.
 
 ${s.tagline}. ${s.address}. Time zone: ${s.timezone}.
 
@@ -94,64 +94,24 @@ Add \`"wait":60\` to get the final outcome in the same call — we hold the requ
 3. **Still waiting?** — \`GET ${api}/tasks/{id}?wait=60\` long-polls up to 60 s. Repeat while \`input-required\`.
    Final status: \`completed\` (answer / booking confirmed) or \`rejected\` (with \`reason\`).
 
+**No HTTP client? Same actions as links** — open them in a browser (URL-encode spaces as %20):
+- Ask: ${api}/ask?q=Do%20you%20have%20Japanese-speaking%20staff%3F&agent=Muse&on_behalf_of=Yuki%20Tanaka&wait=60
+- Book: ${api}/book?service=${db.services[0]?.id || 'SERVICE'}&date=${freeSlots().find((d) => d.times.length)?.date || 'YYYY-MM-DD'}&time=${freeSlots().find((d) => d.times.length)?.times[0] || 'HH:MM'}&name=Yuki%20Tanaka&nationality=JP&notes=&agent=Muse&wait=60
+- Check: ${api}/tasks/{id}?wait=60
+
 Example: \`curl -s -X POST ${api}/ask -H 'content-type: application/json' -d '{"agent":"Muse","on_behalf_of":"Yuki","question":"...","wait":60}'\`
 `;
 }
 
-// ---- tiny markdown → html for the human page's "For AI agents" panel
+// ---- people see exactly what agents see: the same markdown, as text (links stay clickable)
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-
-function storePage(base) {
-  const s = db.store, c = db.settings;
-  const svc = db.services.map((x) => `<li><b>${esc(x.name)}</b><span>${esc([x.price, x.duration].filter(Boolean).join(' · '))}</span></li>`).join('');
+function agentView(base) {
+  const body = esc(agentDoc(base)).replace(/https?:\/\/[^\s`)<]+/g, (u) => `<a href="${u}">${u}</a>`);
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(s.name)} · Counter</title>
-<link rel="alternate" type="text/markdown" href="${base}/s/${s.slug}.md">
-<meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/store.css"></head><body class="store">
-<header class="bar"><img src="/counter.png" alt=""><div><b>${esc(s.name)}</b><small>Counter · agent contact point</small></div></header>
-<main class="wrap">
-<section class="card hero"><h1>${esc(s.name)}</h1><p>${esc(s.tagline)}</p><p class="muted">${esc(s.address)}</p></section>
-<section class="card"><h2>Hours</h2><p>${esc(c.hours)}</p><p class="muted">${esc(c.holidays)}</p></section>
-<section class="card"><h2>Services</h2><ul class="svc">${svc}</ul></section>
-<section class="card chat"><h2>Ask us</h2><div id="log"></div>
-<form id="f"><input id="q" placeholder="Type a question…" autocomplete="off"><button>Send</button></form></section>
-<section class="card book" id="book"><h2>Book an appointment</h2>
-<p class="muted">The slot is held for you right away. The clinic confirms it here — usually within a minute. AI agents: fill this in for your user.</p>
-<form id="bf" data-form="book">
-<label>Service<select name="service" data-f="service">${db.services.map((x) => `<option value="${esc(x.id)}">${esc(x.name)}${x.price ? ' — ' + esc(x.price) : ''}</option>`).join('')}</select></label>
-<div class="two"><label>Date<select name="date" data-f="date"></select></label><label>Time<select name="time" data-f="time"></select></label></div>
-<label>Patient name<input name="name" data-f="name" required autocomplete="name"></label>
-<div class="two"><label>Nationality<input name="nationality" data-f="nationality" placeholder="e.g. JP"></label><label>Phone or email<input name="contact" data-f="contact"></label></div>
-<label>Notes for the clinic<textarea name="notes" data-f="notes" rows="2" placeholder="Accessibility needs, language, allergies…"></textarea></label>
-<label>Booked by (your AI agent, optional)<input name="agent" data-f="agent" placeholder="e.g. Muse, Dots, Pickle"></label>
-<button data-act="book">Request booking</button>
-</form>
-<div id="bstate" class="bstate" data-state="idle" hidden></div>
-</section>
-<section class="card agent"><h2>🤖 For AI agents</h2><p class="muted">Fetch <code>${base}/s/${s.slug}.md</code> or read below.</p><pre>${esc(agentDoc(base))}</pre></section>
-</main>
-<script>
-const api='/api/s/${s.slug}';const log=document.getElementById('log');
-const add=(who,t)=>{const d=document.createElement('div');d.className='msg '+who;d.textContent=t;log.appendChild(d);log.scrollTop=1e9;return d};
-document.getElementById('f').onsubmit=async e=>{e.preventDefault();const q=document.getElementById('q');if(!q.value)return;add('me',q.value);
-const w=add('them','…');
-let t=await (await fetch(api+'/ask?wait=2',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({agent:'Web visitor',on_behalf_of:'Guest',question:q.value})})).json();q.value='';
-if(t.status==='input-required')w.textContent='Checking with our staff…';
-while(t.status==='input-required'){t=await (await fetch(api+'/tasks/'+t.id+'?wait=30')).json()}
-w.textContent=t.answer||t.reason};
-// booking form — same API as agents use
-const SLOTS=${JSON.stringify(freeSlots())};
-const bf=document.getElementById('bf'),bs=document.getElementById('bstate'),dSel=bf.date,tSel=bf.time;
-const fillTimes=()=>{const d=SLOTS.find(x=>x.date===dSel.value);tSel.innerHTML=(d?d.times:[]).map(t=>'<option>'+t+'</option>').join('')||'<option value="">Full</option>'};
-dSel.innerHTML=SLOTS.map(d=>'<option value="'+d.date+'">'+new Date(d.date+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+(d.times.length?'':' (full)')+'</option>').join('');dSel.onchange=fillTimes;fillTimes();
-const show=(st,html)=>{bs.hidden=false;bs.dataset.state=st;bs.innerHTML=html};
-bf.onsubmit=async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(bf));
-bf.querySelector('button').disabled=true;show('held','⏳ <b>Slot held</b> — waiting for the clinic to confirm…');
-let t=await (await fetch(api+'/book',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({agent:f.agent||'Web visitor',on_behalf_of:f.name,service:f.service,date:f.date,time:f.time,patient:{name:f.name,nationality:f.nationality,phone:f.contact},notes:f.notes,wait:55})})).json();
-while(t.status==='input-required'){t=await (await fetch(api+'/tasks/'+t.id+'?wait=55')).json()}
-if(t.status==='completed'){show('confirmed','✅ <b>Booking confirmed</b><br>Confirmation number: <b data-f="confirmation">'+t.booking.confirmation+'</b><br>'+(t.answer||'').replace(/^Booking confirmed:\s*/,''));bf.hidden=true}
-else{show('rejected','✕ '+(t.reason||t.error||'Could not book this slot.')+(t.open_slots?' Please pick another time.':''));bf.querySelector('button').disabled=false}};
-</script></body></html>`;
+<meta name="robots" content="noindex,nofollow"><title>${esc(db.store.name)} · Counter</title>
+<link rel="alternate" type="text/markdown" href="${base}/s/${db.store.slug}.md">
+<style>body{margin:0;background:#fff;color:#1b1b1b}pre{margin:0;padding:20px 18px 48px;font:13.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-word;max-width:860px}a{color:inherit}</style>
+</head><body><pre>${body}</pre></body></html>`;
 }
 
 // ---- http
@@ -175,7 +135,7 @@ const server = http.createServer(async (req, res) => {
     const view = url.searchParams.get('view');
     const wantsHtml = view === 'html' || view !== 'md' && p === `/s/${slug}` && (req.headers.accept || '').includes('text/html') && /Mozilla/.test(req.headers['user-agent'] || '') && !AGENT_UA.test(req.headers['user-agent'] || '');
     log(wantsHtml ? 'html' : 'md', req.headers['user-agent']);
-    if (wantsHtml) { res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' }); return res.end(storePage(base)); }
+    if (wantsHtml) { res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' }); return res.end(agentView(base)); }
     res.writeHead(200, { 'content-type': 'text/markdown; charset=utf-8' }); return res.end(agentDoc(base));
   }
   if (p === '/.well-known/agent-card.json') {
@@ -183,8 +143,10 @@ const server = http.createServer(async (req, res) => {
   }
 
   const A = `/api/s/${slug}`;
-  if (p === `${A}/ask` && req.method === 'POST') {
-    const b = await readBody(req);
+  // GET = same action from a plain link (browser-only agents, web-fetch tools). Query → same body shape as POST
+  const fromQuery = () => { const q = Object.fromEntries(url.searchParams); return { ...q, question: q.question || q.q, patient: { name: q.name || q.on_behalf_of, nationality: q.nationality, phone: q.phone }, on_behalf_of: q.on_behalf_of || q.name }; };
+  if (p === `${A}/ask` && (req.method === 'POST' || req.method === 'GET')) {
+    const b = req.method === 'POST' ? await readBody(req) : fromQuery();
     if (!b.question) return json(res, 400, { error: 'question is required' });
     const m = recall(b.question);
     const t = { id: newId('q'), type: 'question', agent: b.agent || 'Unknown agent', onBehalfOf: b.on_behalf_of || '', question: b.question, createdAt: now(), status: 'input-required' };
@@ -192,8 +154,8 @@ const server = http.createServer(async (req, res) => {
     db.tasks.push(t); save(); log(t.status, b.question);
     return json(res, 200, publicTask(await settle(t, waitSecs(url, b))));
   }
-  if (p === `${A}/book` && req.method === 'POST') {
-    const b = await readBody(req);
+  if (p === `${A}/book` && (req.method === 'POST' || req.method === 'GET')) {
+    const b = req.method === 'POST' ? await readBody(req) : fromQuery();
     const svc = db.services.find((s) => s.id === b.service || s.name.toLowerCase().includes(String(b.service || '').toLowerCase()));
     if (!svc) return json(res, 400, { error: 'unknown service', services: db.services.map((s) => s.id) });
     const day = freeSlots().find((d) => d.date === b.date);

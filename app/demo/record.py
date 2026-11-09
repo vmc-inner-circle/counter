@@ -125,22 +125,20 @@ def setup_learned(d):  # uc2-memory 장면 전에: 이미 한 번 배운 상태�
     t = d.ask(Q); d.srv.call(f'/admin/api/tasks/{t["id"]}/answer', {'answer': A, 'remember': True})
 
 
-# ---- 손님 쪽: 브라우저 에이전트(Muse·Dots·Pickle·Grok Bot)가 가게 웹페이지의 예약 폼을 채우는 장면
-def pending_id(d):
-    return next(t['id'] for t in json.load(urllib.request.urlopen(d.srv.base + '/admin/api/state'))['tasks'] if t['status'] == 'input-required')
-
-
-def store_book(d):
+# ---- 손님 쪽: 사람용 화면은 없다. 브라우저로 열어도 에이전트가 읽는 문서가 그대로 보인다
+def agent_view(d):
     p = d.page
-    d.hold(1.2); p.locator('#book').scroll_into_view_if_needed(); d.hold(0.8)
-    d.tap('[data-f=service]'); p.select_option('[data-f=service]', 'rejuran'); d.hold(0.3)
-    d.tap('[data-f=date]'); p.select_option('[data-f=date]', '2026-11-10'); d.hold(0.3)
-    d.tap('[data-f=time]'); p.select_option('[data-f=time]', '15:00'); d.hold(0.3)
-    d.type('[data-f=name]', d.who['user']); d.type('[data-f=nationality]', d.who['nat'])
-    d.type('[data-f=notes]', d.who['notes']); d.type('[data-f=agent]', d.who['agent']); d.hold(0.6)
-    d.tap('[data-act=book]'); d.see('Slot held'); d.hold(2.0)
-    d.srv.call(f'/admin/api/tasks/{pending_id(d)}/approve')   # 사장님이 폰에서 승인(이 장면에서는 화면 밖)
-    d.see('Booking confirmed'); p.locator('#bstate').scroll_into_view_if_needed(); d.hold(3.5)
+    d.hold(1.5)
+    for _ in range(14):   # 문서를 천천히 훑는다(에이전트가 읽는 모습)
+        p.mouse.wheel(0, 260); d.hold(0.35)
+    d.hold(1.0)
+    el = p.locator('a[href*="/book?"]').first; el.scroll_into_view_if_needed(); d.hold(0.6)
+    bx = el.bounding_box(); p.evaluate('([x,y]) => window.__tap(x/%s, y/%s)' % (ZOOM, ZOOM), [bx['x'] + 40, bx['y'] + bx['height'] / 2])
+    d.hold(0.25); el.click(no_wait_after=True)   # 링크 하나로 예약 → 슬롯이 잡히고 사장님 승인을 기다린다
+    d.hold(2.0)
+    tid = next(t['id'] for t in json.load(urllib.request.urlopen(d.srv.base + '/admin/api/state'))['tasks'] if t['status'] == 'input-required')
+    d.srv.call(f'/admin/api/tasks/{tid}/approve')   # 사장님이 폰에서 승인(화면 밖)
+    p.wait_for_load_state(); d.see('confirmation'); d.hold(3.0)
 
 
 SCENES = {
@@ -150,7 +148,7 @@ SCENES = {
     'uc3-approve': ('사장님 폰: 예약 요청 → 탭 한 번 승인 → 확정 (UC-3, #1~3)', None, uc3_approve),
     'full':        ('사장님 폰: 예약 승인 → 질문 답변 → 기억으로 즉답 (한 번에)', None, full_flow),
     # 4번째 값 = (시작 주소, 준비 완료 선택자). 없으면 사장님 화면에서 시작
-    'store-book':  ('손님 에이전트: 가게 웹페이지 예약 폼 → 슬롯 잡힘 → 확정번호 (UC-3, #1~3)', None, store_book, (f'/s/{SLUG}?view=html', '[data-form=book]')),
+    'agent-view':  ('손님 쪽: 가게 주소를 열면 에이전트가 읽는 문서 그대로 → 예약 링크 한 번에 슬롯 잡힘', None, agent_view, (f'/s/{SLUG}?view=html', 'pre')),
 }
 
 

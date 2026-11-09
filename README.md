@@ -9,7 +9,7 @@ and when it doesn't know something it asks staff once — then remembers.
 ## Live
 
 **https://counter-agent.fly.dev/s/drd-yeongdeungpo** — Counter for a real Seoul dermatology clinic (Dr. Designer Clinic Yeongdeungpo, built from its public website; demo only, not affiliated).
-Give that URL to any AI agent: it reads the clinic's facts, asks what isn't covered, and books a slot that staff approve. Browsers get the page with a booking form.
+Give that URL to any AI agent: it reads the clinic's facts, asks what isn't covered, and books a slot that staff approve. People who open it in a browser see exactly what agents see.
 
 ## Run
 
@@ -26,7 +26,7 @@ ADMIN_TOKEN=... node app/server.mjs   # when exposed publicly (e.g. a tunnel): s
 | `/admin` | Store staff (phone) — needs `ADMIN_TOKEN` when set | Approve bookings · answer unknown questions · memory · settings |
 
 Agent API (`/api/s/dojagi`): `POST /ask` · `POST /book` — add `"wait":60` to get the staff outcome in the same call · `GET /tasks/:id?wait=60` (long-poll).
-Browser agents (Muse · Dots · Pickle · Grok Bot): `/s/dojagi?view=html` has the same ask chat and a **booking form**.
+No human UI: people who open the store URL see the same markdown agents read. Browser-only agents use the same actions as plain links: `GET /ask?q=…` · `GET /book?service=…&date=…&time=…&name=…`.
 Task states: `input-required` (waiting for staff) → `completed` / `rejected`.
 
 ## Demo scenario
