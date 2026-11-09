@@ -16,10 +16,8 @@
 | 파일 | 내용 |
 |---|---|
 | [`characters.md`](characters.md) | 캐릭터 시트 — 등장인물·에이전트의 이름, 생김새, 언어, 장면 |
-| [`characters/`](characters/) | 캐릭터 이미지 |
 
 ## 격상 기록
 
 | 싱크 | 파일 | 원래 위치 | 만든 사람 |
 |---|---|---|---|
-| 11:00 (사전) | `characters.md`, `characters/` | context-hub 덱 소재 | 최수민 |
