@@ -12,6 +12,8 @@
 
 레퍼런스: [Notion 3.0 한국 론칭 영상](https://youtu.be/rfU_yL-oc80) — 나레이션 없이 BGM, 흰 바탕, 큰 타이포, 캐릭터 말풍선, 실제 UI 카드.
 
+레퍼런스(채경완 추가): [youtube.com/watch?v=R1cF4T4lgI4](https://www.youtube.com/watch?v=R1cF4T4lgI4)
+
 ## 구성 v2.1 (89.5초)
 
 | 구간 | 시간 | 내용 | 나레이션 |
