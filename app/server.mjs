@@ -198,7 +198,7 @@ const server = http.createServer(async (req, res) => {
     const b = await readBody(req);
     const t = db.tasks.find((x) => x.id === mt[1]);
     if (!t || t.status !== 'input-required') return json(res, 409, { error: 'not pending' });
-    if (mt[2] === 'approve') Object.assign(t, { status: 'completed', confirmation: `SOI-${t.date.slice(5).replace('-', '')}-${t.time.replace(':', '')}`, answer: `Booking confirmed: ${t.serviceName} on ${t.date} ${t.time} KST. Please arrive 10 minutes early for numbing cream. Free cancellation until 24h before.` });
+    if (mt[2] === 'approve') Object.assign(t, { status: 'completed', confirmation: `SOI-${t.date.slice(5).replace('-', '')}-${t.time.replace(':', '')}`, answer: `Booking confirmed: ${t.serviceName} on ${t.date} ${t.time} KST. Please arrive 10 minutes early. Free cancellation until 24h before.` });
     if (mt[2] === 'reject') Object.assign(t, { status: 'rejected', reason: b.reason || 'The clinic could not accept this request.' });
     if (mt[2] === 'answer') {
       Object.assign(t, { status: 'completed', answer: b.answer, source: 'staff' });
