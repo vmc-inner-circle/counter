@@ -1,5 +1,5 @@
-// Counter — demo server. Zero dependencies: `node server.mjs` (PORT=3000).
-// One store, one prepared scenario. State lives in data/state.json; `node server.mjs --reset` restores the seed.
+// Counter — demo server. Zero dependencies: `node app/server.mjs` (PORT=3000).
+// One store, one prepared scenario. Set ADMIN_TOKEN when deployed: staff open /admin?key=<token> once (kept in a cookie). State lives in data/state.json; `node app/server.mjs --reset` restores the seed.
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -9,6 +9,7 @@ const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const SEED = path.join(ROOT, 'data/seed.json');
 const STATE = path.join(ROOT, 'data/state.json');
 const PORT = Number(process.env.PORT || 3000);
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || ''; // empty = admin open (local only)
 
 if (process.argv.includes('--reset') || !fs.existsSync(STATE)) fs.copyFileSync(SEED, STATE);
 let db = JSON.parse(fs.readFileSync(STATE, 'utf8'));
@@ -176,6 +177,16 @@ const server = http.createServer(async (req, res) => {
     if (t.status !== 'input-required' || !wait) return json(res, 200, publicTask(t));
     const done = await new Promise((r) => { const timer = setTimeout(() => r(t), wait * 1000); waiters.set(t.id, [...(waiters.get(t.id) || []), (x) => { clearTimeout(timer); r(x); }]); });
     return json(res, 200, publicTask(done));
+  }
+
+  // ---- admin: when ADMIN_TOKEN is set, /admin?key=<token> sets a cookie; the page and its API need that cookie
+  if (p === '/admin' || p.startsWith('/admin/')) {
+    if (ADMIN_TOKEN && url.searchParams.get('key') === ADMIN_TOKEN) {
+      res.writeHead(302, { location: '/admin', 'set-cookie': `counter_admin=${encodeURIComponent(ADMIN_TOKEN)}; Path=/admin; HttpOnly; SameSite=Lax; Max-Age=2592000${proto === 'https' ? '; Secure' : ''}` });
+      return res.end();
+    }
+    const cookie = (req.headers.cookie || '').split(/;\s*/).find((c) => c.startsWith('counter_admin='));
+    if (ADMIN_TOKEN && decodeURIComponent(cookie?.slice(14) || '') !== ADMIN_TOKEN) return json(res, 401, { error: 'staff only — open /admin?key=<token>' });
   }
 
   // ---- admin API
