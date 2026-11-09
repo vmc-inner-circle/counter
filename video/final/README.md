@@ -22,7 +22,7 @@
 | Project Description | 아래 |
 | GitHub | https://github.com/vmc-inner-circle/counter (공개) |
 | 90초 영상 | **미정 — 최종본 제작 중** |
-| YC RFS Track | Self-Maintaining APIs (RFS 원문 대조 미검증) |
+| YC RFS Track | AI Powered Consumer Products for a Billion People |
 | Applying to YC? | Yes |
 | Extra Tracks | Transpose Award |
 
