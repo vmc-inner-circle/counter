@@ -18,8 +18,8 @@ R&R(11/09 현장 회의): **영상 = 황준식·이성렬·조순형·채경완*
 
 ## 올리는 법
 
-- **영상 파일은 커밋하지 않는다.** YouTube(일부 공개)·Loom·Google Drive에 올리고 링크를 자기 README에 적는다. (GitHub는 웹 업로드 25MB·push 100MB 제한이 있고, 최종 제출도 YouTube/Loom 링크다)
-- 대본·자막(.srt)·이미지·25MB 이하 짧은 소재는 자기 폴더에 바로 올려도 된다.
+- **영상·대본·자막·이미지 모두 자기 폴더에 자유롭게 올린다.**
+- 브라우저 업로드는 파일당 25MB까지다. 더 크면 방법 2(git push)로 올린다 — 파일당 100MB까지 된다. 100MB를 넘으면 YouTube(일부 공개)·Loom·Drive에 올리고 링크를 자기 README에 적는다
 - 방법 1 (브라우저): 자기 폴더 열기 → `Add file` → `Upload files` 또는 `README.md` 연필 아이콘 → `Commit changes` (main에 바로)
 - 방법 2 (git/Claude Code): `git pull --rebase` → 자기 폴더 수정 → commit → push
 
