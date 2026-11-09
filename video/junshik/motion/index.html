@@ -88,6 +88,15 @@ html,body{height:100%;background:#111;overflow:hidden}
 .n848{position:absolute;left:0;right:0;top:300px;text-align:center;font-size:330px;font-weight:800;color:var(--acc);letter-spacing:-.05em;font-variant-numeric:tabular-nums;line-height:1}
 .src{position:absolute;left:0;right:0;bottom:60px;text-align:center;font-size:24px;color:var(--mut)}
 
+/* C16 win3 */
+.win3{position:absolute;left:0;right:0;top:440px;display:flex;justify-content:center;gap:120px}
+.wcol{width:440px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.wcol b{font-size:46px;font-weight:800}
+.wcol small{font-size:28px;color:var(--mut);font-weight:600}
+.wpic{position:relative;width:260px;height:260px;display:grid;place-items:center}
+.agq{display:grid;grid-template-columns:1fr 1fr;gap:14px}.agq .av{--s:104px}
+.orb3{position:absolute;--s:70px;border-width:2px}
+.why{background:#E9F7EF;border:2px solid #BFE7CF;color:#14804A;border-radius:999px;padding:8px 22px;font-size:30px;font-weight:700}
 /* C7 / C16 triptych */
 .tri{position:absolute;left:0;right:0;top:330px;display:flex;justify-content:center;gap:200px;align-items:center}
 .tri .cell{position:relative;width:300px;height:300px;display:grid;place-items:center}
@@ -305,13 +314,23 @@ body.rec #ctl,body.hidectl #ctl{display:none}
     <div id="fly15"></div>
   </section>
 
-  <!-- C16 73–80 everyone wins -->
+  <!-- C16 73–80 everyone wins — and why -->
   <section class="scene" id="c16" data-s="73" data-e="80">
-    <div class="tri">
-      <div class="cell f pop" data-at="0.2"><div class="owner" style="width:280px;height:280px"></div><div class="badge b-ok pick" data-k="0" style="right:10px;top:10px">✓</div><div class="lbl">Shops</div></div>
-      <div class="cell f pop" data-at="0.3"><div class="logo" style="--s:200px">C</div></div>
-      <div class="cell f pop" data-at="0.4"><div class="av a-pickle" style="--s:240px"></div><div class="badge b-ok pick" data-k="1" style="right:20px;top:20px">✓</div><div class="lbl">Agents</div></div>
-      <div class="cell f pop" data-at="0.5"><div class="person" style="--s:240px"></div><div class="badge b-ok pick" data-k="2" style="right:20px;top:20px">✓</div><div class="lbl">People</div></div>
+    <svg class="lines" viewBox="0 0 1920 1080"><path d="M960 330 C 960 380, 400 380, 400 440" class="wl" fill="none" stroke="#FF6F0F" stroke-width="5" stroke-dasharray="14 10"/><path d="M960 330 L 960 440" fill="none" stroke="#FF6F0F" stroke-width="5" stroke-dasharray="14 10"/><path d="M960 330 C 960 380, 1520 380, 1520 440" fill="none" stroke="#FF6F0F" stroke-width="5" stroke-dasharray="14 10"/></svg>
+    <div class="logo f pop" data-at="0.1" style="position:absolute;left:900px;top:210px;--s:120px">C</div>
+    <div class="win3">
+      <div class="wcol f up" data-at="0.3">
+        <div class="wpic"><div class="owner" style="width:230px;height:230px"></div><div class="badge b-ok pick" data-k="0" style="right:6px;top:6px">✓</div></div>
+        <b>Shops</b><div class="why pick" data-k="0">📵 No robot calls</div><small>Back to their craft</small>
+      </div>
+      <div class="wcol f up" data-at="0.45">
+        <div class="wpic"><div class="agq"><div class="av a-muse"></div><div class="av a-pickle"></div><div class="av a-dots"></div><div class="av a-grok"></div></div><div class="badge b-ok pick" data-k="1" style="right:6px;top:6px">✓</div></div>
+        <b>Agents</b><div class="why pick" data-k="1">✓ Every request answered</div><small>Never hung up on</small>
+      </div>
+      <div class="wcol f up" data-at="0.6">
+        <div class="wpic"><div class="person" style="--s:190px"></div><div class="av a-muse orb3" style="left:10px;top:20px"></div><div class="av a-pickle orb3" style="right:10px;top:20px"></div><div class="av a-dots orb3" style="left:20px;bottom:10px"></div><div class="av a-grok orb3" style="right:20px;bottom:10px"></div><div class="badge b-ok pick" data-k="2" style="right:-10px;top:-10px">✓</div></div>
+        <b>Customers</b><div class="why pick" data-k="2">🗓️ Done via their agent</div><small>Any agent they use</small>
+      </div>
     </div>
   </section>
 
@@ -359,7 +378,7 @@ const HEADS = [
   [58.5, 60, 'Any <span class="hl">language</span>.'],
   [60.2, 67, 'Every shop focuses on <span class="hl">its craft</span>.'],
   [67.2, 73, 'Agents <span class="hl">welcomed</span>, not hung up.'],
-  [73.2, 80, 'Shops win. Agents win. <span class="hl">People win.</span>'],
+  [73.2, 80, 'Shops win. Agents win. <span class="hl">Customers win.</span>'],
   [80.2, 82.6, '<span class="cos"><span class="co"><i class="av a-dots"></i>OpenAI</span><span class="co"><i class="av a-muse"></i>Meta</span><span class="co"><i class="av a-grok"></i>xAI</span><span class="co"><i class="av a-pickle"></i>Pickle</span></span><br>spread <span class="hl">agents</span>.'],
   [82.6, 85, 'We build their <span class="hl">front door</span>.'],
 ];
@@ -483,7 +502,7 @@ function render() {
     const back = p > 1.4; f.el.style.transform = `translate(${(p < 0 || back ? f.sx : tx + (f.sx > 960 ? 60 : -150)) - 45}px,${(p < 0 || back ? f.sy : ty - 60) - 45}px)`;
     f.ok.style.opacity = p > 0.7 && p < 1.4 ? 1 : 0; f.ok.style.transform = `translate(${tx + (f.sx > 960 ? 110 : -100)}px,${ty - 120}px)`; }
   // C16 checks
-  const l16 = t - ST.c16; $$('#c16 .pick').forEach((e) => e.classList.toggle('on', l16 >= 1.4 + +e.dataset.k * 1.2));
+  const l16 = t - ST.c16; $$('#c16 .pick').forEach((e) => e.classList.toggle('on', l16 >= 1.2 + +e.dataset.k * 1.2));
   // C17 dots
   const l17 = t - ST.c17, nlit = Math.floor(clamp(l17 / 4.2, 0, 1) ** 1.6 * LIT.length);
   $$('#dots17 .dm').forEach((d, i) => d.classList.toggle('lit', LIT.indexOf(i) < nlit));
