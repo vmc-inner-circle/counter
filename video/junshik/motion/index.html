@@ -307,7 +307,7 @@ body.rec #ctl,body.hidectl #ctl{display:none}
       <div data-a="27" data-b="35">⑤ Done · remembered</div>
     </div>
     <div class="laptop"><div class="scr">
-      <div class="head"><span class="chip c-muse" style="font-size:20px;padding:4px 12px 4px 4px"><i style="width:30px;height:30px">M</i>Muse</span><span id="mhead">· chat with Emma (tourist, English)</span></div>
+      <div class="head"><span class="chip c-muse" style="font-size:20px;padding:4px 12px 4px 4px"><i style="width:30px;height:30px">M</i>Muse</span><span id="mhead">· chat with Emma (UK tourist, English)</span></div>
       <!-- 1 find -->
       <div class="ln" data-at="0.2" data-off="5"><span class="u">emma ›</span> Find a skin clinic in Seoul for Thursday. I use a wheelchair.</div>
       <div class="ln" data-at="1.0" data-off="5"><span class="g">muse › searching Google Maps…</span></div>
@@ -319,25 +319,25 @@ body.rec #ctl,body.hidectl #ctl{display:none}
       <div class="ln" data-at="7.0" data-off="10"><span class="g">muse › ask</span> "Is the clinic wheelchair accessible?"</div>
       <div class="ln" data-at="7.8" data-off="10"><span class="c">counter ›</span> Yes. Step-free entrance, elevator to 5F, accessible restroom.<span class="tag fast">0.4 s · no staff needed</span></div>
       <!-- 3 UC-2 -->
-      <div class="ln" data-at="10.2" data-off="18"><span class="g">muse › ask</span> "Can I pay with Apple Pay?"</div>
+      <div class="ln" data-at="10.2" data-off="18"><span class="g">muse › ask</span> "Is there a female doctor?"</div>
       <div class="ln" data-at="11.0" data-off="18"><span class="w">counter ›</span> Not in our facts — asking the staff…<span class="tag wait">input-required</span></div>
-      <div class="ln" data-at="16.2" data-off="18"><span class="c">counter ›</span> Yes — Apple Pay works at the desk.<span class="tag" style="background:#1D78C6;color:#fff">from staff · saved</span></div>
+      <div class="ln" data-at="16.2" data-off="18"><span class="c">counter ›</span> Yes — Dr. Han (female) sees patients Tue–Sat.<span class="tag" style="background:#1D78C6;color:#fff">from staff · saved</span></div>
       <!-- 4 UC-3 -->
       <div class="ln" data-at="18.2" data-off="27"><span class="g">muse › book</span> Rejuran Healer · Thu Nov 12 · 15:00 · 1 guest</div>
       <div class="ln" data-at="19.0" data-off="27"><span class="w">counter ›</span> Slot held for you. Waiting for staff approval…<span class="tag wait">input-required</span></div>
       <div class="ln" data-at="23.6" data-off="27"><span class="c">counter ›</span> Booking confirmed · <b>SOI-1112-1500</b></div>
       <!-- 5 done + memory -->
-      <div class="ln" data-at="27.2"><span class="c">muse › emma</span> ✅ You're booked — Soi Dermatology, Thu 15:00.<br>&nbsp;&nbsp;Step-free entrance · Apple Pay OK · SOI-1112-1500</div>
+      <div class="ln" data-at="27.2"><span class="c">muse › emma</span> ✅ You're booked — Soi Dermatology, Thu 15:00.<br>&nbsp;&nbsp;Step-free entrance · female doctor: Dr. Han · SOI-1112-1500</div>
       <div class="ln" data-at="29.6"><span class="g">— later, a different agent —</span></div>
-      <div class="ln" data-at="30.2"><span class="g">pickle › ask</span> "Do you take Apple Pay?"</div>
-      <div class="ln" data-at="30.8"><span class="c">counter ›</span> Yes — Apple Pay works at the desk.<span class="tag mem">🧠 from memory · 0.3 s</span></div>
+      <div class="ln" data-at="30.2"><span class="g">pickle › ask</span> "Do you have a woman doctor?"</div>
+      <div class="ln" data-at="30.8"><span class="c">counter ›</span> Yes — Dr. Han (female) sees patients Tue–Sat.<span class="tag mem">🧠 from memory · 0.3 s</span></div>
     </div></div>
     <div class="phone"><div class="ps">
       <div class="pbar"><img src="../../../app/public/counter.png" alt=""><div><b>Soi Dermatology</b><small>Counter · staff phone</small></div></div>
       <div class="pcard" data-at="0.5" data-off="10.8"><div class="k">🔕 Quiet</div><div style="color:var(--muted)">Agents are reading your facts.<br>Nothing needs you.</div></div>
       <div class="pcard q" data-at="11.4" data-off="18">
         <div class="k">❓ Counter doesn't know this yet</div>
-        <div style="font-weight:700;font-size:21px">“Can I pay with Apple Pay?”</div>
+        <div style="font-weight:700;font-size:21px">“Is there a female doctor?”</div>
         <div class="ta"><span id="typed2"></span><span style="opacity:.5">|</span></div>
         <div class="rem"><span class="box" id="rem2">✓</span> Remember for future agents</div>
         <div class="pbtns"><span class="primary" data-tap="15.6">Send answer</span></div>
@@ -372,7 +372,7 @@ body.rec #ctl,body.hidectl #ctl{display:none}
       <div class="clock" id="clkR">0:00</div>
       <div class="steps"><div data-at="1.2">Question answered</div><div data-at="2.6">Booking requested</div><div data-at="4.6">Staff approved ✓</div></div>
     </div>
-    <div class="note9 on-fade" data-at="5">Phone: [N] min — to be measured · Counter: 26 s incl. staff approval (measured 2026-11-09, Claude Code)</div>
+    <div class="note9 on-fade" data-at="5">Phone: [N] min — to be measured · Counter: 24 s incl. staff approval (reference run 2026-11-09, English prompt — docs/measurement.md)</div>
   </section>
 
   <!-- S10 72–82 -->
@@ -415,7 +415,7 @@ const SUBS = [
   [38, 47, 'Muse requests a booking. The slot is held — the owner approves with one tap.', 'Muse 가 예약을 요청하면 슬롯을 잡아 두고 — 원장은 한 번 탭해 승인해요.'],
   [47, 51, 'Muse tells Emma: booked.', 'Muse 가 Emma 에게 알려요: 예약 완료.'],
   [51, 55, 'And the next agent gets the answer from memory.', '그리고 다음 에이전트는 기억으로 바로 답을 받아요.'],
-  [55, 65, 'Phone booking: [N] minutes. Counter: 26 seconds — staff approval included.', '전화 예약 [N]분. Counter 26초 — 직원 승인 포함.'],
+  [55, 65, 'Phone booking: [N] minutes. Counter: 24 seconds — staff approval included.', '전화 예약 [N]분. Counter 24초 — 직원 승인 포함.'],
   [65, 75, 'No calls. No hang-ups. Your staff get back to real customers.', '전화도, 끊는 일도 없어요. 직원은 다시 진짜 손님에게.'],
   [75, 83, 'Counter. Every shop, ready for AI customers.', 'Counter. 모든 가게를 AI 손님 맞을 준비가 된 가게로.'],
 ];
@@ -507,7 +507,7 @@ function render() {
   // S5 detailed demo
   const l5 = t - ST.s5, fa = $('#fingerA');
   $('#ag1').classList.toggle('hl', l5 >= 2.4 && l5 < 5);
-  const ans = 'Yes — Apple Pay works at the desk.';
+  const ans = 'Yes — Dr. Han, Tue–Sat.';
   $('#typed2').textContent = ans.slice(0, clamp(Math.floor((l5 - 12.4) * 18), 0, ans.length));
   $('#rem2').classList.toggle('on', l5 >= 15.0);
   const tapAt = l5 >= 14.6 && l5 < 16.2 ? 1 : l5 >= 21.4 && l5 < 23.2 ? 2 : 0;
@@ -517,7 +517,7 @@ function render() {
   // S9 timers
   const l9 = t - ST.s9;
   $('#clkL').textContent = l9 < 0 ? '0:00' : fmt(clamp(l9 - 0.4, 0, 9.6) * 42);  // fast-forward: ~6+ min shown
-  $('#clkR').textContent = l9 < 0 ? '0:00' : fmt(clamp((l9 - 0.4) * 5.5, 0, 26));
+  $('#clkR').textContent = l9 < 0 ? '0:00' : fmt(clamp((l9 - 0.4) * 5.5, 0, 24));
   $$('#s9 .steps div').forEach((d) => d.classList.toggle('on', l9 >= +d.dataset.at));
   $('#clkL').textContent += l9 > 6 ? '…' : '';
   // S10 faces
