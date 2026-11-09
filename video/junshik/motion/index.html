@@ -13,7 +13,7 @@
 -->
 <style>
 :root{--blue:#1D78C6;--blue-50:#EAF3FC;--violet:#6B4FD8;--ink:#0F1B2A;--muted:#6B7684;--line:#E6EAF0;--ok:#12A15F;--warn:#F59E0B;--bad:#D64545;--yellow:#FFD84A;
-  --muse:#E8618C;--pickle:#3FAE5A;--dots:#2B6DE8;--duet:#D97757}
+  --muse:#E8618C;--pickle:#3FAE5A;--dots:#F5C518;--grok:#111}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#000;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased}
 #stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;background:#05070d;color:#fff}
@@ -37,7 +37,8 @@ html,body{height:100%;background:#000;overflow:hidden;font-family:-apple-system,
 /* ---------- agent chips ---------- */
 .chip{display:inline-flex;align-items:center;gap:10px;padding:10px 18px 10px 10px;border-radius:999px;background:#fff;color:var(--ink);font-weight:700;font-size:26px;box-shadow:0 8px 24px rgba(0,0,0,.35);white-space:nowrap}
 .chip i{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-style:normal;font-size:22px}
-.c-muse i{background:var(--muse)}.c-pickle i{background:var(--pickle)}.c-dots i{background:var(--dots)}.c-duet i{background:var(--duet)}
+.chip i{background-size:cover;background-position:center;font-size:0 !important;color:transparent}
+.c-muse i{background-image:url(../../common/agents/muse.png)}.c-pickle i{background-image:url(../../common/agents/pickle.png)}.c-dots i{background-color:#fff;background-image:url(../../common/agents/dots.png);background-size:86%;background-repeat:no-repeat;box-shadow:inset 0 0 0 1px #ddd}.c-grok i{background-image:url(../../common/agents/grok-bot.png)}
 
 /* ---------- S1 crawl ---------- */
 #s1{background:radial-gradient(ellipse at center,#141a2e 0%,#05070d 75%)}
@@ -172,13 +173,13 @@ html,body{height:100%;background:#000;overflow:hidden;font-family:-apple-system,
 
 /* S10 4-split live-action placeholder (회의 결정: 사람 4분할 실사 컷) */
 #s10{background:#000}
-.q4{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6px}
+.q4{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr;gap:6px}
 .q4 .cell{position:relative;overflow:hidden;opacity:0;transform:scale(1.08);transition:opacity .35s,transform .9s cubic-bezier(.2,.8,.2,1)}
 .q4 .cell.on{opacity:1;transform:none}
-.q4 .cell .face{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);font-size:210px}
+.q4 .cell .face{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:190px}
 .q4 .cell .lbl{position:absolute;left:24px;bottom:20px;font-size:24px;font-weight:700;color:#fff;background:rgba(0,0,0,.45);padding:6px 14px;border-radius:10px}
-.q4 .cell .ph{position:absolute;right:24px;top:20px;font-size:18px;color:#fff;background:var(--bad);padding:4px 10px;border-radius:6px;font-weight:700}
-.q4 .notif{position:absolute;left:50%;top:40px;width:470px;margin-left:-235px;background:rgba(255,255,255,.95);color:var(--ink);border-radius:20px;padding:14px 18px;font-size:21px;transform:translateY(-180%);transition:transform .45s cubic-bezier(.2,1.4,.4,1)}
+.q4 .cell .ph{position:absolute;left:18px;top:40px;font-size:16px;color:#fff;background:var(--bad);padding:4px 10px;border-radius:6px;font-weight:700}
+.q4 .notif{position:absolute;left:18px;right:18px;top:110px;background:rgba(255,255,255,.95);color:var(--ink);border-radius:20px;padding:14px 18px;font-size:21px;transform:translateY(-180%);transition:transform .45s cubic-bezier(.2,1.4,.4,1)}
 .q4 .notif.on{transform:none}
 .q4 .notif b{display:block;font-size:22px}.q4 .notif small{color:var(--muted)}
 /* S11 logo */
@@ -253,7 +254,7 @@ body.rec #ctl,body.hidectl #ctl{display:none}
 
   <!-- S5 27–40 demo 1 -->
   <section class="scene demo" id="s5" data-s="20" data-e="33">
-    <div class="badge-ph">DEMO PLACEHOLDER · clip #1</div>
+    <div class="badge-ph">UC-1 + UC-3 · 피부과 · clip #1 PLACEHOLDER</div>
     <div class="badge-sim">Simulated agents — no official integration</div>
     <div class="laptop"><div class="scr">
       <div class="head"><span class="chip c-muse" style="font-size:20px;padding:4px 12px 4px 4px"><i style="width:30px;height:30px;font-size:15px">M</i>Muse</span> → counter.app/s/soi-derm</div>
@@ -265,7 +266,7 @@ body.rec #ctl,body.hidectl #ctl{display:none}
       <div class="ln" data-at="9.2"><span class="c">counter ›</span> Booking confirmed · <b>SOI-1112-1500</b></div>
     </div></div>
     <div class="phone"><div class="ps">
-      <div class="pbar"><img src="../../../public/counter.png" alt=""><div><b>Soi Dermatology</b><small>Counter · staff</small></div></div>
+      <div class="pbar"><img src="../../../app/public/counter.png" alt=""><div><b>Soi Dermatology</b><small>Counter · staff</small></div></div>
       <div class="pcard pend" data-at="4.8">
         <div class="k">📅 New booking request · Muse</div>
         <div class="bk"><b>Rejuran Healer (full face)</b><span class="when">Thu Nov 12 · 15:00</span></div>
@@ -280,7 +281,7 @@ body.rec #ctl,body.hidectl #ctl{display:none}
 
   <!-- S6 40–46 demo 2 -->
   <section class="scene demo" id="s6" data-s="33" data-e="39">
-    <div class="badge-ph">DEMO PLACEHOLDER · clip #2</div>
+    <div class="badge-ph">UC-3 · 식당 · clip #2 PLACEHOLDER</div>
     <div class="badge-sim">Simulated agents — no official integration</div>
     <div class="qc">
       <div class="qflag on-fade pop" data-at="0.1">🍜</div>
@@ -295,7 +296,7 @@ body.rec #ctl,body.hidectl #ctl{display:none}
 
   <!-- S7 46–52 demo 3 -->
   <section class="scene demo" id="s7" data-s="39" data-e="45">
-    <div class="badge-ph">DEMO PLACEHOLDER · clip #3</div>
+    <div class="badge-ph">UC-3 · 숙소 · clip #3 PLACEHOLDER</div>
     <div class="badge-sim">Simulated agents — no official integration</div>
     <div class="qc">
       <div class="qflag on-fade pop" data-at="0.1">🏨</div>
@@ -310,22 +311,22 @@ body.rec #ctl,body.hidectl #ctl{display:none}
 
   <!-- S8 52–62 demo 4 -->
   <section class="scene demo" id="s8" data-s="45" data-e="55">
-    <div class="badge-ph">DEMO PLACEHOLDER · clip #4</div>
+    <div class="badge-ph">UC-2 · 피부과 · clip #4 PLACEHOLDER</div>
     <div class="badge-sim">Simulated agents — no official integration</div>
     <div class="laptop"><div class="scr">
       <div class="head">agents → counter.app/s/soi-derm</div>
-      <div class="ln" data-at="0.2"><span class="g">duet › ask</span> "Is there visitor parking?"</div>
+      <div class="ln" data-at="0.2"><span class="g">grok › ask</span> "Do you have Japanese-speaking staff?"</div>
       <div class="ln" data-at="0.9"><span class="w">counter ›</span> Not in our facts yet — asking the staff…<span class="tag wait">input-required</span></div>
-      <div class="ln" data-at="5.0"><span class="c">counter ›</span> Yes — 2 hours free in the building's B2 lot.<span class="tag" style="background:#1D78C6;color:#fff">from staff</span></div>
+      <div class="ln" data-at="5.0"><span class="c">counter ›</span> Yes — Dr. Kim speaks Japanese, Tue &amp; Thu.<span class="tag" style="background:#1D78C6;color:#fff">from staff</span></div>
       <div class="ln" data-at="6.6"><span class="g">— next day, a different agent —</span></div>
-      <div class="ln" data-at="7.2"><span class="g">muse › ask</span> "Can I park there?"</div>
-      <div class="ln" data-at="7.8"><span class="c">counter ›</span> Yes — 2 hours free in the building's B2 lot.<span class="tag mem">🧠 from memory · 0.3 s</span></div>
+      <div class="ln" data-at="7.2"><span class="g">muse › ask</span> "Anyone who speaks Japanese?"</div>
+      <div class="ln" data-at="7.8"><span class="c">counter ›</span> Yes — Dr. Kim speaks Japanese, Tue &amp; Thu.<span class="tag mem">🧠 from memory · 0.3 s</span></div>
     </div></div>
     <div class="phone"><div class="ps">
-      <div class="pbar"><img src="../../../public/counter.png" alt=""><div><b>Soi Dermatology</b><small>Counter · staff</small></div></div>
+      <div class="pbar"><img src="../../../app/public/counter.png" alt=""><div><b>Soi Dermatology</b><small>Counter · staff</small></div></div>
       <div class="pcard q" data-at="1.2">
         <div class="k">❓ Counter doesn't know this yet</div>
-        <div style="font-weight:700;font-size:21px">“Is there visitor parking?”</div>
+        <div style="font-weight:700;font-size:21px">“Do you have Japanese-speaking staff?”</div>
         <div class="ta"><span id="typed8"></span><span style="opacity:.5">|</span></div>
         <div class="rem"><span class="box" id="rem8" data-at="3.6">✓</span> Remember this for future agents</div>
         <div class="pbtns"><span class="primary" id="send8" data-tap="4.4">Send answer</span></div>
@@ -358,7 +359,7 @@ body.rec #ctl,body.hidectl #ctl{display:none}
 
   <!-- S11 82–90 -->
   <section class="scene" id="s11" data-s="75" data-e="83.5">
-    <img class="on-fade pop" data-at="0.2" src="../../../public/counter.png" alt="Counter mascot">
+    <img class="on-fade pop" data-at="0.2" src="../../../app/public/counter.png" alt="Counter mascot">
     <h1 class="on-fade up" data-at="0.6">Counter.</h1>
     <p class="on-fade up" data-at="1.2">Every shop, ready for AI customers.</p>
     <div class="url on-fade" data-at="2.2">One link on your map listing · counter.app</div>
@@ -392,7 +393,7 @@ const SUBS = [
   [65, 75, 'No calls. No hang-ups. Your staff get back to real customers.', '전화도, 끊는 일도 없어요. 직원은 다시 진짜 손님에게.'],
   [75, 83, 'Counter. Every shop, ready for AI customers.', 'Counter. 모든 가게를 AI 손님 맞을 준비가 된 가게로.'],
 ];
-const AGENTS = [['muse','M','Muse'],['pickle','P','Pickle'],['dots','D','Dots'],['duet','C','Claude Duet']];
+const AGENTS = [['muse','M','Muse'],['pickle','P','Pickle'],['dots','D','Dots'],['grok','G','Grok Bot']];
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
 // ---------- build generated bits (deterministic random) ----------
@@ -424,7 +425,7 @@ for (let i = 0; i < 8; i++) {
   s.dataset.dx = 1180 - x; s.dataset.dy = 690 - y; suckbox.appendChild(s);
 }
 const p4 = $('#phones4'); p4.className = 'q4';
-[['muse','Muse','English','Soi Dermatology · Thu 15:00','😄','#f3c9b5,#e9a3b9'],['pickle','Pickle','中文','Mapo Kitchen · Sat 19:00','😆','#cfe8c8,#9fd3b0'],['dots','Dots','Tiếng Việt','Hongdae Stay · Fri–Sun','🥳','#c8dcf7,#a3bff0'],['duet','Claude Duet','日本語','Yeonnam Hair · Sun 11:00','😊','#f6dfc0,#eab98f']]
+[['muse','Muse','English','Soi Dermatology · Thu 15:00','😄','#f3c9b5,#e9a3b9'],['pickle','Pickle','中文','Mapo Kitchen · Sat 19:00','😆','#cfe8c8,#9fd3b0'],['dots','Dots','Tiếng Việt','Hongdae Stay · Fri–Sun','🥳','#c8dcf7,#a3bff0'],['grok','Grok Bot','日本語','Yeonnam Hair · Sun 11:00','😊','#f6dfc0,#eab98f']]
 .forEach((d, i) => {
   const at = (0.3 + i * 0.5).toFixed(2), el = document.createElement('div'); el.className = 'cell'; el.dataset.at = at;
   el.style.background = `linear-gradient(160deg,${d[5]})`;
@@ -463,7 +464,7 @@ function render() {
   const l5 = t - ST.s5, f1 = $('#finger1');
   f1.style.transform = l5 > 7.4 ? 'translate(0,-10px) scale(.9)' : 'translate(120px,200px)';
   // S8 typing
-  const l8 = t - ST.s8, ans = 'Yes — 2 hours free in B2.';
+  const l8 = t - ST.s8, ans = 'Yes — Dr. Kim, Tue & Thu.';
   $('#typed8').textContent = ans.slice(0, clamp(Math.floor((l8 - 1.8) * 16), 0, ans.length));
   $('#rem8').classList.toggle('on', l8 >= 3.6);
   // S9 timers
