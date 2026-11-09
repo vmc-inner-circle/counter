@@ -19,3 +19,4 @@
 ## 코멘트
 
 <!-- 다른 팀원 의견은 여기 한 줄씩: "- 이름: 의견" -->
+- 13:15 싱크 v12 피드백 ([상시녹음 4](../../docs/meeting-logs/261109_상시녹음4-아이콘-영상피드백.md)): ① 첫 문장 "Soon, every customer is an AI agent." → 개인 AI 비서가 늘수록 AI 전화가 범람할 것 ② "So every shop gets its own agent." → "So we made an agent for owners. Counter." ③ UI 데모·로고 최신으로 sync ④ "Any person. Any agent. Any language." 노드 잇는 선이 노드에서 끊기게(위치 조정은 안 함) ⑤ 슬로건 → "(OpenAI·Meta·xAI·Pickle) spreads agents. We build their front door" (Counter와 같이 쓰는 방식은 미정) · 예약 완료 장면은 넣지 않는다
