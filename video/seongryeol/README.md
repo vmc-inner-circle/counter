@@ -4,7 +4,7 @@
 
 | 버전 | 시각 | 링크 | 바뀐 점 |
 |---|---|---|---|
-| v1 | | | |
+| v6 (English) | 11/09 11:21 | [Counter_v6_English.mp4](Counter_v6_English.mp4) | 영어판 |
 
 ## 대본
 
