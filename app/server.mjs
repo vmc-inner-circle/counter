@@ -23,7 +23,8 @@ const now = () => new Date().toISOString();
 const newId = (p) => `${p}_${Math.random().toString(36).slice(2, 8)}`;
 const secs = (t) => (t.resolvedAt ? Math.round((new Date(t.resolvedAt) - new Date(t.createdAt)) / 1000) : null);
 
-// ---- memory match: a learned answer applies if most of its content words appear in the new question
+// ---- memory match: a learned answer applies if the two questions share 2+ content words and either question is almost fully (80%+) covered by the other
+// (agents often ask the first time with date/service attached, then another agent asks the short version — or the reverse. One differing key word, e.g. Japanese vs Chinese, must not match)
 const STOP = new Set('a an the is are do does did you your there any to for of in on at and or i we my me can could would will be with have has it this that what which how when where who please'.split(' '));
 const words = (s) => s.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter((w) => w.length > 2 && !STOP.has(w));
 function recall(question) {
@@ -31,9 +32,10 @@ function recall(question) {
   let best = null;
   for (const m of db.memory) {
     const k = words(m.question);
-    const hit = k.filter((w) => q.has(w) || [...q].some((x) => x.startsWith(w.slice(0, 5)) || w.startsWith(x.slice(0, 5)))).length;
-    const score = k.length ? hit / k.length : 0;
-    if (score >= 0.5 && (!best || score > best.score)) best = { m, score };
+    const near = (w, set) => set.has(w) || [...set].some((x) => x.startsWith(w.slice(0, 5)) || w.startsWith(x.slice(0, 5)));
+    const ks = new Set(k), hitK = k.filter((w) => near(w, q)).length, hitQ = [...q].filter((w) => near(w, ks)).length;
+    const score = Math.max(k.length ? hitK / k.length : 0, q.size ? hitQ / q.size : 0);
+    if (Math.min(hitK, hitQ) >= 2 && score >= 0.8 && (!best || score > best.score)) best = { m, score };
   }
   return best?.m;
 }
