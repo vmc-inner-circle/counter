@@ -77,28 +77,47 @@ class Director:
     def see(self, text): self.page.get_by_text(text).first.wait_for(timeout=10000)
 
 
-Q = 'Do you have Japanese-speaking staff?'
-A = 'Yes — Dr. Han speaks Japanese. She is in Mon–Fri.'
-Q_AGAIN = 'Is there a staff member who speaks Japanese?'
+Q = 'Do you have a female doctor?'
+A = 'Yes — Dr. Kim sees patients Tue & Thu.'
+Q_AGAIN = 'Is there a female doctor?'
+MEM = {'agent': 'Dots', 'user': 'Nguyen Thi Lan'}  # 같은 질문을 다시 하는 다른 에이전트
+
+
+# 화면은 시안 A(채널톡형): 대화 목록 → 손님 대화 → 하단의 Approve / 답장. 선택자는 문구가 아니라 data-* 로 잡는다
+def to_list(d):
+    if d.page.locator('[data-act=back]').count(): d.tap('[data-act=back]')
+    d.page.wait_for_selector('[data-screen=list]')
+
+
+def open_conv(d, agent, user):
+    to_list(d); d.tap(f'[data-conv="{agent}|{user}"]'); d.page.wait_for_selector('[data-screen=thread]')
 
 
 def uc2_answer(d):   # 모르는 질문 → 사장님이 한 번 답하고 기억
-    d.hold(1.5); d.ask(Q); d.see(Q); d.hold(1.5)
-    d.type('textarea[id^=a_]', A); d.hold(0.8)
-    d.tap('text=Send answer'); d.see('Answered by staff'); d.hold(2.5)
+    d.hold(1.5); d.ask(Q); d.see(Q); d.hold(1.2)
+    open_conv(d, d.who['agent'], d.who['user']); d.hold(1.0)
+    d.type('#reply', A); d.hold(0.8)
+    d.tap('[data-act=send]'); d.see('You answered'); d.hold(2.5)
 
 
 def uc2_memory(d):   # 다른 에이전트가 같은 질문 → 사장님 없이 바로 답
-    d.hold(1.5); d.ask(Q_AGAIN, agent='Pickle', user='Wei Chen'); d.see('Answered from memory'); d.hold(3.5)
+    to_list(d); d.hold(1.5); d.ask(Q_AGAIN, agent=MEM['agent'], user=MEM['user']); d.see('Answered from memory'); d.hold(1.2)
+    open_conv(d, MEM['agent'], MEM['user']); d.see('answered from memory'); d.hold(3.0)
 
 
 def uc3_approve(d):  # 예약 요청 → 슬롯 잡아 둠 → 탭 한 번 승인
-    d.hold(1.5); d.book(); d.see('needs your approval'); d.hold(2.0)
-    d.tap('text=Approve booking'); d.see('Booking confirmed'); d.hold(3.0)
+    d.hold(1.5); d.book(); d.see('approve?'); d.hold(1.2)
+    open_conv(d, d.who['agent'], d.who['user']); d.hold(1.2)
+    d.tap('[data-act=approve]'); d.see('Booked'); d.hold(3.0)
 
 
-def full_flow(d):
-    uc2_answer(d); uc3_approve(d); uc2_memory(d)
+def full_flow(d):    # video/soonhyung C2 순서: 목록 → Emma 대화 → Approve → 모르는 질문에 답 → 다른 에이전트는 기억으로 즉답
+    d.hold(1.5); d.book(); d.ask(Q); d.see('approve?'); d.hold(1.2)
+    open_conv(d, d.who['agent'], d.who['user']); d.hold(1.2)
+    d.tap('[data-act=approve]'); d.see('Booked'); d.hold(1.5)
+    d.type('#reply', A); d.hold(0.8)
+    d.tap('[data-act=send]'); d.see('You answered'); d.hold(2.0)
+    uc2_memory(d)
 
 
 def setup_learned(d):  # uc2-memory 장면 전에: 이미 한 번 배운 상태로 만든다(녹화 안 됨)
@@ -110,7 +129,7 @@ SCENES = {
     'uc2-answer':  ('사장님 폰: 모르는 질문이 들어와 한 번 답하고 "기억" (UC-2, #4)', None, uc2_answer),
     'uc2-memory':  ('사장님 폰: 다른 에이전트의 같은 질문이 사장님 없이 바로 답됨 (UC-2, #4)', setup_learned, uc2_memory),
     'uc3-approve': ('사장님 폰: 예약 요청 → 탭 한 번 승인 → 확정 (UC-3, #1~3)', None, uc3_approve),
-    'full':        ('사장님 폰: 질문 답변 → 예약 승인 → 기억으로 즉답 (한 번에)', None, full_flow),
+    'full':        ('사장님 폰: 예약 승인 → 질문 답변 → 기억으로 즉답 (한 번에)', None, full_flow),
 }
 
 
@@ -125,7 +144,7 @@ def record(pw, sid, who):
         d = Director(page, srv, who)
         if setup: setup(d)
         t0 = time.time()
-        page.goto(srv.base + '/admin'); page.wait_for_selector('.stats'); lead = time.time() - t0
+        page.goto(srv.base + '/admin'); page.wait_for_selector('[data-screen=list]'); lead = time.time() - t0
         script(d)
         ctx.close(); browser.close()
         webm = next(Path(tmp).glob('*.webm'))
@@ -141,8 +160,8 @@ def record(pw, sid, who):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('scenes', nargs='*', help=' / '.join(SCENES))
-    ap.add_argument('--agent', default='Muse'); ap.add_argument('--user', default='Yuki Tanaka')
-    ap.add_argument('--nat', default='JP'); ap.add_argument('--notes', default='Wheelchair user. Prefers Japanese-speaking staff.')
+    ap.add_argument('--agent', default='Muse'); ap.add_argument('--user', default='Emma Clarke')
+    ap.add_argument('--nat', default='GB'); ap.add_argument('--notes', default='Uses a wheelchair')
     a = ap.parse_args()
     bad = [s for s in a.scenes if s not in SCENES]
     if bad: sys.exit(f'unknown scene: {bad} — choose from {list(SCENES)}')
