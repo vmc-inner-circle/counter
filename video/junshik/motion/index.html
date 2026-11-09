@@ -3,179 +3,150 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Counter — 9:16 draft v2 (junshik)</title>
+<title>Counter — 16:9 v3 (junshik)</title>
 <!--
-  황준식 안 — 모션 그래픽 v2 (9:16, 1080×1920, 약 63초, 음향 포함).
-  원칙(11:30 싱크·video/README.md): 깔끔하게, 글자 최소, 그림·모션으로. 한 컷에 시선 하나. 속도 비교 없음.
-  열기: 브라우저로 연다 → Space 재생(소리 남), ←/→ 2초, H 조작 막대 숨김, R 처음부터. ?t=20 = 20초부터. ?rec = 녹화용.
-  소리: assets/ — BGM = 팀 ElevenLabs 생성(조순형 build/assets), 효과음 = CC0 kit(같은 곳). 렌더 때는 CUES 로 따로 믹스.
-  에이전트 이미지: ../../common/agents/ (회사 상표 — 돕는 구도로만).
+  황준식 안 v3 — 시나리오 v4.1(../script.md) 을 스타일 A(Notion 3.0 톤)+B(이성렬 모션 키트 구도)로. 16:9 1920×1080, 90초, BGM·효과음.
+  핵심: 서론 = 에이전트들이 «한 가게»에 무차별로 전화. 본론 = Counter 가 앞에서 받아 대부분 처리. 결론 = 가게·에이전트·사람 모두 이김.
+  열기: 브라우저 → Space 재생(소리), ←/→ 2초, H 막대 숨김, R 처음. ?t=30 = 30초부터. ?rec = 녹화용.
+  소재: assets/ (owner.png·BGM = 조순형 build/assets, 효과음 CC0, Pretendard OFL) · ../../common/agents/ · ../../demo-clips/ (자동 녹화)
 -->
 <style>
-:root{--bg:#F6F4EF;--ink:#0F1B2A;--muted:#8A94A3;--blue:#1D78C6;--blue-50:#EAF3FC;--ok:#12A15F;--bad:#E04B4B;--yellow:#FFD84A;--card:#fff;--line:#E6E2D9}
+@font-face{font-family:P;src:url(assets/fonts/Pretendard-Medium.woff2) format("woff2");font-weight:500}
+@font-face{font-family:P;src:url(assets/fonts/Pretendard-SemiBold.woff2) format("woff2");font-weight:600}
+@font-face{font-family:P;src:url(assets/fonts/Pretendard-ExtraBold.woff2) format("woff2");font-weight:800}
+:root{--bg:#F6F5F0;--ink:#141414;--mut:#8A8A8A;--acc:#FF6B3D;--line:#E6E4DE;--ok:#1FA463}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#000;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
-#stage{position:absolute;left:50%;top:50%;width:1080px;height:1920px;overflow:hidden;background:var(--bg);color:var(--ink)}
+html,body{height:100%;background:#111;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:P,-apple-system,sans-serif;letter-spacing:-.01em}
 .scene{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .3s}
 .scene.active{opacity:1;visibility:visible}
-.f{opacity:0;transition:opacity .45s,transform .6s cubic-bezier(.2,.9,.25,1.15)}
+.f{opacity:0;transition:opacity .4s,transform .55s cubic-bezier(.2,.9,.25,1.15)}
 .f.on{opacity:1}
-.up{transform:translateY(60px)}.up.on{transform:none}
+.up{transform:translateY(50px)}.up.on{transform:none}
 .pop{transform:scale(.4)}.pop.on{transform:scale(1)}
-.dark{background:#070a12;color:#fff}
+.hl{background:linear-gradient(transparent 58%,rgba(255,107,61,.28) 58%);padding:0 .06em}
+.acc{color:var(--acc)}
 
-/* caption — one short line, no box */
-#cap{position:absolute;left:60px;right:60px;bottom:230px;text-align:center;font-size:72px;font-weight:800;line-height:1.15;letter-spacing:-.02em;z-index:50;pointer-events:none;transition:opacity .3s,transform .4s}
-#cap.hide{opacity:0;transform:translateY(20px)}
-#cap.light{color:#fff}
+/* headline — one line per cut */
+#head{position:absolute;left:0;right:0;top:110px;text-align:center;font-size:84px;font-weight:800;letter-spacing:-.025em;z-index:40;transition:opacity .25s,transform .35s}
+#head.hide{opacity:0;transform:translateY(16px)}
+#head.mid{top:470px;font-size:110px}
+#head.left{left:150px;right:auto;top:430px;text-align:left;font-size:96px;width:820px}
 
-/* avatars */
-.av{width:var(--s,120px);height:var(--s,120px);border-radius:50%;background-size:cover;background-position:center;box-shadow:0 10px 30px rgba(0,0,0,.18);border:4px solid #fff;flex:none}
+/* parts */
+.av{width:var(--s,110px);height:var(--s,110px);border-radius:50%;background:#fff center/cover;border:4px solid #fff;box-shadow:0 8px 22px rgba(0,0,0,.12);flex:none}
 .a-muse{background-image:url(../../common/agents/muse.png)}
 .a-pickle{background-image:url(../../common/agents/pickle.png)}
-.a-dots{background-image:url(../../common/agents/dots.png);background-color:#fff;background-size:80%;background-repeat:no-repeat}
+.a-dots{background-image:url(../../common/agents/dots.png);background-size:80%;background-repeat:no-repeat}
 .a-grok{background-image:url(../../common/agents/grok-bot.png)}
-.mascot{border-radius:50%;background:#fff url(../../../app/public/counter.png) center/cover;box-shadow:0 20px 60px rgba(29,120,198,.35);border:8px solid #fff}
 .owner{background:url(assets/owner.png) center/cover;border-radius:50%}
+.logo{width:var(--s,200px);height:var(--s,200px);border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:800;font-size:calc(var(--s,200px)*.58);box-shadow:0 18px 50px rgba(255,107,61,.35);flex:none}
+.bub{position:absolute;background:#fff;border:2px solid var(--line);border-radius:28px;padding:18px 28px;font-size:38px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.05);white-space:nowrap}
+.person{position:relative;width:var(--s,90px);height:var(--s,90px);border-radius:50%;background:#FFE3D3;border:3px solid var(--ink);overflow:hidden;flex:none}
+.person:before{content:"";position:absolute;left:32%;top:18%;width:36%;height:36%;border-radius:50%;background:#fff;border:3px solid var(--ink)}
+.person:after{content:"";position:absolute;left:14%;top:60%;width:72%;height:60%;border-radius:50% 50% 0 0;background:#fff;border:3px solid var(--ink)}
+.badge{position:absolute;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:40px;font-weight:800}
+.b-ok{background:var(--ok)}.b-x{background:var(--ink)}.b-q{background:var(--acc)}
+.curve{position:absolute;font-size:54px;color:var(--acc)}
+.pick{transform:scale(.3);opacity:0;transition:all .3s cubic-bezier(.3,1.6,.5,1)}.pick.on{transform:scale(1);opacity:1}
 
-/* S1 crawl */
-#swarm{position:absolute;inset:-80px}
-#swarm .av{position:absolute;opacity:.35;border-width:2px}
-#s1:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(7,10,18,.8) 0%,rgba(7,10,18,.25) 70%);z-index:1}
-.crawl-wrap{position:absolute;inset:0;perspective:520px;display:flex;justify-content:center;z-index:2}
-.crawl{position:absolute;bottom:-25%;width:1000px;text-align:center;color:var(--yellow);font-weight:900;font-size:136px;line-height:1.05;transform-origin:50% 100%;transform:rotateX(28deg)}
-#s1.active .crawl{animation:crawl 2.6s cubic-bezier(.3,.1,.5,1) forwards}
-#s1.active #swarm{animation:drift 2.6s linear forwards}
-@keyframes crawl{0%{transform:rotateX(28deg) translateY(30%)}75%{opacity:1}100%{transform:rotateX(28deg) translateY(-250%);opacity:0}}
-@keyframes drift{from{transform:scale(1.2)}to{transform:scale(1)}}
+/* C1 kinetic */
+.kin{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:30px;white-space:nowrap;font-size:118px;font-weight:800;letter-spacing:-.04em}
+.kin span{opacity:0;transform:scale(1.6);transition:all .18s cubic-bezier(.2,.9,.3,1.2)}
+.kin span.on{opacity:1;transform:none}
 
-/* S2 earth */
-.zw{position:absolute;inset:0;transform-origin:540px 1150px;transition:transform 1.2s cubic-bezier(.6,0,.4,1),opacity .35s .85s}
-.zw.on{transform:scale(8);opacity:0}
-.earth{position:absolute;left:50%;top:860px;width:1600px;height:1600px;margin-left:-800px;border-radius:50%;background:radial-gradient(circle at 40% 30%,#3d8fe0,#1a4f99 45%,#0b2450 75%);box-shadow:0 0 140px rgba(80,160,255,.45)}
-.land{position:absolute;border-radius:45%;background:#2f9e6a;opacity:.85}
-.person{position:absolute;width:28px;height:28px;border-radius:50%;background:#ffe6c7}
-.rain{position:absolute;transition:transform 1s cubic-bezier(.3,1.4,.5,1),opacity .2s;opacity:0}
-.rain.on{opacity:1}
-.bignum{position:absolute;left:0;right:0;top:330px;text-align:center;font-size:120px;font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-.bignum small{display:block;font-size:56px;font-weight:700;margin-top:10px;opacity:.85}
-.pulse{position:absolute;left:520px;top:1130px;width:40px;height:40px;border-radius:50%;background:var(--bad);box-shadow:0 0 0 0 rgba(224,75,75,.6);animation:pulse 1s infinite}
-@keyframes pulse{to{box-shadow:0 0 0 40px rgba(224,75,75,0)}}
+/* C2 people grid */
+.pgrid{position:absolute;left:210px;right:210px;top:330px;display:grid;grid-template-columns:repeat(10,1fr);gap:36px 0;justify-items:center}
+.drop{position:absolute;left:50%;top:-12px;margin-left:-29px;--s:58px;transform:translateY(-700px);transition:transform .7s cubic-bezier(.3,1.4,.5,1)}
+.drop.on{transform:none}
+.pcell{position:relative}
+.num{position:absolute;left:0;right:0;top:110px;text-align:center;font-size:110px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 
-/* S2b town */
-.town{position:absolute;left:60px;top:210px;width:960px;height:1380px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(5,1fr);gap:26px;transition:transform .8s cubic-bezier(.6,0,.4,1),opacity .3s .5s}
-.town.on{transform:scale(4.2);opacity:0}
-#s2b.active .town{animation:zin .6s cubic-bezier(.2,.8,.2,1)}
-@keyframes zin{from{transform:scale(1.6);opacity:0;filter:blur(8px)}to{transform:none;opacity:1;filter:none}}
-.tile{position:relative;background:var(--card);border-radius:32px;display:grid;place-items:center;box-shadow:0 8px 24px rgba(15,27,42,.06);transition:box-shadow .15s,background .15s}
-.tile .em{font-size:130px;line-height:1}
-.tile.ring{background:#fff2f1;box-shadow:0 0 0 6px var(--bad)}
-.tile.ring .em{animation:shake .1s infinite alternate}
-@keyframes shake{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
-.tile .mc{position:absolute;right:18px;top:18px;min-width:52px;height:52px;border-radius:26px;background:var(--bad);color:#fff;font-size:28px;font-weight:900;display:grid;place-items:center;padding:0 12px;font-variant-numeric:tabular-nums;opacity:0}
-.tile .mc.on{opacity:1}
-.tile .caller{position:absolute;left:18px;top:18px;--s:72px;opacity:0;transform:scale(.5);transition:all .15s}
-.tile .caller.on{opacity:1;transform:scale(1)}
-.tile .rx{position:absolute;left:50%;bottom:16px;margin-left:-36px;font-size:64px;opacity:0;transform:translateY(10px);transition:all .15s}
-.tile .rx.on{opacity:1;transform:none}
+/* C3 */
+.trio{position:absolute;left:0;right:0;top:380px;display:flex;justify-content:center;gap:260px}
+.trio .col{display:flex;flex-direction:column;align-items:center;gap:30px;position:relative}
+.trio .bub{position:static}
+.go{transition:transform .9s cubic-bezier(.6,0,.6,1)}.go.on{transform:translateX(1400px)}
 
-/* S3 clinic closeup */
-#s3.active .cw0{animation:zin .7s cubic-bezier(.2,.8,.2,1)}
-.cw0{position:absolute;inset:0}
-.desk{position:absolute;left:60px;right:60px;top:1060px;height:120px;background:#fff;border-radius:28px;box-shadow:0 10px 0 #E6E2D9}
-.own3{position:absolute;left:290px;top:520px;width:500px;height:500px}
-#s3 .own3.stress{animation:shake .09s infinite alternate}
-.sweat{position:absolute;left:720px;top:520px;font-size:110px;opacity:0;transition:opacity .2s}.sweat.on{opacity:1}
-.dphone{position:absolute;left:150px;top:900px;font-size:170px}
-#s3.active .dphone.ring{animation:shake .08s infinite alternate}
-.miss{position:absolute;left:300px;top:900px;min-width:90px;height:90px;border-radius:45px;background:var(--bad);color:#fff;font-size:50px;font-weight:900;display:grid;place-items:center;padding:0 20px;font-variant-numeric:tabular-nums}
-.orb{position:absolute;--s:130px;transition:transform .5s cubic-bezier(.3,1.4,.5,1),opacity .2s;opacity:0}
-.orb.on{opacity:1}
-.orb:after{content:"📞";position:absolute;right:-18px;top:-18px;font-size:54px}
-.queue{position:absolute;left:0;right:0;top:1230px;text-align:center;font-size:120px;letter-spacing:20px}
-.n848{position:absolute;left:0;right:0;top:1370px;text-align:center;font-size:200px;font-weight:900;color:var(--bad);line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
-.src{position:absolute;left:0;right:0;bottom:120px;text-align:center;font-size:22px;color:var(--muted)}
+/* C4 one shop, many agents */
+.shop{position:absolute;left:760px;top:330px;width:400px;height:460px;background:#fff;border:3px solid var(--ink);border-radius:30px;overflow:hidden;z-index:3}
+.shop .aw{height:90px;background:repeating-linear-gradient(90deg,var(--acc) 0 66px,#fff 66px 132px);border-bottom:3px solid var(--ink)}
+.shop .door{position:absolute;left:150px;bottom:0;width:100px;height:170px;border:3px solid var(--ink);border-bottom:0;border-radius:14px 14px 0 0}
+.shop .win{position:absolute;left:40px;top:140px;width:320px;height:110px;border:3px solid var(--ink);border-radius:14px;display:grid;place-items:center;font-size:70px}
+.shop.ring{animation:shake .08s infinite alternate}
+@keyframes shake{from{transform:rotate(-1.6deg)}to{transform:rotate(1.6deg)}}
+.calls{position:absolute;left:1110px;top:290px;min-width:120px;height:100px;border-radius:50px;background:var(--acc);color:#fff;font-size:60px;font-weight:800;display:grid;place-items:center;padding:0 24px;z-index:4;font-variant-numeric:tabular-nums}
+.flyer{position:absolute;--s:96px;opacity:0;z-index:2}
+.flyer:after{content:"☎";position:absolute;right:-14px;top:-18px;font-size:40px;color:var(--acc)}
+.ringwave{position:absolute;left:960px;top:560px;width:10px;height:10px;border-radius:50%;border:4px solid var(--acc);transform:translate(-50%,-50%);opacity:0}
 
-/* S4 counter steps in */
-.bigph{position:absolute;left:50%;top:300px;margin-left:-160px;font-size:320px;transition:all .6s}
-.xm{position:absolute;left:50%;top:320px;width:360px;height:360px;margin-left:-180px}
-.xm:before,.xm:after{content:"";position:absolute;left:50%;top:50%;width:440px;height:30px;margin:-15px 0 0 -220px;background:var(--bad);border-radius:15px;transform:rotate(45deg) scaleX(0);transition:transform .3s}
-.xm:after{transform:rotate(-45deg) scaleX(0);transition-delay:.12s}
-.xm.on:before{transform:rotate(45deg) scaleX(1)}.xm.on:after{transform:rotate(-45deg) scaleX(1)}
-.ph-out{transition:opacity .4s,transform .5s}.ph-out.on{opacity:0;transform:translateY(-200px) scale(.5)}
-.own4{position:absolute;left:50%;top:860px;width:300px;height:300px;margin-left:-150px;opacity:.9}
-.shield{position:absolute;left:50%;top:560px;width:460px;height:460px;margin-left:-230px;transform:translateY(-1400px);transition:transform .7s cubic-bezier(.3,1.3,.5,1)}
-.shield.on{transform:none}
-.shield .mascot{width:100%;height:100%}
-.glow{position:absolute;left:50%;top:520px;width:540px;height:540px;margin-left:-270px;border-radius:50%;box-shadow:0 0 0 0 rgba(29,120,198,.0);transition:box-shadow .6s}
-.glow.on{box-shadow:0 0 0 30px rgba(29,120,198,.12),0 0 0 70px rgba(29,120,198,.06)}
-.inc{position:absolute;--s:120px;opacity:0}
-.inc.on{opacity:1}
-.ok{position:absolute;width:64px;height:64px;border-radius:50%;background:var(--ok);color:#fff;font-size:42px;font-weight:900;display:grid;place-items:center;opacity:0;transform:scale(.3);transition:all .25s cubic-bezier(.3,1.6,.5,1)}
-.ok.on{opacity:1;transform:scale(1)}
+/* C5 owner */
+.ownbig{position:absolute;left:660px;top:280px;width:600px;height:600px}
+.ownbig.stress{animation:shake .09s infinite alternate}
 
-/* demo cuts */
-.col{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center}
-.bub{background:#fff;border-radius:40px;padding:26px 36px;font-size:96px;box-shadow:0 14px 40px rgba(15,27,42,.1);position:relative;line-height:1}
-.bub:after{content:"";position:absolute;left:50%;bottom:-22px;margin-left:-22px;border:22px solid transparent;border-bottom:0;border-top-color:#fff}
-.arrow{width:10px;height:120px;background:repeating-linear-gradient(var(--blue) 0 18px,transparent 18px 32px);border-radius:5px;transform-origin:top;transform:scaleY(0);transition:transform .45s}
-.arrow.on{transform:scaleY(1)}
-.emma{font-size:220px;line-height:1}
-.hub{position:absolute;left:50%;top:640px;width:380px;height:380px;margin-left:-190px}
-.hub .mascot{width:100%;height:100%}
-.sat{position:absolute;--s:150px}
-.q{position:absolute;font-size:70px;background:#fff;border-radius:28px;padding:10px 16px;box-shadow:0 8px 24px rgba(15,27,42,.12);opacity:0;transition:transform .55s cubic-bezier(.5,0,.5,1),opacity .2s}
-.q.on{opacity:1}
-.tally{position:absolute;left:0;right:0;top:250px;display:flex;justify-content:center;gap:60px;font-size:110px;font-weight:900;font-variant-numeric:tabular-nums}
-.tally .g{color:var(--ok)}.tally .b{color:var(--blue)}
-.ownmini{position:absolute;left:50%;top:1200px;width:260px;height:260px;margin-left:-130px}
-.zz{position:absolute;left:620px;top:1190px;font-size:90px}
-.qmark{position:absolute;left:50%;top:600px;margin-left:120px;width:120px;height:120px;border-radius:50%;background:#F59E0B;color:#fff;font-size:84px;font-weight:900;display:grid;place-items:center;opacity:0;transform:scale(.3);transition:all .3s cubic-bezier(.3,1.6,.5,1)}
-.qmark.on{opacity:1;transform:scale(1)}
-.brain{position:absolute;font-size:100px;opacity:0;transition:transform .8s cubic-bezier(.5,0,.3,1),opacity .2s}
-.brain.on{opacity:1}
-.phone{position:absolute;left:50%;top:330px;width:560px;height:1060px;margin-left:-280px;background:#0F1B2A;border-radius:76px;padding:22px;box-shadow:0 40px 100px rgba(15,27,42,.3)}
-.phone .ps{width:100%;height:100%;background:#F4F6F9;border-radius:56px;overflow:hidden;position:relative;padding:120px 34px 0}
-.pc{background:#fff;border-radius:36px;padding:40px 32px;text-align:center;box-shadow:0 10px 30px rgba(15,27,42,.08);border:4px solid var(--blue);opacity:0;transform:translateY(40px);transition:all .4s}
-.pc.on{opacity:1;transform:none}
-.pc .big{font-size:150px;line-height:1.1}
-.pc .row{display:flex;gap:20px;justify-content:center;margin-top:30px}
-.btn{width:150px;height:110px;border-radius:30px;display:grid;place-items:center;font-size:64px;font-weight:900;transition:transform .12s,background .2s}
-.btn.y{background:var(--ok);color:#fff}.btn.n{background:#EEF1F5;color:var(--muted)}
-.btn.tap{transform:scale(.85);background:#0b7a45}
-.finger{position:absolute;font-size:120px;opacity:0;transition:opacity .2s,transform .3s;z-index:5}
-.finger.on{opacity:1}
-.toggle{display:inline-flex;align-items:center;gap:14px;margin-top:26px;font-size:60px}
-.toggle .sw{width:110px;height:62px;border-radius:31px;background:#DDE3EA;position:relative;transition:background .25s}
-.toggle .sw:after{content:"";position:absolute;left:6px;top:6px;width:50px;height:50px;border-radius:50%;background:#fff;transition:left .25s}
-.toggle .sw.on{background:var(--ok)}.toggle .sw.on:after{left:54px}
-.stream{position:absolute;width:44px;height:44px;border-radius:50%;opacity:0}
-.flowline{position:absolute;left:50%;width:8px;margin-left:-4px;background:repeating-linear-gradient(var(--blue) 0 14px,transparent 14px 26px);transform-origin:top;transform:scaleY(0);transition:transform .4s}
-.flowline.on{transform:scaleY(1)}
-.calm{position:absolute;left:50%;top:420px;width:620px;height:620px;margin-left:-310px}
-.cust{position:absolute;left:640px;top:820px;font-size:200px}
-.silent{position:absolute;left:180px;top:930px;font-size:150px;opacity:.5}
-.silent:after{content:"💤";position:absolute;right:-60px;top:-50px;font-size:80px}
+/* C6 */
+.n848{position:absolute;left:0;right:0;top:300px;text-align:center;font-size:330px;font-weight:800;color:var(--acc);letter-spacing:-.05em;font-variant-numeric:tabular-nums;line-height:1}
+.src{position:absolute;left:0;right:0;bottom:60px;text-align:center;font-size:24px;color:var(--mut)}
 
-/* global 1x4 */
-.rows{position:absolute;left:0;right:0;top:0;bottom:440px;display:grid;grid-template-rows:repeat(4,1fr)}
-.rowg{position:relative;display:flex;align-items:center;justify-content:center;gap:50px;opacity:0;transform:translateX(120px);transition:all .45s cubic-bezier(.2,.9,.25,1.1)}
-.rowg.on{opacity:1;transform:none}
-.rowg:nth-child(1){background:#FBE3DF}.rowg:nth-child(2){background:#E2F2E0}.rowg:nth-child(3){background:#E0EAF9}.rowg:nth-child(4){background:#F7EAD6}
-.rowg .fl{font-size:120px}.rowg .fc{font-size:170px}.rowg .av{--s:130px}
-.rowg .ck{width:110px;height:110px;border-radius:50%;background:var(--ok);color:#fff;font-size:70px;font-weight:900;display:grid;place-items:center}
+/* C7 / C16 triptych */
+.tri{position:absolute;left:0;right:0;top:330px;display:flex;justify-content:center;gap:200px;align-items:center}
+.tri .cell{position:relative;width:300px;height:300px;display:grid;place-items:center}
+.tri .lbl{position:absolute;bottom:-70px;left:0;right:0;text-align:center;font-size:34px;font-weight:600;color:var(--mut)}
 
-/* logo */
-#s12{background:var(--blue);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px}
-#s12 .mascot{width:340px;height:340px}
-#s12 h1{font-size:170px;font-weight:900;letter-spacing:-.03em}
-#s12 p{font-size:60px;font-weight:600;text-align:center;line-height:1.2;padding:0 80px}
+/* C8 */
+.ph8{position:absolute;left:880px;top:330px;font-size:200px;transition:all .5s}
+.ph8.on{transform:translateX(-900px) rotate(-30deg);opacity:0}
+.ph8 i{position:absolute;inset:0;font-style:normal}
+.own8{position:absolute;left:1040px;top:420px;width:380px;height:380px;opacity:.9}
+.lg8{position:absolute;left:720px;top:360px;--s:300px;transform:translateY(-1100px);transition:transform .7s cubic-bezier(.3,1.35,.5,1)}
+.lg8.on{transform:none}
+
+/* C10 flow */
+.flow{position:absolute;left:0;right:0;top:420px;display:flex;justify-content:center;align-items:center;gap:0}
+.node{width:260px;height:260px;border-radius:36px;background:#fff;border:3px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-size:30px;font-weight:600;color:var(--mut);opacity:0;transform:translateY(30px);transition:all .4s cubic-bezier(.2,.9,.3,1.2)}
+.node.on{opacity:1;transform:none}
+.node.hot{border-color:var(--acc);box-shadow:0 0 0 8px rgba(255,107,61,.12)}
+.link{width:150px;height:6px;background:repeating-linear-gradient(90deg,var(--ink) 0 14px,transparent 14px 26px);transform-origin:left;transform:scaleX(0);transition:transform .35s;position:relative}
+.link.on{transform:scaleX(1)}
+
+/* C11 converge */
+.c11top{position:absolute;left:160px;right:160px;top:250px;display:grid;grid-template-columns:repeat(16,1fr);gap:16px;justify-items:center}
+.c11top .av{--s:62px;border-width:2px}
+.ccard{position:absolute;left:810px;top:600px;width:300px;height:110px;border-radius:24px;background:#fff;border:3px solid var(--acc);display:flex;align-items:center;gap:18px;padding:0 24px;font-size:36px;font-weight:800}
+.pcard{position:absolute;left:1360px;top:860px;width:320px;height:100px;border-radius:24px;background:#fff;border:3px dashed var(--acc);display:flex;align-items:center;gap:16px;padding:0 20px;font-size:30px;font-weight:600}
+.tick{position:absolute;left:150px;bottom:80px;font-size:44px;font-weight:800;font-variant-numeric:tabular-nums}
+.tick .o{color:var(--ok)}.tick .m{color:var(--acc);margin-left:30px}
+svg.lines{position:absolute;inset:0;pointer-events:none}
+.ill{position:absolute;right:30px;bottom:24px;font-size:20px;color:var(--mut)}
+
+/* C12 phone with real clip */
+.phone{position:absolute;left:1120px;top:60px;width:540px;height:960px;background:#141414;border-radius:70px;padding:18px;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.phone video{width:100%;height:100%;object-fit:cover;border-radius:54px;background:#fff}
+.real{position:absolute;left:1120px;top:1035px;width:540px;text-align:center;font-size:20px;color:var(--mut)}
+
+/* C13 / C14 panels */
+.panel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:80px}
+.inds{position:absolute;left:100px;right:100px;top:300px;bottom:150px;display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
+.ind{position:relative;background:#fff;border:3px solid var(--line);border-radius:36px;display:grid;place-items:center;font-size:220px;opacity:0;transform:translateY(40px);transition:all .45s cubic-bezier(.2,.9,.3,1.2)}
+.ind.on{opacity:1;transform:none}
+.ind .logo{position:absolute;right:20px;bottom:20px;--s:66px}
+
+/* C17 dots */
+.dotmap{position:absolute;left:260px;right:260px;top:300px;bottom:140px;display:grid;grid-template-columns:repeat(34,1fr);gap:10px}
+.dm{width:22px;height:22px;border-radius:50%;background:#DCD8CE;transition:background .2s,transform .2s}
+.dm.lit{background:var(--acc);transform:scale(1.25)}
+
+/* C18 */
+#c18{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
+.wm{display:flex;align-items:center;gap:36px;font-size:150px;font-weight:800;letter-spacing:.12em;transform:translateY(-400px) scale(.6);opacity:0;transition:transform .8s cubic-bezier(.3,1.6,.45,1),opacity .2s}
+.wm.on{transform:none;opacity:1}
+.tag{font-size:52px;font-weight:600;color:var(--mut)}
 
 /* controls */
 #ctl{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;padding:10px 16px;background:rgba(10,14,22,.92);color:#cfd6e0;font:14px -apple-system,sans-serif;z-index:100}
-#ctl button{background:#1D78C6;color:#fff;border:0;border-radius:8px;padding:6px 14px;font:inherit;cursor:pointer}
+#ctl button{background:#FF6B3D;color:#fff;border:0;border-radius:8px;padding:6px 14px;font:inherit;cursor:pointer}
 #ctl input[type=range]{flex:1}
-#ctl .t{font-variant-numeric:tabular-nums;min-width:96px}
+#ctl .t{font-variant-numeric:tabular-nums;min-width:60px}
 #ctl .hint{opacity:.6}
 body.rec #ctl,body.hidectl #ctl{display:none}
 </style>
@@ -183,305 +154,303 @@ body.rec #ctl,body.hidectl #ctl{display:none}
 <body>
 <div id="stage">
 
-  <!-- S1 0–2.2: the invasion -->
-  <section class="scene dark" id="s1" data-s="0" data-e="2.2">
-    <div id="swarm"></div>
-    <div class="crawl-wrap"><div class="crawl">The Agent<br>Invasion<br>Has Begun.</div></div>
+  <!-- C1 0–3 kinetic hook -->
+  <section class="scene" id="c1" data-s="0" data-e="3">
+    <div class="kin"><span data-at="0.15">The</span><span data-at="0.65" class="hl">agent</span><span data-at="1.15">invasion</span><span data-at="1.75">has begun.</span></div>
   </section>
 
-  <!-- S2 2–5.2: a billion agents land -->
-  <section class="scene dark" id="s2" data-s="2" data-e="5.3">
-    <div class="zw" data-at="2.3">
-      <div class="bignum f up" data-at="0.1"><span id="billion">0</span><small>agents</small></div>
-      <div class="earth" id="earth"></div>
-      <div id="rainbox"></div>
-      <div class="pulse f" data-at="1.8"></div>
+  <!-- C2 3–7 a billion agents -->
+  <section class="scene" id="c2" data-s="3" data-e="7">
+    <div class="num f up" data-at="0"><span class="hl" id="bil">0</span> agents</div>
+    <div class="pgrid" id="pgrid"></div>
+  </section>
+
+  <!-- C3 7–11 everyone has an agent -->
+  <section class="scene" id="c3" data-s="7" data-e="11">
+    <div class="trio">
+      <div class="col"><div class="bub f pop" data-at="0.3">🏥 ♿ Thu</div><div class="person f pop" data-at="0" style="--s:150px"></div><div class="go" data-at="2.6"><div class="av a-muse f pop" data-at="1.2" style="--s:120px"></div></div></div>
+      <div class="col"><div class="bub f pop" data-at="0.5">🍜 × 4</div><div class="person f pop" data-at="0.1" style="--s:150px"></div><div class="go" data-at="2.75"><div class="av a-pickle f pop" data-at="1.4" style="--s:120px"></div></div></div>
+      <div class="col"><div class="bub f pop" data-at="0.7">🏨 2 nights</div><div class="person f pop" data-at="0.2" style="--s:150px"></div><div class="go" data-at="2.9"><div class="av a-dots f pop" data-at="1.6" style="--s:120px"></div></div></div>
     </div>
   </section>
 
-  <!-- S2b 5.2–10: they call every shop -->
-  <section class="scene" id="s2b" data-s="5.2" data-e="10">
-    <div class="town" id="town" data-at="4.3"></div>
+  <!-- C4 11–17 they all call ONE shop -->
+  <section class="scene" id="c4" data-s="11" data-e="17">
+    <div class="shop" id="shop4"><div class="aw"></div><div class="win">🏪</div><div class="door"></div></div>
+    <div class="calls" id="calls4">0</div>
+    <div id="fly4"></div>
   </section>
 
-  <!-- S3 10–15: one clinic, drowning -->
-  <section class="scene" id="s3" data-s="10" data-e="15">
-    <div class="cw0">
-      <div class="desk"></div>
-      <div class="own3 owner" id="own3"></div>
-      <div class="sweat" id="sweat">💦</div>
-      <div class="dphone ring" id="dphone">☎️</div>
-      <div class="miss" id="miss">0</div>
-      <div id="orbs"></div>
-      <div class="queue f up" data-at="1.4" id="queue">😤🧓😠👩</div>
-      <div class="n848 f pop" data-at="2.6"><span id="n848">0</span></div>
-      <div class="src f" data-at="2.8">Source: The San Francisco Standard, Oct 29, 2026</div>
+  <!-- C5 17–22 owner hangs up -->
+  <section class="scene" id="c5" data-s="17" data-e="22">
+    <div class="ownbig owner" id="own5"></div>
+    <div id="curves5"></div>
+    <div class="bub f pop" data-at="0.6" style="left:1260px;top:380px">Another bot?</div>
+    <div class="bub f pop" data-at="1.6" style="left:1260px;top:500px">Booking or spam?</div>
+    <div class="bub f pop" data-at="3.0" style="left:300px;top:620px;background:#141414;color:#fff;border-color:#141414">*click*</div>
+  </section>
+
+  <!-- C6 22–26 848 -->
+  <section class="scene" id="c6" data-s="22" data-e="26">
+    <div class="n848 f pop" data-at="0.1" id="n848">0</div>
+    <div class="src f" data-at="0.6">Source: The San Francisco Standard, Oct 29, 2026 — one AI agent called 848 local businesses in a few hours</div>
+  </section>
+
+  <!-- C7 26–30 everyone loses -->
+  <section class="scene" id="c7" data-s="26" data-e="30">
+    <div class="tri">
+      <div class="cell f pop" data-at="0.2"><div class="owner" style="width:280px;height:280px"></div><div class="badge b-x" style="right:10px;top:10px">✕</div><div class="lbl">Shop</div></div>
+      <div class="cell f pop" data-at="0.5"><div class="av a-pickle" style="--s:240px"></div><div class="badge b-x" style="right:20px;top:20px">✕</div><div class="lbl">Agent</div></div>
+      <div class="cell f pop" data-at="0.8"><div class="person" style="--s:240px"></div><div class="badge b-x" style="right:20px;top:20px">?</div><div class="lbl">Person</div></div>
     </div>
   </section>
 
-  <!-- S4 15–20: Counter steps in front of the owner -->
-  <section class="scene" id="s4" data-s="15" data-e="20">
-    <div class="ph-out" data-at="1.0"><div class="bigph">☎️</div><div class="xm" data-at="0.3"></div></div>
-    <div class="glow" data-at="1.8"></div>
-    <div class="own4 owner f" data-at="1.2"></div>
-    <div class="shield" data-at="1.4"><div class="mascot"></div></div>
-    <div id="incbox"></div>
+  <!-- C8 30–34 meet Counter -->
+  <section class="scene" id="c8" data-s="30" data-e="34">
+    <div class="own8 owner f" data-at="0.6"></div>
+    <div class="ph8" data-at="0.5">☎<i></i></div>
+    <div class="lg8 logo" data-at="0.8">C</div>
   </section>
 
-  <!-- S5 20–24.5: Emma → Muse → Counter -->
-  <section class="scene" id="s5" data-s="20" data-e="24.5">
-    <div class="col" style="top:200px;gap:26px">
-      <div class="bub f pop" data-at="0.4">🏥 ♿ 📅</div>
-      <div class="emma f up" data-at="0.1">👩‍🦽</div>
-      <div class="arrow" data-at="1.2"></div>
-      <div class="av a-muse f pop" data-at="1.6" style="--s:220px"></div>
-      <div class="arrow" data-at="2.3"></div>
-      <div class="mascot f pop" data-at="2.7" style="width:260px;height:260px"></div>
+  <!-- C9 34–38 phones/people, counter/agents -->
+  <section class="scene" id="c9" data-s="34" data-e="38"></section>
+
+  <!-- C10 38–43 flow: person → agent → Counter → owner -->
+  <section class="scene" id="c10" data-s="38" data-e="43">
+    <div class="flow">
+      <div class="node" data-at="0.2"><div class="person" style="--s:110px"></div>Person</div>
+      <div class="link" data-at="1.0"></div>
+      <div class="node" data-at="0.4"><div class="av a-pickle" style="--s:120px"></div>Agent</div>
+      <div class="link" data-at="1.5"></div>
+      <div class="node hot" data-at="0.6"><div class="logo" style="--s:120px">C</div><b style="color:var(--ink)">Counter</b></div>
+      <div class="link" data-at="2.0" style="opacity:.35"></div>
+      <div class="node" data-at="0.8"><div class="owner" style="width:120px;height:120px"></div>Owner</div>
     </div>
   </section>
 
-  <!-- S6 24.5–30: Counter answers everything -->
-  <section class="scene" id="s6" data-s="24.5" data-e="30">
-    <div class="tally f" data-at="0.2"><span class="g">✓ <span id="nok">0</span></span></div>
-    <div class="hub f pop" data-at="0"><div class="mascot"></div></div>
-    <div id="satbox"></div>
-    <div class="ownmini owner f" data-at="2.6"></div>
-    <div class="zz f" data-at="3.0">🔕</div>
+  <!-- C11 43–48 most end here -->
+  <section class="scene" id="c11" data-s="43" data-e="48">
+    <svg class="lines" id="lines11" viewBox="0 0 1920 1080"></svg>
+    <div class="c11top" id="top11"></div>
+    <div class="ccard f pop" data-at="0.2"><div class="logo" style="--s:70px">C</div>Counter</div>
+    <div class="pcard f pop" data-at="2.6"><div class="owner" style="width:64px;height:64px"></div>Owner's phone</div>
+    <div class="tick f" data-at="0.4"><span class="o">✓ <span id="ok11">0</span> answered</span><span class="m">👆 <span id="me11">0</span> needs you</span></div>
+    <div class="ill">figures illustrative</div>
   </section>
 
-  <!-- S7 30–36: a new question goes to the owner once -->
-  <section class="scene" id="s7" data-s="30" data-e="36">
-    <div class="phone f up" data-at="0"><div class="ps">
-      <div class="pc on" style="opacity:1;transform:none">
-        <div style="display:flex;justify-content:center;gap:20px;align-items:center"><div class="av a-muse" style="--s:110px"></div><div class="big">👩‍⚕️❓</div></div>
-        <div class="row"><div class="btn y" id="yes7">✓</div><div class="btn n">✕</div></div>
-        <div class="toggle">🧠 <span class="sw" id="sw7"></span></div>
-      </div>
-    </div></div>
-    <div class="finger" id="f7">👆</div>
-    <div class="brain" id="brain7">🧠</div>
+  <!-- C12 48–54 real owner screen: answer once, remembered -->
+  <section class="scene" id="c12" data-s="48" data-e="54">
+    <div class="phone"><video id="v12" muted playsinline preload="auto"></video></div>
+    <div class="real">Real product screen · auto-recorded</div>
   </section>
 
-  <!-- S8 36–40: next agent, answered from memory -->
-  <section class="scene" id="s8" data-s="36" data-e="40">
-    <div class="hub f pop" data-at="0" style="top:760px"><div class="mascot"></div></div>
-    <div class="f" data-at="0" style="position:absolute;left:560px;top:690px;font-size:120px">🧠</div>
-    <div class="av a-pickle f pop" data-at="0.4" style="position:absolute;left:390px;top:220px;--s:300px"></div>
-    <div class="bub f pop" data-at="0.9" style="position:absolute;left:680px;top:240px;font-size:84px">👩‍⚕️❓</div>
-    <div class="ok" data-at="1.7" style="left:470px;top:560px;width:140px;height:140px;font-size:90px">✓</div>
+  <!-- C13 54–60 benefits -->
+  <section class="scene" id="c13" data-s="54" data-e="60">
+    <div class="panel" id="p13a"><div class="owner" style="width:360px;height:360px"></div><div style="font-size:200px">🙂</div><div style="font-size:120px;opacity:.5">🔕</div></div>
+    <div class="panel" id="p13b"><div class="av a-muse" style="--s:220px"></div><div class="av a-pickle" style="--s:220px"></div><div class="av a-dots" style="--s:220px"></div><div class="badge b-ok" style="position:static;width:150px;height:150px;font-size:96px">✓</div></div>
+    <div class="panel" id="p13c" style="font-size:190px;gap:60px"><span class="pick" data-k="0">🇬🇧</span><span class="pick" data-k="1">🇨🇳</span><span class="pick" data-k="2">🇻🇳</span><span class="pick" data-k="3">🇯🇵</span></div>
   </section>
 
-  <!-- S9 40–46: most end at Counter, one goes to the owner -->
-  <section class="scene" id="s9" data-s="40" data-e="46">
-    <div class="tally f" data-at="0.1" style="top:160px"><span class="g">✓ <span id="nok9">0</span></span><span class="b">👆 <span id="nme9">0</span></span></div>
-    <div class="hub f pop" data-at="0" style="top:520px;width:320px;height:320px;margin-left:-160px"><div class="mascot"></div></div>
-    <div id="streambox"></div>
-    <div class="flowline" data-at="2.2" style="top:860px;height:190px"></div>
-    <div class="pc" data-at="2.6" style="position:absolute;left:190px;right:190px;top:1070px;padding:30px">
-      <div style="font-size:110px">📅</div>
-      <div class="row" style="margin-top:16px"><div class="btn y" id="yes9">✓</div><div class="btn n">✕</div></div>
+  <!-- C14 60–67 every shop focuses on its craft -->
+  <section class="scene" id="c14" data-s="60" data-e="67">
+    <div class="inds">
+      <div class="ind" data-at="0.3">👩‍🍳<div class="logo">C</div></div>
+      <div class="ind" data-at="1.0">👩‍⚕️<div class="logo">C</div></div>
+      <div class="ind" data-at="1.7">🏭<div class="logo">C</div></div>
+      <div class="ind" data-at="2.4">💇<div class="logo">C</div></div>
     </div>
-    <div class="finger" id="f9">👆</div>
   </section>
 
-  <!-- S10 46–50: no calls -->
-  <section class="scene" id="s10" data-s="46" data-e="50">
-    <div class="calm owner f pop" data-at="0"></div>
-    <div class="cust f up" data-at="0.5">🙂</div>
-    <div class="silent f" data-at="0.9">☎️</div>
+  <!-- C15 67–73 agents welcomed (same one-shop composition, calm) -->
+  <section class="scene" id="c15" data-s="67" data-e="73">
+    <div class="shop"><div class="aw"></div><div class="win">🏪</div><div class="door"></div></div>
+    <div class="logo f pop" data-at="0.2" style="position:absolute;left:880px;top:800px;--s:160px;z-index:4">C</div>
+    <div id="fly15"></div>
   </section>
 
-  <!-- S11 50–57: any agent, any language -->
-  <section class="scene" id="s11" data-s="50" data-e="57">
-    <div class="rows" id="rows"></div>
+  <!-- C16 73–80 everyone wins -->
+  <section class="scene" id="c16" data-s="73" data-e="80">
+    <div class="tri">
+      <div class="cell f pop" data-at="0.2"><div class="owner" style="width:280px;height:280px"></div><div class="badge b-ok pick" data-k="0" style="right:10px;top:10px">✓</div><div class="lbl">Shops</div></div>
+      <div class="cell f pop" data-at="0.3"><div class="logo" style="--s:200px">C</div></div>
+      <div class="cell f pop" data-at="0.4"><div class="av a-pickle" style="--s:240px"></div><div class="badge b-ok pick" data-k="1" style="right:20px;top:20px">✓</div><div class="lbl">Agents</div></div>
+      <div class="cell f pop" data-at="0.5"><div class="person" style="--s:240px"></div><div class="badge b-ok pick" data-k="2" style="right:20px;top:20px">✓</div><div class="lbl">People</div></div>
+    </div>
   </section>
 
-  <!-- S12 57–63: logo -->
-  <section class="scene" id="s12" data-s="57" data-e="63.5">
-    <div class="mascot f pop" data-at="0.2"></div>
-    <h1 class="f up" data-at="0.6">Counter</h1>
-    <p class="f up" data-at="1.3">Every shop, ready for<br>AI customers.</p>
+  <!-- C17 80–85 front door everywhere -->
+  <section class="scene" id="c17" data-s="80" data-e="85">
+    <div class="dotmap" id="dots17"></div>
   </section>
 
-  <div id="cap" class="hide"></div>
+  <!-- C18 85–90 end card -->
+  <section class="scene" id="c18" data-s="85" data-e="90.5">
+    <div class="wm" data-at="0.2"><div class="logo" style="--s:170px">C</div>COUNTER</div>
+    <div class="tag f up" data-at="1.0">Every shop, ready for AI customers.</div>
+  </section>
+
+  <div id="head" class="hide"></div>
 </div>
 
 <div id="ctl">
   <button id="play">▶ Play</button>
   <span class="t" id="tt">0.0</span>
-  <input type="range" id="seek" min="0" max="63" step="0.1" value="0">
+  <input type="range" id="seek" min="0" max="90" step="0.1" value="0">
   <span class="hint">Space 재생(소리) · ←/→ 2초 · H 막대 숨김 · R 처음</span>
 </div>
 
 <script>
-const DUR = 63;
-// captions: one short line per cut (light = on dark bg)
-const CAPS = [
-  [5.4, 7.6, 'They call every shop.'],
-  [7.6, 10, 'All day.'],
-  [10.6, 12.6, 'Owners drown.'],
-  [12.8, 15, 'One agent. 848 shops.'],
-  [15.2, 17.4, 'Phones are for people.'],
-  [17.5, 20, 'Counter is for agents.'],
-  [20.3, 24.5, 'You ask your agent.'],
-  [24.8, 30, 'Counter answers.'],
-  [30.3, 36, 'New? Asked once.'],
-  [36.3, 40, 'Then remembered.'],
-  [40.3, 46, 'Only what needs you.'],
-  [46.3, 50, 'No calls.'],
-  [50.3, 57, 'Any agent. Any language.'],
+const DUR = 90;
+// [start, end, html, mode]  mode: '' top · 'mid' centre · 'left'
+const HEADS = [
+  [7.2, 11, 'Everyone has an <span class="hl">agent</span>.'],
+  [11.2, 14, 'They all call <span class="hl">one shop</span>.'],
+  [14, 17, 'All at <span class="hl">once</span>.'],
+  [17.2, 22, 'Owners <span class="hl">hang up</span>.'],
+  [22.2, 26, 'One agent. <span class="hl">848</span> shops.'],
+  [26.2, 30, '<span class="hl">Everyone</span> loses.'],
+  [30.3, 34, 'Meet <span class="hl">Counter</span>.'],
+  [34.2, 36, 'Phones are for people.', 'mid'],
+  [36, 38, 'Phones are for people.<br><span class="acc">Counter is for agents.</span>', 'mid'],
+  [38.2, 43, 'One <span class="hl">front door</span> for every agent.'],
+  [43.2, 48, 'Most end <span class="hl">here</span>.'],
+  [48.2, 51.3, 'Answer <span class="hl">once</span>.', 'left'],
+  [51.3, 54, '<span class="hl">Remembered</span><br>for every agent.', 'left'],
+  [54.2, 56, 'Owners stay <span class="hl">free</span>.'],
+  [56, 58, 'Agents get <span class="hl">answers</span>.'],
+  [58, 60, 'Any <span class="hl">language</span>.'],
+  [60.2, 67, 'Every shop focuses on <span class="hl">its craft</span>.'],
+  [67.2, 73, 'Agents <span class="hl">welcomed</span>, not hung up.'],
+  [73.2, 80, 'Shops win. Agents win. <span class="hl">People win.</span>'],
+  [80.2, 82.6, 'Tech spreads agents.'],
+  [82.6, 85, 'We build their <span class="hl">front door</span>.'],
 ];
-// sound cues: [time, file, volume, maxDuration]
 /*CUES*/const CUES = [
-  [0.0, 'bgm_bright.mp3', 0.42, 63],
-  [0.0, 'whoosh.ogg', 0.6], [2.0, 'whoosh.ogg', 0.6],
-  [2.3, 'pop.ogg', 0.5], [2.6, 'pop.ogg', 0.5], [2.9, 'pop.ogg', 0.5], [3.2, 'pop.ogg', 0.5],
-  [4.3, 'riser.ogg', 0.5],
-  [5.2, 'whoosh.ogg', 0.6], [5.4, 'sfx_ring_many.mp3', 0.55, 4.6],
-  [10.0, 'whoosh.ogg', 0.6], [10.2, 'sfx_ring_many.mp3', 0.6, 2.4], [12.6, 'sfx_busy_tone.mp3', 0.5, 1.6],
-  [13.0, 'riser.ogg', 0.55],
-  [15.3, 'impact.ogg', 0.8], [16.4, 'impact.ogg', 0.9], [16.9, 'pop.ogg', 0.5], [17.3, 'pop.ogg', 0.5], [17.7, 'pop.ogg', 0.5],
-  [20.0, 'whoosh.ogg', 0.6], [20.4, 'pop.ogg', 0.5], [21.6, 'pop.ogg', 0.5], [22.7, 'pop.ogg', 0.5],
-  [24.5, 'whoosh.ogg', 0.6], [25.3, 'tick.ogg', 0.7], [25.9, 'tick.ogg', 0.7], [26.5, 'tick.ogg', 0.7], [27.1, 'tick.ogg', 0.7], [27.7, 'tick.ogg', 0.7], [28.3, 'tick.ogg', 0.7],
-  [30.0, 'whoosh.ogg', 0.6], [31.9, 'click.ogg', 0.9], [32.9, 'click.ogg', 0.9], [33.6, 'pop.ogg', 0.6],
-  [36.0, 'whoosh.ogg', 0.6], [37.7, 'pop.ogg', 0.7],
-  [40.0, 'whoosh.ogg', 0.6], [43.5, 'click.ogg', 0.9], [43.7, 'pop.ogg', 0.6],
-  [46.0, 'whoosh.ogg', 0.6],
-  [50.0, 'whoosh.ogg', 0.6], [50.4, 'pop.ogg', 0.6], [50.9, 'pop.ogg', 0.6], [51.4, 'pop.ogg', 0.6], [51.9, 'pop.ogg', 0.6],
-  [57.0, 'whoosh.ogg', 0.6], [57.3, 'impact.ogg', 0.9],
+  [0.0, 'bgm_bright.mp3', 0.4, 90],
+  [0.15, 'impact.ogg', 0.7], [0.65, 'impact.ogg', 0.7], [1.15, 'impact.ogg', 0.7], [1.75, 'impact.ogg', 0.8],
+  [3.0, 'whoosh.ogg', 0.6], [3.4, 'pop.ogg', 0.4], [3.8, 'pop.ogg', 0.4], [4.2, 'pop.ogg', 0.4], [4.6, 'pop.ogg', 0.4], [5.0, 'pop.ogg', 0.4],
+  [7.0, 'whoosh.ogg', 0.6], [8.2, 'pop.ogg', 0.5], [8.4, 'pop.ogg', 0.5], [8.6, 'pop.ogg', 0.5], [9.6, 'whoosh.ogg', 0.6],
+  [11.0, 'whoosh.ogg', 0.6], [11.3, 'sfx_ring_many.mp3', 0.6, 5.7],
+  [17.0, 'whoosh.ogg', 0.5], [17.1, 'sfx_ring_many.mp3', 0.45, 2.9], [17.6, 'pop.ogg', 0.5], [18.6, 'pop.ogg', 0.5], [20.0, 'click.ogg', 1.0], [20.1, 'sfx_busy_tone.mp3', 0.5, 1.8],
+  [22.0, 'whoosh.ogg', 0.5], [22.1, 'impact.ogg', 0.9],
+  [26.0, 'whoosh.ogg', 0.5], [26.2, 'tick.ogg', 0.8], [26.5, 'tick.ogg', 0.8], [26.8, 'tick.ogg', 0.8],
+  [28.3, 'riser.ogg', 0.5],
+  [30.0, 'whoosh.ogg', 0.6], [30.8, 'impact.ogg', 1.0],
+  [34.0, 'whoosh.ogg', 0.5], [36.0, 'click.ogg', 0.9],
+  [38.0, 'whoosh.ogg', 0.6], [38.2, 'pop.ogg', 0.5], [38.4, 'pop.ogg', 0.5], [38.6, 'pop.ogg', 0.5], [38.8, 'pop.ogg', 0.5],
+  [43.0, 'whoosh.ogg', 0.6], [43.6, 'tick.ogg', 0.7], [44.0, 'tick.ogg', 0.7], [44.4, 'tick.ogg', 0.7], [44.8, 'tick.ogg', 0.7], [45.2, 'tick.ogg', 0.7], [45.6, 'pop.ogg', 0.6],
+  [48.0, 'whoosh.ogg', 0.6],
+  [54.0, 'whoosh.ogg', 0.5], [54.3, 'pop.ogg', 0.6], [56.0, 'whoosh.ogg', 0.5], [56.3, 'pop.ogg', 0.6], [58.0, 'whoosh.ogg', 0.5], [58.2, 'pop.ogg', 0.5], [58.5, 'pop.ogg', 0.5], [58.8, 'pop.ogg', 0.5], [59.1, 'pop.ogg', 0.5],
+  [60.0, 'whoosh.ogg', 0.6], [60.3, 'pop.ogg', 0.5], [61.0, 'pop.ogg', 0.5], [61.7, 'pop.ogg', 0.5], [62.4, 'pop.ogg', 0.5],
+  [67.0, 'whoosh.ogg', 0.6],
+  [73.0, 'whoosh.ogg', 0.6], [74.4, 'impact.ogg', 0.8], [75.6, 'impact.ogg', 0.8], [76.8, 'impact.ogg', 0.9],
+  [80.0, 'whoosh.ogg', 0.6], [82.4, 'riser.ogg', 0.5],
+  [85.0, 'whoosh.ogg', 0.6], [85.6, 'impact.ogg', 1.0],
 ];/*/CUES*/
 const AG = ['muse', 'pickle', 'dots', 'grok'];
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
-let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-const avEl = (a, s, cls = '') => { const d = document.createElement('div'); d.className = `av a-${a} ${cls}`; d.style.setProperty('--s', s + 'px'); return d; };
+let seed = 5; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const mk = (cls, html = '') => { const d = document.createElement('div'); d.className = cls; d.innerHTML = html; return d; };
 
-// S1 swarm
-const sw = $('#swarm');
-for (let i = 0; i < 70; i++) { const d = avEl(AG[i % 4], Math.round(60 + rnd() * 90)); Object.assign(d.style, { left: rnd() * 1120 + 'px', top: rnd() * 2000 + 'px' }); sw.appendChild(d); }
-// S2 earth + rain
-const earth = $('#earth');
-for (let i = 0; i < 7; i++) { const l = document.createElement('div'); l.className = 'land'; Object.assign(l.style, { left: 200 + rnd() * 1100 + 'px', top: 60 + rnd() * 700 + 'px', width: 140 + rnd() * 280 + 'px', height: 90 + rnd() * 170 + 'px' }); earth.appendChild(l); }
-const rb = $('#rainbox');
-for (let i = 0; i < 24; i++) {
-  const x = 90 + (i % 6) * 165 + rnd() * 30, y = 930 + Math.floor(i / 6) * 140 + rnd() * 30;
-  const p = document.createElement('div'); p.className = 'person'; Object.assign(p.style, { left: x + 'px', top: y + 70 + 'px' }); rb.appendChild(p);
-  const r = document.createElement('div'); r.className = 'rain'; r.dataset.at = (0.2 + i * 0.05).toFixed(2); r.appendChild(avEl(AG[i % 4], 70));
-  Object.assign(r.style, { left: x - 21 + 'px', top: y - 10 + 'px' }); rb.appendChild(r);
+// C2 people + drops
+const pg = $('#pgrid');
+for (let i = 0; i < 30; i++) { const c = mk('pcell'); c.appendChild(mk('person')); const d = mk(`drop av a-${AG[i % 4]}`); d.dataset.at = (0.3 + i * 0.07).toFixed(2); c.appendChild(d); pg.appendChild(c); }
+// C4 flyers into one shop (from all sides)
+const f4 = $('#fly4'), FL4 = [];
+for (let k = 0; k < 34; k++) {
+  const ang = rnd() * Math.PI * 2, R = 1100, el = mk(`flyer av a-${AG[k % 4]}`); f4.appendChild(el);
+  const tx = 960 + Math.cos(ang) * (240 + rnd() * 60), ty = 560 + Math.sin(ang) * (270 + rnd() * 40);
+  FL4.push({ el, at: 0.15 + k * 0.15, sx: 960 + Math.cos(ang) * R, sy: 560 + Math.sin(ang) * R * 0.7, tx, ty });
 }
-// S2b town
-const SHOPS = ['🍜', '🏭', '🏥', '✂️', '🏨', '🔧', '🥐', '🦷', '💐', '🧺'], RX = ['😠', '📵', '✋', '🙉', '💢', '😤'];
-const town = $('#town'), CALLS = [];
-SHOPS.forEach((e) => { const t = document.createElement('div'); t.className = 'tile'; t.innerHTML = `<div class="em">${e}</div><div class="mc"></div><div class="caller av"></div><div class="rx"></div>`; town.appendChild(t); });
-for (let k = 0; k < 36; k++) CALLS.push({ shop: Math.floor(rnd() * 10), ag: AG[k % 4], at: 0.2 + k * 0.105 + rnd() * 0.08, rx: RX[Math.floor(rnd() * RX.length)] });
-requestAnimationFrame(() => { const c = $$('.tile')[2]; town.style.transformOrigin = `${c.offsetLeft + c.offsetWidth / 2}px ${c.offsetTop + c.offsetHeight / 2}px`; });
-// S3 orbiting callers
-const orbs = $('#orbs'), ORB = [[90, 360], [800, 380], [60, 640], [850, 660], [200, 200], [700, 180]];
-ORB.forEach(([x, y], i) => { const o = avEl(AG[i % 4], 130, 'orb'); o.dataset.at = (0.2 + i * 0.3).toFixed(2); Object.assign(o.style, { left: x + 'px', top: y + 'px' }); orbs.appendChild(o); });
-// S4 incoming agents → Counter
-const inc = $('#incbox');
-[[-200, 300], [1180, 420], [-200, 900], [1180, 1000]].forEach(([x, y], i) => { const o = avEl(AG[i], 120, 'inc'); o.dataset.at = (1.9 + i * 0.4).toFixed(2); Object.assign(o.style, { left: x + 'px', top: y + 'px' }); o.dataset.tx = [250, 710, 250, 710][i]; o.dataset.ty = [600, 600, 860, 860][i]; inc.appendChild(o); const k = document.createElement('div'); k.className = 'ok'; k.dataset.at = (2.3 + i * 0.4).toFixed(2); Object.assign(k.style, { left: [250, 710, 250, 710][i] + 70 + 'px', top: [600, 600, 860, 860][i] - 20 + 'px' }); inc.appendChild(k); });
-// S6 satellites asking
-const sb = $('#satbox'), SAT = [[120, 420], [810, 420], [120, 1080], [810, 1080]], QS = ['♿', '🕐', '💳', '🅿️'];
-SAT.forEach(([x, y], i) => { const a = avEl(AG[i], 150, 'sat f pop'); a.dataset.at = (0.2 + i * 0.15).toFixed(2); Object.assign(a.style, { left: x + 'px', top: y + 'px' }); sb.appendChild(a); });
-const QEV = []; for (let k = 0; k < 6; k++) { const i = k % 4; const q = document.createElement('div'); q.className = 'q'; q.textContent = QS[(k + Math.floor(k / 4)) % 4]; sb.appendChild(q); QEV.push({ el: q, i, at: 0.6 + k * 0.6 }); }
-// S9 stream of requests
-const st = $('#streambox'), STR = [];
-for (let k = 0; k < 22; k++) { const d = document.createElement('div'); d.className = 'stream'; d.style.background = ['#E8618C', '#3FAE5A', '#F5C518', '#222'][k % 4]; st.appendChild(d); STR.push({ el: d, at: 0.3 + k * 0.12, x: 120 + rnd() * 840 }); }
-// S11 rows
-[['🇬🇧', 'muse', '😄'], ['🇨🇳', 'pickle', '😆'], ['🇻🇳', 'dots', '🥳'], ['🇯🇵', 'grok', '😊']].forEach((r, i) => {
-  const d = document.createElement('div'); d.className = 'rowg'; d.dataset.at = (0.3 + i * 0.5).toFixed(2);
-  d.innerHTML = `<div class="fl">${r[0]}</div><div class="fc">${r[2]}</div><div class="av a-${r[1]}"></div><div class="ck">✓</div>`; $('#rows').appendChild(d);
-});
+// C5 phone curves around owner
+const c5 = $('#curves5');
+for (let i = 0; i < 12; i++) { const a = (i / 12) * Math.PI * 2, el = mk('curve', '☎'); Object.assign(el.style, { left: 960 + Math.cos(a) * 430 - 25 + 'px', top: 580 + Math.sin(a) * 330 - 30 + 'px' }); el.dataset.a = a; c5.appendChild(el); }
+// C11 top avatars + lines
+const t11 = $('#top11');
+for (let i = 0; i < 48; i++) t11.appendChild(mk(`av a-${AG[i % 4]}`));
+// C15 calm flyers (arrive at Counter, get ✓, leave)
+const f15 = $('#fly15'), FL15 = [];
+for (let k = 0; k < 10; k++) { const ang = Math.PI * (0.15 + 0.7 * (k % 2 ? 0 : 1)) + (rnd() - .5) * 1.2 + (k % 2 ? Math.PI : 0); const el = mk(`flyer av a-${AG[k % 4]}`); el.style.setProperty('--s', '90px'); el.classList.add('calm'); f15.appendChild(el); const ok = mk('badge b-ok', '✓'); ok.style.opacity = 0; ok.style.width = ok.style.height = '44px'; ok.style.fontSize = '28px'; f15.appendChild(ok); FL15.push({ el, ok, at: 0.5 + k * 0.5, sx: 960 + Math.cos(ang) * 1100, sy: 560 + Math.sin(ang) * 700 }); }
+// C17 dot map
+const d17 = $('#dots17'); for (let i = 0; i < 34 * 16; i++) d17.appendChild(mk('dm'));
+const LIT = [...Array(34 * 16).keys()].sort(() => rnd() - 0.5);
 
 // ---------- timeline ----------
 const scenes = $$('.scene').map((el) => ({ el, s: +el.dataset.s, e: +el.dataset.e, items: $$('[data-at]', el) }));
 const ST = Object.fromEntries(scenes.map((x) => [x.el.id, x.s]));
-const cap = $('#cap');
+const head = $('#head'); let headKey = '';
 let t = 0, playing = false, last = 0, prevT = 0;
-function place(el, x, y) { el.style.transform = `translate(${x}px,${y}px)`; }
+const v12 = $('#v12');
 function render() {
   for (const sc of scenes) {
     const act = t >= sc.s && t < sc.e, lt = t - sc.s;
     sc.el.classList.toggle('active', act);
     for (const it of sc.items) it.classList.toggle('on', act && lt >= +it.dataset.at);
   }
-  // S2
-  $('#billion').textContent = (clamp((t - 2.2) / 1.8, 0, 1) * 1e9 | 0).toLocaleString('en-US');
-  $$('.rain').forEach((r) => (r.style.transform = r.classList.contains('on') ? 'none' : 'translateY(-1300px)'));
-  // S2b
-  const l2 = t - ST.s2b;
-  $$('.tile').forEach((el, i) => {
-    const mine = CALLS.filter((c) => c.shop === i && c.at <= l2), cur = mine.filter((c) => l2 < c.at + 1.2).pop();
-    el.classList.toggle('ring', !!cur);
-    const mc = $('.mc', el); mc.textContent = mine.length; mc.classList.toggle('on', mine.length > 0);
-    const cl = $('.caller', el); if (cur) cl.className = `caller av a-${cur.ag}`; cl.classList.toggle('on', !!cur);
-    const rx = $('.rx', el); if (cur) rx.textContent = cur.rx; rx.classList.toggle('on', !!cur && l2 >= cur.at + 0.5);
-  });
-  // S3
-  const l3 = t - ST.s3;
-  $('#dphone').classList.toggle('ring', l3 < 2.6);
-  $('#own3').classList.toggle('stress', l3 > 0.6 && l3 < 2.6);
-  $('#sweat').classList.toggle('on', l3 > 1.0);
-  $('#miss').textContent = Math.round(clamp((l3 - 0.2) * 18, 0, 47));
-  $('#queue').style.visibility = l3 > 2.5 ? 'hidden' : '';
-  $('#n848').textContent = Math.round(clamp((l3 - 2.7) / 1.3, 0, 1) ** 0.7 * 848);
-  $$('.orb').forEach((o, i) => { const on = o.classList.contains('on'); o.style.transform = on ? `translate(${Math.sin((l3 + i) * 3) * 14}px,${Math.cos((l3 + i) * 3) * 14}px)` : 'scale(.3)'; });
-  // S4
-  $$('.inc').forEach((o) => { const on = o.classList.contains('on'); o.style.transition = 'transform .5s cubic-bezier(.4,0,.2,1),opacity .2s'; o.style.transform = on ? `translate(${o.dataset.tx - parseFloat(o.style.left)}px,${o.dataset.ty - parseFloat(o.style.top)}px)` : 'none'; });
-  // S6 questions fly sat → hub → ✓
-  const l6 = t - ST.s6; let nok = 0;
-  for (const q of QEV) {
-    const [sx, sy] = SAT[q.i], hx = 490, hy = 790, p = l6 - q.at;
-    q.el.classList.toggle('on', p >= 0 && p < 1.0);
-    if (p < 0) { q.el.style.transition = 'none'; q.el.style.transform = `translate(${sx + 40}px,${sy + 40}px)`; }
-    else if (p < 0.5) { q.el.style.transition = 'transform .5s cubic-bezier(.5,0,.5,1),opacity .2s'; q.el.style.transform = `translate(${hx}px,${hy}px)`; q.el.textContent = QS[(QEV.indexOf(q) + Math.floor(QEV.indexOf(q) / 4)) % 4]; }
-    else { q.el.textContent = '✓'; q.el.style.color = '#12A15F'; q.el.style.transform = `translate(${sx + 40}px,${sy + 40}px)`; nok++; }
+  // C2
+  $('#bil').textContent = (clamp((t - 3.3) / 2.4, 0, 1) * 1e9 | 0).toLocaleString('en-US');
+  // C4 one shop under fire
+  const l4 = t - ST.c4; let n4 = 0;
+  for (const f of FL4) {
+    const p = l4 - f.at; const ring = p > 0.55 && p < 1.6;
+    f.el.style.opacity = p > 0 && p < 2.2 ? 1 : 0;
+    f.el.style.transition = 'transform .55s cubic-bezier(.4,0,.2,1),opacity .2s';
+    f.el.style.transform = `translate(${(p < 0 ? f.sx : f.tx) - 48}px,${(p < 0 ? f.sy : f.ty) - 48}px)` + (ring ? ' rotate(8deg)' : '');
+    if (p > 0.55) n4++;
   }
-  $('#nok').textContent = nok;
-  // S7 owner answers once
-  const l7 = t - ST.s7, f7 = $('#f7'), y7 = $('#yes7'), s7 = $('#sw7'), b7 = $('#brain7');
-  const r7 = (el) => { const sr = $('#stage').getBoundingClientRect(), sc = sr.width / 1080, b = el.getBoundingClientRect(); return [(b.left - sr.left) / sc + b.width / sc / 2, (b.top - sr.top) / sc + b.height / sc / 2]; };
-  if (t >= ST.s7 && t < ST.s8) {
-    const tgt = l7 < 2.6 ? y7 : s7, [x, y] = r7(tgt);
-    f7.style.left = x - 40 + 'px'; f7.style.top = y - 10 + 'px';
-    f7.classList.toggle('on', (l7 > 1.4 && l7 < 2.2) || (l7 > 2.5 && l7 < 3.2));
-    y7.classList.toggle('tap', l7 > 1.85 && l7 < 2.1);
-    s7.classList.toggle('on', l7 > 2.9);
-    b7.classList.toggle('on', l7 > 3.5 && l7 < 5.2);
-    b7.style.left = '480px'; b7.style.top = (l7 > 3.7 ? 120 : 760) + 'px'; b7.style.transform = l7 > 3.7 ? 'scale(1.4)' : 'none';
+  $('#shop4').classList.toggle('ring', l4 > 0.6 && l4 < 6);
+  $('#calls4').textContent = Math.round(n4 * 3.6);
+  // C5
+  const l5 = t - ST.c5;
+  $('#own5').classList.toggle('stress', l5 > 0.3 && l5 < 3);
+  $$('#curves5 .curve').forEach((c, i) => { const a = +c.dataset.a + l5 * 0.9; c.style.transform = `translate(${Math.cos(a) * 30}px,${Math.sin(a) * 30}px) rotate(${a}rad)`; c.style.opacity = l5 < 3 ? 1 : 0.15; });
+  // C6
+  $('#n848').textContent = Math.round(clamp((t - ST.c6 - 0.2) / 1.2, 0, 1) ** 0.6 * 848);
+  // C11 converge lines
+  const l11 = t - ST.c11;
+  if (t >= ST.c11 && t < ST.c12) {
+    const svg = $('#lines11'); let h = '';
+    const cells = $$('#top11 .av'), sr = $('#stage').getBoundingClientRect(), sc = sr.width / 1920;
+    const shown = Math.floor(clamp((l11 - 0.4) / 2.0, 0, 1) * cells.length);
+    cells.forEach((c, i) => { if (i >= shown) return; const b = c.getBoundingClientRect(); const x = (b.left - sr.left) / sc + b.width / sc / 2, y = (b.top - sr.top) / sc + b.height / sc; h += `<path d="M${x} ${y} C ${x} ${y + 180}, 960 ${520}, 960 600" fill="none" stroke="#C9C5BB" stroke-width="2"/>`; });
+    if (l11 > 2.6) h += `<path d="M1110 655 C 1300 700, 1400 760, 1500 860" fill="none" stroke="#FF6B3D" stroke-width="4" stroke-dasharray="12 10"/>`;
+    svg.innerHTML = h;
+    $('#ok11').textContent = Math.max(0, shown - (l11 > 2.6 ? 1 : 0)); $('#me11').textContent = l11 > 2.6 ? 1 : 0;
   }
-  // S9 stream: most ✓, one to owner
-  const l9 = t - ST.s9; let n9 = 0;
-  STR.forEach((s, k) => { const p = l9 - s.at; const toOwner = k === 9;
-    s.el.style.opacity = p > 0 && p < (toOwner ? 0.9 : 1.1) ? 1 : 0;
-    s.el.style.transition = 'transform .6s cubic-bezier(.5,0,.5,1)';
-    s.el.style.transform = p <= 0 ? `translate(${s.x}px,-60px)` : p < 0.6 ? `translate(518px,660px)` : toOwner ? `translate(518px,1000px)` : `translate(${s.x}px,1960px)`;
-    if (p >= 0.6 && !toOwner) n9++; });
-  $('#nok9').textContent = n9; $('#nme9').textContent = l9 >= 2.6 ? 1 : 0;
-  if (t >= ST.s9 && t < ST.s10) { const [x, y] = r7($('#yes9')), f9 = $('#f9'); f9.style.left = x - 40 + 'px'; f9.style.top = y - 10 + 'px'; f9.classList.toggle('on', l9 > 3.0 && l9 < 4.2); $('#yes9').classList.toggle('tap', l9 > 3.45 && l9 < 3.7); }
-  // caption
-  const c = CAPS.find(([a, b]) => t >= a && t < b);
-  const txt = c ? c[2] : '';
-  if (cap.textContent !== txt) { cap.classList.add('hide'); if (txt) { cap.textContent = txt; requestAnimationFrame(() => cap.classList.remove('hide')); } }
-  cap.classList.toggle('light', t < 5.2);
+  // C12 real clip: uc2-answer 48–51.3, uc2-memory 51.3–54
+  if (t >= ST.c12 && t < ST.c13) {
+    const l = t - ST.c12, want = l < 3.3 ? '../../demo-clips/uc2-answer.mp4' : '../../demo-clips/uc2-memory.mp4';
+    const rate = l < 3.3 ? 3.2 : 2.4, local = (l < 3.3 ? l : l - 3.3) * rate + (l < 3.3 ? 0.3 : 0.2);
+    if (!v12.src.endsWith(want.slice(5))) { v12.src = want; v12.load(); }
+    if (v12.readyState >= 1) { v12.playbackRate = rate; if (Math.abs(v12.currentTime - local) > 0.35) v12.currentTime = local; if (playing && v12.paused) v12.play().catch(() => {}); if (!playing && !v12.paused) v12.pause(); }
+  } else if (!v12.paused) v12.pause();
+  // C13 sub-panels
+  const l13 = t - ST.c13;
+  ['#p13a', '#p13b', '#p13c'].forEach((id, i) => { const on = l13 >= i * 2 && l13 < i * 2 + 2; const p = $(id); p.style.opacity = on ? 1 : 0; p.style.transform = on ? 'none' : 'scale(.92)'; p.style.transition = 'opacity .25s,transform .35s'; });
+  $$('#p13c .pick').forEach((e) => e.classList.toggle('on', l13 >= 4.2 + +e.dataset.k * 0.3));
+  // C15 calm
+  const l15 = t - ST.c15;
+  for (const f of FL15) { const p = l15 - f.at; const tx = 960, ty = 820;
+    f.el.style.opacity = p > 0 && p < 2.4 ? 1 : 0; f.el.style.transition = 'transform .6s cubic-bezier(.4,0,.2,1),opacity .2s';
+    const back = p > 1.4; f.el.style.transform = `translate(${(p < 0 || back ? f.sx : tx + (f.sx > 960 ? 60 : -150)) - 45}px,${(p < 0 || back ? f.sy : ty - 60) - 45}px)`;
+    f.ok.style.opacity = p > 0.7 && p < 1.4 ? 1 : 0; f.ok.style.transform = `translate(${tx + (f.sx > 960 ? 110 : -100)}px,${ty - 120}px)`; }
+  // C16 checks
+  const l16 = t - ST.c16; $$('#c16 .pick').forEach((e) => e.classList.toggle('on', l16 >= 1.4 + +e.dataset.k * 1.2));
+  // C17 dots
+  const l17 = t - ST.c17, nlit = Math.floor(clamp(l17 / 4.2, 0, 1) ** 1.6 * LIT.length);
+  $$('#dots17 .dm').forEach((d, i) => d.classList.toggle('lit', LIT.indexOf(i) < nlit));
+  // headline
+  const h = HEADS.find(([a, b]) => t >= a && t < b), key = h ? h[2] : '';
+  if (key !== headKey) { headKey = key; head.classList.add('hide'); if (h) { head.innerHTML = h[2]; head.className = 'hide ' + (h[3] || ''); requestAnimationFrame(() => head.classList.remove('hide')); } }
   $('#tt').textContent = t.toFixed(1); $('#seek').value = t;
 }
-// ---------- audio (preview only; render mixes CUES with ffmpeg) ----------
-const AUD = {}; let bgm = null; const live = !new URLSearchParams(location.search).has('rec');
+// ---------- audio (preview; render mixes CUES with ffmpeg) ----------
+const live = !new URLSearchParams(location.search).has('rec'), AUD = {}; let bgm = null;
 if (live) for (const [, f] of CUES) if (!AUD[f]) { AUD[f] = new Audio('assets/' + f); AUD[f].preload = 'auto'; }
-function sound(from, to) {
-  if (!live) return;
-  for (const [ct, f, v, d] of CUES) {
-    if (f.startsWith('bgm')) continue;
-    if (ct > from && ct <= to) { const a = AUD[f].cloneNode(); a.volume = v; a.play().catch(() => {}); if (d) setTimeout(() => a.pause(), d * 1000); }
-  }
-}
-function syncBgm() { if (!live) return; const c = CUES.find((x) => x[1].startsWith('bgm')); if (!bgm) { bgm = AUD[c[1]]; bgm.volume = c[2]; } if (playing) { bgm.currentTime = t; bgm.play().catch(() => {}); } else bgm.pause(); }
-function loop(ts) {
-  if (playing) { prevT = t; t += (ts - last) / 1000; if (t >= DUR) { t = DUR; setPlay(false); document.title = 'DONE'; } sound(prevT, t); }
-  last = ts; render(); requestAnimationFrame(loop);
-}
+function sound(a, b) { if (!live) return; for (const [ct, f, v, d] of CUES) { if (f.startsWith('bgm') || !(ct > a && ct <= b)) continue; const x = AUD[f].cloneNode(); x.volume = Math.min(1, v); x.play().catch(() => {}); if (d) setTimeout(() => x.pause(), d * 1000); } }
+function syncBgm() { if (!live) return; const c = CUES.find((x) => x[1].startsWith('bgm')); bgm = bgm || AUD[c[1]]; bgm.volume = c[2]; if (playing) { bgm.currentTime = t; bgm.play().catch(() => {}); } else bgm.pause(); }
+function loop(ts) { if (playing) { prevT = t; t += (ts - last) / 1000; if (t >= DUR) { t = DUR; setPlay(false); document.title = 'DONE'; } sound(prevT, t); } last = ts; render(); requestAnimationFrame(loop); }
 function setPlay(p) { if (p && t >= DUR) t = 0; playing = p; $('#play').textContent = p ? '❚❚ Pause' : '▶ Play'; syncBgm(); if (p) window.__playWall = Date.now(); }
 $('#play').onclick = () => setPlay(!playing);
 $('#seek').oninput = (e) => { t = +e.target.value; syncBgm(); };
@@ -492,11 +461,11 @@ addEventListener('keydown', (e) => {
   if (e.key === 'h' || e.key === 'H') document.body.classList.toggle('hidectl');
   if (e.key === 'r' || e.key === 'R') { t = 0; setPlay(true); }
 });
-function fit() { const s = Math.min(innerWidth / 1080, innerHeight / 1920); $('#stage').style.transform = `translate(-50%,-50%) scale(${s})`; }
+function fit() { const s = Math.min(innerWidth / 1920, innerHeight / 1080); $('#stage').style.transform = `translate(-50%,-50%) scale(${s})`; }
 addEventListener('resize', fit); fit();
 const q = new URLSearchParams(location.search);
 if (q.has('t')) t = +q.get('t');
-if (q.has('rec')) { document.body.classList.add('rec'); setTimeout(() => setPlay(true), 800); }
+if (q.has('rec')) { document.body.classList.add('rec'); document.fonts.ready.then(() => setTimeout(() => setPlay(true), 800)); }
 requestAnimationFrame((ts) => { last = ts; loop(ts); });
 </script>
 </body>
