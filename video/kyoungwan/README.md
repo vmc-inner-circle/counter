@@ -1,27 +1,38 @@
 # 채경완 — 영상 안
 
-> 아래는 [`video/soonhyung/`](../soonhyung/)의 v2.5 결과물을 다시 복사해 왔다 (v2.1 복사 이후 soonhyung 쪽이 v2.2~v2.5로 더 발전해서 재동기화). mp4 파일은 용량 때문에 이 폴더엔 안 두고 soonhyung 폴더 것을 그대로 링크한다. 이 폴더(`build/`)에는 경완님이 요청한 구조 변경 5가지가 추가로 반영돼 있다:
-> 1. 오프닝 "이제 손님은 에이전트입니다" 삭제
-> 2–3. 그 자리를 "에이전트 수십 개가 Counter 없이 사장님 폰으로 직접 쏟아지는" 문제 장면으로 교체
-> 4. "매장마다 에이전트를 둡니다" → 여러 사용자×에이전트가 Counter 하나로 모이는 깔때기 + "모든 요청은 사장님이 아닌 Counter가 받습니다"
-> 5. "사장님께는 확인이 필요한 것만" → "수백 개의 문의가 한 가게로 몰립니다" → "Counter가 대신 받습니다" 순으로 C1 타이틀 순서를 바꿔 오프닝 문제 장면과 수미상관
+> 아래는 [`video/soonhyung/`](../soonhyung/)의 v3(제출 후보, 영어)를 다시 복사해 왔다. mp4는 용량 때문에 이 폴더엔 안 두고 soonhyung 폴더 것을 그대로 링크한다. v2.5 때 반영했던 5가지 구조 변경은 **재적용하지 않았다** — 경완님 확인상 v3의 앞부분(문제/워크플로우)은 이미 충분히 가까운 방향이라 그대로 두고, 대신 `build/demo3_en.html`의 D(강점) 구간만 바꿨다:
 >
-> DUR 87.5s → 83.2s (A2 삭제분 4.3s 당김). soonhyung 쪽 v2.5 이후 업데이트가 더 생기면 다시 받아와 이 5가지를 재적용해야 한다.
+> - 기존: "Time on the phone today: 100→0 min" 같은 통계를 한 번에 하나씩 보여주는 3단계 cycling
+> - 변경: **체크리스트 한 화면**으로 통합
+>   1. Calls answered: 0. 20 agent requests, handled before they reach the owner.
+>   2. Agent-native front door. Not a phone number — structured info agents can actually read.
+>   3. One integration. Every language, 24/7.
+>
+> 기존 D의 3단계(Time on phone / Agent-native front door / Scattered requests)를 다 유지하면 2번 항목이 리스트와 겹쳐서, D 구간 전체를 이 체크리스트 하나로 교체했다. DUR 87.5s → 83.5s. 한국어판(`demo21_ko.html`)은 손대지 않음 — v3 자체가 영어판만 있음.
 
 ## 영상 초안
 
 | 버전 | 시각 | 링크 | 바뀐 점 |
 |---|---|---|---|
-| v1 | 11/09 11:06 | (나레이션형, 폐기) | 검정 배경 + 나레이션 + 자막. 레퍼런스 톤과 달라 접음 |
-| v2 draft | 11/09 11:36 | (폐기) | 나레이션 없음 · BGM + 화면 텍스트 · 크림 바탕 모션그래픽 · 한국어판/영어판 각 89초 |
-| v2.1 draft | 11/09 12:2x | (v2.2로 대체) | 순형 피드백 6개 반영 — 나레이션 5줄, 워크플로우 도식, 혼내는 장면 삭제·체인 전환, 강점 3컷, 사장님 폰(시안 A), 슬로건 교체. 각 89.5초 |
-| **v2.2 draft** | 11/09 13:0x | [`Counter_v22_KO_draft.mp4`](../soonhyung/Counter_v22_KO_draft.mp4) · [`Counter_v22_EN_draft.mp4`](../soonhyung/Counter_v22_EN_draft.mp4) (30fps, 16:9, 89.5초) | 11:30 싱크 회의록 대조 1순위 4개 반영(아래). **v2.3과 비교 중** — 사장님 폰을 베젤째 오른쪽에 두는 버전 |
-| v2.3 draft | 11/09 13:2x | [`Counter_v23_KO_draft.mp4`](../soonhyung/Counter_v23_KO_draft.mp4) · [`Counter_v23_EN_draft.mp4`](../soonhyung/Counter_v23_EN_draft.mp4) (30fps, 16:9, 87.5초) | 순형 13:10 피드백: 사장님 폰을 베젤 없이 내용물만 1.6배 확대, 목록 구간 3초로 단축 · 오프닝의 '사용자가 에이전트 각각에게 시키는' 말풍선 삭제(사용자 한 마디 → 에이전트 셋 → 100곳 전화) |
+| **v3 final (영어)** | 11/09 14:4x | [`Counter_v3_EN_final.mp4`](../soonhyung/Counter_v3_EN_final.mp4) (60fps · 모션블러, 16:9, 87.5초, -17 LUFS) | **제출 후보.** 순형 14:20 피드백 8건: 영어판만 · 전화 장면을 준식 안 구도(가게 하나에 에이전트가 몰려 전화, 배지 0→120)로 · 작은 글자 전부 삭제 · 워크플로우를 "에이전트→사장님 직접 → Counter가 사이에 들어와 걸러줌"으로, 업장 1개 · 폰 목록에 Counter 즉답 건 DONE(초록) · Grok Bot 추가 + "agent-native front door" 문구 · "받은 전화 0통" → "Time on the phone 100→0 min" · 슬로건 "Tech spreads agents. We build their front door." + 종 로고(후보 #5) + 토스풍 3D 사장님 |
+| v2.5 | 11/09 14:1x | (v3으로 대체, 파일 삭제) | 토스풍 3D 사장님 3표정, C 모노그램 로고, Pickle 표정 정리 |
+| v2.2 / v2.3 | 11/09 13:0x | (대체) | 회의록 1순위 반영 / 폰 내용물 확대 |
+| v2.1 | 11/09 12:2x | (대체) | 순형 피드백 6개 반영 |
+| v1 | 11/09 11:06 | (폐기) | 나레이션형, 검정 배경 |
 
-레퍼런스: [Notion 3.0 한국 론칭 영상](https://youtu.be/rfU_yL-oc80) — 나레이션 없이 BGM, 흰 바탕, 큰 타이포, 캐릭터 말풍선, 실제 UI 카드.
+레퍼런스: [Notion 3.0 한국 론칭 영상](https://youtu.be/rfU_yL-oc80) — 나레이션 없이 BGM, 흰 바탕, 큰 타이포, 캐릭터 말풍선, 실제 UI 카드. 소스: `build/demo3_en.html` (한국어판 `demo21_ko.html`은 v2.5 기준, v3 미반영).
 
-| **v2.5 draft** | 11/09 14:0x | [`Counter_v25_KO_draft.mp4`](../soonhyung/Counter_v25_KO_draft.mp4) · [`Counter_v25_EN_draft.mp4`](../soonhyung/Counter_v25_EN_draft.mp4) (30fps, 16:9, 87.5초) | v2.3 채택 후: 사장님을 토스풍 3D 캐릭터 3표정(허둥·평온·웃음)으로 교체, Counter 로고 마크 신설(C 획이 카운터 상판으로 이어지는 모노그램, [후보 4개](../soonhyung/logo/candidates.jpg) 중 #4), Pickle 웃는 표정 정리. |
-| **v2.5 final** | 11/09 14:1x | [`Counter_v25_KO_final.mp4`](../soonhyung/Counter_v25_KO_final.mp4) · [`Counter_v25_EN_final.mp4`](../soonhyung/Counter_v25_EN_final.mp4) (**60fps · 모션블러**, 16:9, 87.5초, -17 LUFS) | v2.5 드래프트와 같은 소스의 최종 렌더 |
+## 구성 v3 (87.5초, 영어)
+
+| 구간 | 시간 | 내용 | 나레이션 |
+|---|---|---|---|
+| A 인트로 | 0–6.8 | 종 로고 클릭 → "Your next customer is an AI agent." | n1 |
+| B 페인 | 6.6–22.4 | 사용자 한 마디 → Muse·Pickle·Dots 등장 → **가게 하나에 에이전트 22개가 몰려 전화, 배지 0→120** → 사장님(3D) 허둥 | — |
+| B' 전환 | 22.4–31 | 사장님이 오른쪽으로, 왼쪽에 User → Pickle → Counter(종) 체인 → COUNTER 워드마크 | n2 |
+| C1 워크플로우 | 31–45 | 에이전트 42개 → **사장님에게 직접**(허둥) → Counter가 사이에 등장, 선이 Counter로 → ✓ → 필요한 것만 주황 점선으로 사장님에게 | n3 (Counter 등장 시점) |
+| C2 사장님 폰 | 45–60 | 시안 A, 베젤 없이 내용물만: 즉답 건은 **DONE 초록 테두리**, Needs you 1건 → Approve → 모르는 질문 답 + Remember → 기억 즉답 | n4 |
+| D 강점 | 60–72 | "Time on the phone today: 100→0 min" / "In the age of agents, shops need an agent-native front door."(Muse·Pickle·Dots·Grok Bot) / "Scattered requests, one place." | — |
+| E 클로징 | 72–87.5 | 사장님 웃음 "18 requests today. Zero minutes on the phone." → Pickle 웃음 → **"Tech spreads agents. / We build their front door."** → 종 로고 | n6 |
 
 ## 구성 v2.5 (87.5초)
 
