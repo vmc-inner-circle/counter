@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Counter 설계 브리핑</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  body{font-family:-apple-system,"Apple SD Gothic Neo",sans-serif;margin:0;background:#f6f5f2;color:#1b1b1b}
+  section{max-width:820px;margin:0 auto;padding:28px 32px;background:#fff;border-bottom:8px solid #f6f5f2}
+  h1{font-size:28px;margin:0 0 6px} h2{font-size:22px;margin:0 0 4px} .sub{color:#666;margin:0 0 18px;font-size:15px}
+  .num{display:inline-block;background:#1b1b1b;color:#fff;border-radius:6px;padding:1px 9px;margin-right:8px;font-size:16px}
+  .big{font-size:19px;line-height:1.55}
+  table{border-collapse:collapse;width:100%;font-size:15px} th,td{border:1px solid #ddd;padding:9px 10px;text-align:left;vertical-align:top} th{background:#faf8f3}
+  .ok{color:#12804a;font-weight:700}.warn{color:#c27a00;font-weight:700}.no{color:#b3261e;font-weight:700}
+  .pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:13px;background:#eee;margin-left:6px}
+  .card{border:1px solid #e3e0d8;border-radius:10px;padding:12px 14px;margin:10px 0;background:#fdfcf9}
+  .mermaid{margin:6px 0}
+  .tag{font-size:12px;color:#888}
+</style></head><body>
+
+<section data-s="1">
+  <h1>Counter 설계 브리핑</h1>
+  <p class="sub">2026-11-09 · 기술스택 논의 정리 · <b>제안 단계</b>(아직 구현 전)</p>
+  <p class="big"><b>한 줄:</b> 가게마다 <b>에이전트용 창구 URL</b> 하나.<br>
+  손님이 어떤 AI를 쓰든 <b>그 주소 하나로</b> 들어온다.<br>
+  서버는 방문자가 읽을 수 있는 <b>형태로만 바꿔서</b> 답한다 (사람·브라우저 → 웹페이지, 에이전트 → 마크다운).</p>
+  <div class="card"><b>오늘 결론 3개</b><br>
+  ① 프로토콜(작업 상태·슬롯 홀드·기억)은 <b>우리 것</b> — 이미 서버에 있다<br>
+  ② 손님 쪽 설정은 <b>0</b> — 주소만 알면 된다. MCP는 커넥터 등록이 필요해서 <b>선택 사항</b>으로 내림<br>
+  ③ 성능은 전송 방식이 아니라 <b>왕복 횟수</b>로 줄인다 (5턴 → 3턴)</div>
+</section>
+
+<section data-s="2">
+  <h2><span class="num">1</span>전체 구조 — 가게당 주소 하나</h2>
+  <p class="sub">손님 AI가 무엇이든 들어오는 곳은 같다. 서버가 상대에 맞는 형태로 답할 뿐</p>
+<pre class="mermaid">
+flowchart LR
+  subgraph A["손님이 쓰는 AI — 무엇이든"]
+    B["브라우저형<br/>Muse · Dots · Pickle · Grok Bot"]
+    T["터미널형<br/>Claude Code · Codex"]
+    C["일반 채팅<br/>claude.ai · ChatGPT"]
+  end
+  URL(["🔗 counter.app/s/soi-derm<br/>가게마다 하나 발급"])
+  B --> URL
+  T --> URL
+  C --> URL
+  subgraph F["Counter 서버 (Fly.io · app/)"]
+    direction TB
+    R{"누가 왔나?"}
+    H["웹페이지<br/>질문 채팅 + 예약 폼 🆕"]
+    MD["마크다운<br/>가게 정보 + 쓰는 법"]
+    CORE["Counter 코어<br/>작업 상태 · 슬롯 홀드 · 기억"]
+    DB[("state.json")]
+    R -- "브라우저" --> H
+    R -- "에이전트·curl" --> MD
+    H --> CORE
+    MD --> CORE
+    CORE --- DB
+  end
+  URL --> R
+  ADM["📱 사장님 폰 /admin<br/>ADMIN_TOKEN 잠금 ✅"]
+  CORE <-- "승인 · 답변" --> ADM
+  classDef url fill:#1b1b1b,color:#fff,stroke:#1b1b1b
+  classDef new fill:#fff4d6,stroke:#c27a00
+  class URL url
+  class H new
+</pre>
+  <p class="tag">웹페이지·마크다운은 같은 주소가 내주는 두 가지 "모양"이지 별도 주소가 아니다. 질문·예약은 둘 다 같은 코어로 간다.<br>
+  🆕 = 이번에 추가 · ✅ = 오늘 반영(app/ 이동, ADMIN_TOKEN)</p>
+</section>
+
+<section data-s="3">
+  <h2><span class="num">2</span>에이전트별로 어디까지 되나</h2>
+  <p class="sub">기준: 심사위원이 <b>원래 쓰던 에이전트에 URL 하나만</b> 주면 되는가</p>
+  <table>
+    <tr><th>에이전트</th><th>읽기<br>UC-1</th><th>질문·예약<br>UC-2·3</th><th>같은 주소가 내주는 모양</th></tr>
+    <tr><td>터미널 (Claude Code·Codex)</td><td class="ok">✅</td><td class="ok">✅ 실측함</td><td>마크다운 → API 호출 (지금 방식)</td></tr>
+    <tr><td>브라우저형 (Muse·Dots·Pickle·Grok Bot)</td><td class="ok">✅</td><td class="ok">✅ 폼 추가 시</td><td>웹페이지 → 폼</td></tr>
+    <tr><td>일반 채팅 (웹 열람만)</td><td class="ok">✅</td><td class="warn">⚠️ 미검증</td><td>마크다운 → 링크 따라가기 (막힐 수 있음)</td></tr>
+    
+  </table>
+  <div class="card"><b>요약:</b> 읽기는 누구나. 쓰기는 터미널·브라우저 에이전트까지 <b>설정 없이</b>. 손님이 쓰는 4종은 모두 브라우저형 → 웹페이지 예약 폼이 핵심. 실측 전엔 미검증.</div>
+</section>
+
+<section data-s="4">
+  <h2><span class="num">3</span>예약 한 건이 흐르는 길</h2>
+  <p class="sub">UC-2(모르는 질문) + UC-3(예약) · <b>wait를 붙여 한 번에 받는</b> 개선안</p>
+<pre class="mermaid">
+sequenceDiagram
+  autonumber
+  participant U as 🧳 관광객
+  participant AG as 개인 에이전트
+  participant CT as Counter
+  participant S as 📱 사장님
+  U->>AG: "내일 3시 리쥬란, 일본어 직원?"
+  AG->>CT: 창구 문서 읽기
+  CT-->>AG: 영업시간·접근성·가격·빈 슬롯 (UC-1은 여기서 끝)
+  AG->>CT: ask "일본어 직원?" (wait)
+  CT->>S: 모르는 질문 알림
+  S-->>CT: "네, 있어요" + 기억 ON
+  CT-->>AG: 답 (다음 에이전트는 즉시 답)
+  AG->>CT: book 11/10 15:00 (wait)
+  Note over CT: 슬롯을 잡아 둠
+  CT->>S: 승인 요청
+  S-->>CT: 탭 한 번 승인
+  CT-->>AG: 확정번호 SOI-1110-1500
+  AG-->>U: 모국어로 "예약 완료"
+</pre>
+</section>
+
+<section data-s="5">
+  <h2><span class="num">4</span>성능 — 어디서 시간이 드나</h2>
+  <p class="sub">11/09 실측: 전체 26초 (Claude Code)</p>
+<div style="font-size:15px">
+  <div style="display:flex;height:46px;border-radius:8px;overflow:hidden;margin:6px 0 8px">
+    <div style="flex:16;background:#3a3a3a;color:#fff;display:flex;align-items:center;padding-left:12px">에이전트가 생각하는 시간 ≈16초</div>
+    <div style="flex:10;background:#c27a00;color:#fff;display:flex;align-items:center;padding-left:12px">사장님 응답 ≈10초</div>
+  </div>
+  <div class="tag">HTTP냐 MCP냐에서 나는 전송 차이: 밀리초 단위라 막대에 안 보인다 · 분해는 추정(미검증)</div>
+</div><br>
+  <table>
+    <tr><th></th><th>지금</th><th>개선안</th></tr>
+    <tr><td>왕복</td><td>문서 → ask → 대기 → book → 대기 = <b>5턴</b></td><td>문서 → ask(wait) → book(wait) = <b>3턴</b></td></tr>
+    <tr><td>예상</td><td>26초</td><td>약 20초 이하 <span class="pill">미검증 · 구현 후 재실측</span></td></tr>
+  </table>
+  <div class="card">전송 방식을 우리가 새로 만들어도 줄어드는 건 밀리초. <b>줄일 수 있는 건 턴 수뿐</b>이고, 이건 어느 입구로 와도 똑같이 적용된다.</div>
+</section>
+
+<section data-s="6">
+  <h2><span class="num">5</span>작업 상태 — 우리 프로토콜의 핵심</h2>
+<pre class="mermaid">
+stateDiagram-v2
+  direction LR
+  [*] --> completed: 아는 질문 (기억·등록 정보)
+  [*] --> input_required: 모르는 질문 / 예약 요청
+  input_required --> completed: 사장님 답변 · 승인
+  input_required --> rejected: 사장님 거절
+  completed --> [*]
+  rejected --> [*]
+  note right of input_required
+    예약이면 슬롯을 잡아 둔다
+    승인 없이는 확정되지 않는다
+  end note
+</pre>
+  <p class="tag">상태 이름이 A2A 표준과 같다 → 영상 대본 소재로 활용 가능. 실제 A2A 입구는 이번에 만들지 않는다(쓰는 에이전트가 거의 없음).</p>
+</section>
+
+<section data-s="7">
+  <h2><span class="num">6</span>리스크와 대응</h2>
+  <table>
+    <tr><th>리스크</th><th>대응</th></tr>
+    <tr><td>심사위원이 아무나 승인·답변</td><td class="ok">ADMIN_TOKEN 잠금 — 반영 완료</td></tr>
+    <tr><td>사장님 화면에 응답할 사람이 없으면 에이전트가 60초 뒤 멈춤</td><td>심사 시간 동안 팀원 1명이 폰으로 /admin 담당</td></tr>
+    <tr><td>앞 심사위원이 슬롯을 잡아 다음 사람이 못 씀</td><td>/admin 초기화 버튼 (이미 있음)</td></tr>
+    <tr><td>링크 미리보기·크롤러가 GET 예약 링크를 눌러 버림</td><td>승인 없이는 확정 안 됨 → 피해 없음</td></tr>
+    <tr><td>일반 채팅이 GET 링크를 안 따라감</td><td>배포 전 실측 → 안 되면 표에서 빼고 터미널·브라우저 경로로 안내</td></tr>
+  </table>
+</section>
+
+<section data-s="8">
+  <h2><span class="num">7</span>다음 순서</h2>
+<pre class="mermaid">
+flowchart LR
+  D["✅ 완료<br/>app/ 이동<br/>ADMIN_TOKEN"] --> W["① wait로<br/>3턴 만들기"]
+  W --> P["② 예약 폼<br/>+ GET 링크"]
+  P --> X["③ 터널로 공개 후<br/>3종 에이전트 실측<br/>~15분"]
+  X --> FLY["④ Fly.io 배포<br/>직전 확인받음"]
+  X -.->|"빈틈 있으면"| MCP["MCP 추가"]
+  classDef done fill:#e3f4ea,stroke:#12804a
+  classDef gate fill:#fdecea,stroke:#b3261e
+  class D done
+  class FLY gate
+</pre>
+  <div class="card"><b>수민님이 정할 것 2개</b><br>
+  1. 이 순서로 진행 — <b>기본값: ㄱㄱ</b><br>
+  2. 심사위원이 질의할 대상 — <b>기본값: 피부과 데모 창구</b> (아니면 Counter 팀 자체 창구 <code>/s/counter</code> 추가)</div>
+</section>
+
+<script>
+const s=new URLSearchParams(location.search).get('s');
+if(s) document.querySelectorAll('section').forEach(x=>{ if(x.dataset.s!==s) x.remove(); });
+mermaid.initialize({startOnLoad:false,theme:'neutral',fontFamily:'-apple-system,"Apple SD Gothic Neo",sans-serif'});
+mermaid.run().then(()=>document.body.dataset.ready='1');
+</script>
+</body></html>
