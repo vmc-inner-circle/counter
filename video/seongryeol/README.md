@@ -4,7 +4,8 @@
 
 | 버전 | 시각 | 링크 | 바뀐 점 |
 |---|---|---|---|
-| **v12 최종 (가로 16:9, English, 90초)** | 11/09 13:5x | [Counter_v12_최종.mp4](Counter_v12_최종.mp4) | 순형 안 색감·스타일(크림·주황·3D 캐릭터) · 근미래 인트로(사장님 3명, AI 통화 음성) · Before/After(직접 전화로 놓침 vs 가게마다 Counter 노드 체인) · Emma → Muse → Counter → 원장 · 사장님 앱(확인 1건 한 번 탭+기억) · Muse가 Emma에게 답 · 다국어(중·스·일 차례로) · 실사 지구본 네트워크(전 세계 사장님·업종, Agent → Counter → Owner) · 효용 · 슬로건 |
+| **v13 최종 (가로 16:9, English, 90초)** | 11/09 14:3x | [Counter_v13_최종.mp4](Counter_v13_최종.mp4) | 13:15 싱크 피드백 5개 반영: ① 첫 문장 "More AI assistants. More AI calls." ② "So we made an agent for owners. Counter." ③ 최신 사장님 앱 녹화·새 로고(주황 돔 캐릭터) ④ Any person 장면 선이 노드에서 끊기게 ⑤ 슬로건 "OpenAI · Meta · xAI · Pickle spread agents. We build their front door." · 예약 완료 장면 없음 |
+| v12 최종 | 11/09 13:5x | (git 이력) | 순형 안 색감, Before/After 노드 체인, 지구본 네트워크 |
 | v10 (가로) | 11/09 12:49 | (git 이력) | 다크 미니멀, 3초 가치 문구 |
 | v7 (가게 중심) | 11/09 11:47 | (git 이력) | 비행기 컨셉 제외, UC-1~3 챕터 |
 
@@ -14,7 +15,7 @@
 
 ## 대본
 
-[`script.md`](script.md) — v12 최종 내레이션·장면 표
+[`script.md`](script.md) — v13 최종 내레이션·장면 표
 
 ## 코멘트
 
