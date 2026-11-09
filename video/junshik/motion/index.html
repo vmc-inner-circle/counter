@@ -132,6 +132,14 @@ svg.lines{position:absolute;inset:0;pointer-events:none}
 .ind .logo{position:absolute;right:20px;bottom:20px;--s:66px}
 
 /* C13a owners free */
+.shop13{position:absolute;left:990px;top:300px;width:820px;height:560px;background:#fff;border:4px solid var(--ink);border-radius:36px;overflow:hidden}
+.aw13{height:80px;background:repeating-linear-gradient(90deg,var(--acc) 0 70px,#fff 70px 140px);border-bottom:4px solid var(--ink)}
+.cbar13{position:absolute;left:0;right:0;top:380px;height:180px;background:#F3E3D3;border-top:4px solid var(--ink)}
+.ph13{position:absolute;left:400px;top:318px;font-size:52px;opacity:.65}
+.sb13{position:absolute;top:110px;background:#fff;border:3px solid var(--ink);border-radius:22px;padding:10px 18px;font-size:30px;font-weight:700;opacity:0;transform:scale(.5);transition:all .3s cubic-bezier(.3,1.5,.5,1)}
+.sb13.on{opacity:1;transform:none}
+.sb13.l{left:260px}.sb13.r{left:560px}
+
 .f13{position:absolute;--s:96px;z-index:2;transition:transform .5s cubic-bezier(.4,0,.2,1),opacity .2s}
 .f13.done13:after{content:'✓';position:absolute;right:-8px;bottom:-8px;width:40px;height:40px;border-radius:50%;background:var(--ok);color:#fff;font-size:26px;font-weight:800;display:grid;place-items:center}
 .ok13{position:absolute;left:600px;top:680px;width:200px;text-align:center;font-size:52px;font-weight:800;color:var(--ok);font-variant-numeric:tabular-nums}
@@ -256,14 +264,19 @@ body.rec #ctl,body.hidectl #ctl{display:none}
   <!-- C13 54–60 benefits -->
   <section class="scene" id="c13" data-s="54" data-e="60">
     <div class="panel" id="p13a" style="display:block">
-      <div class="f13 av a-muse" data-k="0"></div><div class="f13 av a-pickle" data-k="1"></div><div class="f13 av a-dots" data-k="2"></div><div class="f13 av a-grok" data-k="3"></div><div class="f13 av a-muse" data-k="4"></div><div class="f13 av a-pickle" data-k="5"></div>
+      <div class="f13 av a-muse" data-k="0"></div><div class="f13 av a-pickle" data-k="1"></div><div class="f13 av a-dots" data-k="2"></div><div class="f13 av a-grok" data-k="3"></div><div class="f13 av a-muse" data-k="4"></div>
       <div class="logo" style="position:absolute;left:600px;top:450px;--s:200px">C</div>
       <div class="ok13" id="ok13">✓ <span id="n13">0</span></div>
       <div class="wall13"></div>
-      <div class="owner" id="own13" style="position:absolute;left:1040px;top:430px;width:320px;height:320px"></div>
-      <div class="person" style="position:absolute;left:1500px;top:500px;--s:220px"></div>
-      <div class="heart13" id="h13">🙂</div>
-      <div class="desk13"><span>📵</span></div>
+      <div class="shop13">
+        <div class="aw13"></div>
+        <div class="owner" style="position:absolute;left:60px;top:150px;width:250px;height:250px"></div>
+        <div class="cbar13"></div>
+        <div class="person" style="position:absolute;left:520px;top:200px;--s:200px;z-index:2"></div>
+        <div class="sb13 l" id="sb13a">Welcome! 🙂</div>
+        <div class="sb13 r" id="h13">Hi! 👋</div>
+        <div class="ph13">📵</div>
+      </div>
     </div>
     <div class="panel" id="p13b"><div class="av a-muse" style="--s:220px"></div><div class="av a-pickle" style="--s:220px"></div><div class="av a-dots" style="--s:220px"></div><div class="badge b-ok" style="position:static;width:150px;height:150px;font-size:96px">✓</div></div>
     <div class="panel" id="p13c" style="font-size:190px;gap:60px"><span class="pick" data-k="0">🇬🇧</span><span class="pick" data-k="1">🇨🇳</span><span class="pick" data-k="2">🇻🇳</span><span class="pick" data-k="3">🇯🇵</span></div>
@@ -455,8 +468,8 @@ function render() {
     const SLOT = [[420, 330], [300, 470], [420, 610], [300, 750], [190, 400], [190, 680]], [tx, ty] = SLOT[k];
     el.style.opacity = p > 0 ? 1 : 0; el.style.transform = `translate(${p < 0 ? fx - 300 : tx}px,${p < 0 ? fy : ty}px)`;
     el.classList.toggle('done13', p > 0.6); });
-  $('#n13').textContent = Math.round(clamp((l13 - 0.4) / 1.4, 0, 1) * 120);
-  $('#h13').classList.toggle('on', l13 > 1.5 && l13 < 3);
+  $('#n13').textContent = $$('#p13a .f13.done13').length;
+  $('#h13').classList.toggle('on', l13 > 1.5 && l13 < 3); $('#sb13a').classList.toggle('on', l13 > 1.9 && l13 < 3);
   // C15 calm
   const l15 = t - ST.c15;
   for (const f of FL15) { const p = l15 - f.at; const tx = 960, ty = 820;
