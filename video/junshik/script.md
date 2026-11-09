@@ -1,8 +1,9 @@
-# 황준식 안 — 대본·화면 지시서 v3.3
+# 황준식 안 — 대본·화면 지시서 v3.4
 
 - 만든 때: 2026-11-09 11시경 (황준식 + Claude) · v3.1 11:20경 — 회의록 d3fef95·1edbea7 반영(숙소 에이전트 Grok→**Dots**, 엔딩 = 사람 4분할 실사 컷)
 - v3.2 11:25경 — `docs/use-cases.md` UC 번호 표기, 엔딩 4×1 가로 분할(e472174), 에이전트 아이콘 = `../common/agents/` 공식 이미지, 4번째 에이전트 Claude Duet→Grok Bot(common 기준)
 - v3.3 11:35경 (황준식 지시) — **식당·숙소 장면 삭제, 피부과 하나로 시스템 데모를 자세히**(지도 발견 → UC-1 → UC-2 → UC-3 → 완료·기억, 단계 표시줄), **도입부 6–10s 에 침공이 낳은 문제 카드**. 엔딩 4칸은 모두 피부과 예약
+- v3.4 11:45경 (황준식 지시) — 도입부 문제를 카드 글이 아니라 **여러 업종 가게에 에이전트가 무차별로 전화하는 화면**으로(5–10s), 그 가운데 병원으로 줌인해 이야기를 잇는다
 - 모션 그래픽 초안: [`motion/index.html`](motion/index.html) — 브라우저로 열고 Space
 - 기준: 11/09 현장 R&R·스펙 회의, 후속 데모 시나리오·영상 흐름 회의, Notion Kickoff 「System Demo Scenarios」, `server.mjs` 데모(f2d442b)
 - 형식: **모션 그래픽** + 데모 녹화(플레이스홀더 → `../demo-clips.md` 번호)
@@ -13,8 +14,8 @@
 | 시간 | 장면 | 내레이션 (EN) | 한국어 뜻 |
 |---|---|---|---|
 | 0–2s | 우주, 노란 글자가 비스듬히 멀어짐 | *(글자만)* **The Agent Invasion Has Begun.** | 에이전트들의 침공이 시작되었다. |
-| 2–6s | Muse·Pickle·Dots·Grok Bot 아이콘이 지구 위로 쏟아져 사람마다 하나씩 붙음 | "Every AI company is racing to give a billion people their own agent." | 모든 AI 회사가 10억 명에게 각자의 에이전트를 쥐여 주려고 경쟁 중이에요. |
-| 6–10s | **침공이 낳은 문제 (3~4초)** — 빨간 카드 4장이 탁탁: 사람용 가게에 전화하는 에이전트 · 끊고 화내는 사장님 · 로봇 전화에 묶인 직원과 기다리는 손님 · 스팸으로 막혀 예약이 안 됨 → 📍 Seoul 로 줌인 | "But to reach a shop, agents still pick up the phone." | 그런데 가게에 닿으려면, 에이전트는 아직 전화를 걸어요. |
+| 2–5s | Muse·Pickle·Dots·Grok Bot 아이콘이 지구 위로 쏟아져 사람마다 하나씩 붙음 → 동네로 줌인 | "Every AI company is racing to give a billion people their own agent." | 모든 AI 회사가 10억 명에게 각자의 에이전트를 쥐여 주려고 경쟁 중이에요. |
+| 5–10s | **침공이 낳은 문제 — 무차별 전화**: 「Every agent. Every shop. All day.」 식당·공장·병원·미용실·숙소·정비소·빵집·치과·꽃집·세탁소 10곳에 에이전트들이 번갈아 전화 → 전화기 흔들림·빨간 테두리, 「Robot again?!」「*click*」「We're busy!」, 가게마다 부재중 숫자 증가 → 병원 카드로 줌인 | "And those agents call every business — restaurants, clinics, factories, salons. Nonstop, all day. Owners hang up. Agents get yelled at." | 그리고 그 에이전트들이 모든 가게에 전화해요 — 식당, 병원, 공장, 미용실. 가리지 않고, 하루 종일. 사장님은 끊고, 에이전트는 혼나요. |
 | 10–15s | **병원 클로즈업 · 문제** (Soi Dermatology 접수대): 전화가 쉬지 않고 울림, AI 전화 말풍선이 영어·중국어·베트남어로 쌓임, 부재중 0→47, 직원 😵‍💫 → 끊음, 줄 선 진짜 환자들 😤. 오른쪽 아래 848 카운터 + 출처 | "And they all call the same small shops. One agent called 848 businesses in a few hours. Staff just hang up." | 그리고 모두 같은 작은 가게에 전화해요. 에이전트 하나가 몇 시간 만에 848곳에 전화했어요. 직원은 그냥 끊어요. |
 | 15–20s | **다시 클로즈업** — 접수대 전화로 들어가 → 전화기 X → 병원 지도 카드에 🤖 `Agent: …/s/soi-derm`, 에이전트 말풍선이 그 링크로 빨려 들어감 | "Phones are for people. Counter is for agents. One link on your map listing." | 전화는 사람을 위한 것. Counter 는 에이전트를 위한 것. 지도 프로필에 링크 하나. |
 | 20–25s | **피부과 시스템 데모 ①** 지도에서 발견 — Emma(관광객, 영어)가 Muse 에 "Find a skin clinic in Seoul for Thursday. I use a wheelchair." → Muse 가 Google Maps 검색 → 지도 카드의 🤖 Counter 링크 강조 → 연다 | "A tourist asks Muse for a clinic. Muse finds Counter on the map listing." | 관광객이 Muse 에게 병원을 부탁해요. Muse 는 지도에서 Counter 를 찾아요. |

@@ -69,6 +69,25 @@ html,body{height:100%;background:#000;overflow:hidden;font-family:-apple-system,
 /* ---------- S2 problems ---------- */
 .probs{position:absolute;left:0;right:0;top:300px;display:grid;grid-template-columns:repeat(2,700px);justify-content:center;gap:22px 40px;z-index:4}
 .prob{background:rgba(214,69,69,.95);color:#fff;font-size:34px;font-weight:700;padding:22px 28px;border-radius:20px;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+/* ---------- S2b town ---------- */
+#s2b{background:#eef2f7;color:var(--ink)}
+#s2b.active .town{animation:zin .7s cubic-bezier(.2,.8,.2,1)}
+.townhead{position:absolute;left:0;right:0;top:46px;text-align:center;font-size:52px;font-weight:900}
+.town{position:absolute;left:110px;top:150px;width:1700px;height:760px;--zx:50%;display:grid;grid-template-columns:repeat(5,1fr);gap:26px;transform-origin:50% 50%;transition:transform .8s cubic-bezier(.6,0,.4,1),opacity .35s .45s}
+.town{transform-origin:850px 180px}
+.town.on{transform:scale(4);opacity:0}
+.shop2{position:relative;background:#fff;border-radius:24px;box-shadow:0 8px 24px rgba(15,27,42,.1);padding:22px 18px;text-align:center;transition:box-shadow .2s,background .2s}
+.shop2 .em{font-size:96px;line-height:1.1}
+.shop2 .nm{font-size:26px;font-weight:800;margin-top:6px}
+.shop2 .ph2{position:absolute;left:16px;bottom:14px;font-size:44px}
+.shop2.ring{background:#fff1f1;box-shadow:0 0 0 5px var(--bad),0 8px 24px rgba(214,69,69,.3)}
+.shop2.ring .ph2{animation:ring .12s infinite alternate}
+.shop2 .mc{position:absolute;right:14px;bottom:18px;background:var(--bad);color:#fff;border-radius:999px;font-size:20px;font-weight:800;padding:2px 12px;font-variant-numeric:tabular-nums}
+.shop2 .caller{position:absolute;left:50%;top:-22px;transform:translateX(-50%) scale(.7);opacity:0;transition:all .2s}
+.shop2 .caller.on{opacity:1;transform:translateX(-50%) scale(.9)}
+.shop2 .caller .chip{font-size:20px;padding:4px 12px 4px 4px}.shop2 .caller .chip i{width:30px;height:30px}
+.shop2 .rx{position:absolute;left:50%;bottom:66px;transform:translateX(-50%);white-space:nowrap;background:var(--ink);color:#fff;font-size:21px;font-weight:700;padding:6px 14px;border-radius:12px;opacity:0;transition:opacity .15s}
+.shop2 .rx.on{opacity:1}
 /* ---------- S2 zoom ---------- */
 .zw{position:absolute;inset:0;transform-origin:1010px 700px;transition:transform 1.3s cubic-bezier(.6,0,.4,1),opacity .4s 1.0s}
 .zw.on{transform:scale(7);opacity:0}
@@ -226,15 +245,15 @@ body.rec #ctl,body.hidectl #ctl{display:none}
   </section>
 
   <!-- S2 2–9 -->
-  <section class="scene" id="s2" data-s="2" data-e="10">
+  <section class="scene" id="s2" data-s="2" data-e="5.3">
     <div class="stars"></div>
-    <div class="zw" data-at="7.2"><div class="counter-big on-fade up" data-at="0.3"><span id="billion">0</span> people. One agent each.<small>Every AI company is racing to ship personal agents.</small></div><div class="earth" id="earth"></div><div id="rainbox"></div><div class="pin on-fade pop" data-at="6.4">📍 Seoul</div></div>
-    <div class="probs">
-      <div class="prob on-fade pop" data-at="3.9" data-off="6.9">📞 Agents phone shops built for humans</div>
-      <div class="prob on-fade pop" data-at="4.4" data-off="6.9">😤 Owners hang up — agents get yelled at</div>
-      <div class="prob on-fade pop" data-at="4.9" data-off="6.9">⏳ Staff stuck on robot calls, real customers wait</div>
-      <div class="prob on-fade pop" data-at="5.4" data-off="6.9">🚫 Agents blocked as spam — nothing gets booked</div>
-    </div>
+    <div class="zw" data-at="2.3"><div class="counter-big on-fade up" data-at="0.3"><span id="billion">0</span> people. One agent each.<small>Every AI company is racing to ship personal agents.</small></div><div class="earth" id="earth"></div><div id="rainbox"></div><div class="pin on-fade pop" data-at="1.9">📍 Seoul</div></div>
+  </section>
+
+  <!-- S2b 5–10 agents call every business -->
+  <section class="scene" id="s2b" data-s="5.2" data-e="10">
+    <div class="townhead on-fade up" data-at="0.1">Every agent. Every shop. All day.</div>
+    <div class="town" id="town" data-at="4.4"></div>
   </section>
 
   <!-- S3 10–15 clinic problem -->
@@ -383,9 +402,10 @@ body.rec #ctl,body.hidectl #ctl{display:none}
 const DUR = 83;
 const SUBS = [
   [0, 2, '', ''],
-  [2, 6, 'Every AI company is racing to give a billion people their own agent.', '모든 AI 회사가 10억 명에게 각자의 에이전트를 쥐여 주려고 경쟁 중이에요.'],
-  [6, 10, 'But to reach a shop, agents still pick up the phone.', '그런데 가게에 닿으려면, 에이전트는 아직 전화를 걸어요.'],
-  [10, 12.4, 'At a Seoul clinic, the desk phone never stops.', '서울의 한 피부과, 접수대 전화가 멈추질 않아요.'],
+  [2, 5.2, 'Every AI company is racing to give a billion people their own agent.', '모든 AI 회사가 10억 명에게 각자의 에이전트를 쥐여 주려고 경쟁 중이에요.'],
+  [5.2, 7.6, 'And those agents call every business — restaurants, clinics, factories, salons.', '그리고 그 에이전트들이 모든 가게에 전화해요 — 식당, 병원, 공장, 미용실.'],
+  [7.6, 10, 'Nonstop, all day. Owners hang up. Agents get yelled at.', '가리지 않고, 하루 종일. 사장님은 끊고, 에이전트는 혼나요.'],
+  [10, 12.4, 'Take one clinic in Seoul. The desk phone never stops.', '서울의 한 피부과를 볼까요. 접수대 전화가 멈추질 않아요.'],
   [12.4, 15, 'One agent called 848 businesses in a few hours. Staff just hang up.', '에이전트 하나가 몇 시간 만에 848곳에 전화했어요. 직원은 그냥 끊어요.'],
   [15, 17.5, 'Phones are for people. Counter is for agents.', '전화는 사람을 위한 것. Counter 는 에이전트를 위한 것.'],
   [17.5, 20, 'One link on your map listing.', '지도 프로필에 링크 하나.'],
@@ -411,7 +431,7 @@ for (let i = 0; i < 30; i++) {
   const x = 120 + (i % 10) * 168 + rnd() * 40, y = 620 + Math.floor(i / 10) * 110 + rnd() * 30;
   const p = document.createElement('div'); p.className = 'person'; Object.assign(p.style, { left: x + 'px', top: y + 40 + 'px' }); rainbox.appendChild(p);
   const a = AGENTS[i % 4], r = document.createElement('div');
-  r.className = 'rain'; r.dataset.at = (0.4 + i * 0.08).toFixed(2);
+  r.className = 'rain'; r.dataset.at = (0.2 + i * 0.05).toFixed(2);
   r.innerHTML = `<span class="chip c-${a[0]}"><i>${a[1]}</i>${a[2]}</span>`;
   Object.assign(r.style, { left: x - 30 + 'px', top: y - 30 + 'px', transform: `translateY(${-900 - rnd() * 300}px)` });
   r.dataset.y = 0; rainbox.appendChild(r);
@@ -422,6 +442,12 @@ for (let i = 0; i < 90; i++) {
   const sc = 0.45 + rnd() * 0.75; c.style.setProperty('--sc', sc.toFixed(2)); c.style.setProperty('--b', (sc < .7 ? 2 : 0) + 'px');
   Object.assign(c.style, { left: rnd() * 1900 + 'px', top: rnd() * 1100 + 'px' }); swarm.appendChild(c);
 }
+// town: 10 businesses, agents call them indiscriminately
+const SHOPS = [['🍜','Restaurant'],['🏭','Factory'],['🏥','Clinic'],['✂️','Hair salon'],['🏨','Guesthouse'],['🔧','Repair shop'],['🥐','Bakery'],['🦷','Dentist'],['💐','Florist'],['🧺','Laundry']];
+const RX = ['Robot again?!', '*click*', "We're busy!", 'Who is this?', '*hangs up*', 'Not now!'];
+const town = $('#town'), CALLS = [];
+SHOPS.forEach((sh, i) => { const el = document.createElement('div'); el.className = 'shop2'; el.innerHTML = `<div class="caller"></div><div class="em">${sh[0]}</div><div class="nm">${sh[1]}</div><div class="ph2">☎️</div><div class="mc">0</div><div class="rx"></div>`; town.appendChild(el); });
+for (let k = 0; k < 34; k++) CALLS.push({ shop: Math.floor(rnd() * 10), ag: AGENTS[k % 4], at: 0.25 + k * 0.11 + rnd() * 0.1, rx: RX[Math.floor(rnd() * RX.length)] });
 const suckbox = $('#suckbox');
 for (let i = 0; i < 8; i++) {
   const a = AGENTS[i % 4], s = document.createElement('div'); s.className = 'suck';
@@ -457,7 +483,18 @@ function render() {
   }
   // S2 rain + billion counter
   for (const r of $$('.rain')) if (r.classList.contains('on')) r.style.transform = 'translateY(0)'; else r.style.transform = 'translateY(-1100px)';
-  $('#billion').textContent = (clamp((t - 2.3) / 3, 0, 1) * 1e9 | 0).toLocaleString('en-US');
+  $('#billion').textContent = (clamp((t - 2.2) / 1.6, 0, 1) * 1e9 | 0).toLocaleString('en-US');
+  // S2b town calls
+  const lt2 = t - ST.s2b, shops = $$('.shop2');
+  shops.forEach((el, i) => {
+    const mine = CALLS.filter((c) => c.shop === i && c.at <= lt2);
+    const cur = mine.filter((c) => lt2 < c.at + 1.3).pop();
+    el.classList.toggle('ring', !!cur);
+    $('.mc', el).textContent = mine.length;
+    const cl = $('.caller', el), rx = $('.rx', el);
+    if (cur) { const h = `<span class="chip c-${cur.ag[0]}"><i>${cur.ag[1]}</i>${cur.ag[2]}</span>`; if (cl.innerHTML !== h) cl.innerHTML = h; rx.textContent = cur.rx; }
+    cl.classList.toggle('on', !!cur); rx.classList.toggle('on', !!cur && lt2 >= cur.at + 0.55);
+  });
   // S3 clinic problem
   const l3 = t - ST.s3;
   $('#dphone').classList.toggle('ring', l3 < 2.6);
