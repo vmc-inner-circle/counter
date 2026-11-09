@@ -22,5 +22,6 @@ git pull --rebase origin main
 ## 3. 고치는 범위
 
 - **앱(빌드) 코드는 [`app/`](app/) 안에만 둔다.** 원격 배포되는 것은 이 폴더 하나다. 루트·`docs/`·`video/`에 실행 코드를 두지 않는다
+- **화면을 바꾸면 `python3 app/demo/record.py`로 시연 클립을 다시 뽑아 같이 올린다.** 영상팀은 [`video/demo-clips/`](video/demo-clips.md)의 클립을 쓰고 손으로 녹화하지 않는다
 - 영상팀은 `video/` 아래 **자기 폴더만** 고친다. `video/common/`과 `docs/use-cases.md`는 싱크에서 정한 것만 올린다
 - 커밋할 때는 자기가 고친 파일만 경로로 지정해서 올린다(`git add -A` 금지)

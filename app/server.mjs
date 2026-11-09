@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const SEED = path.join(ROOT, 'data/seed.json');
-const STATE = path.join(ROOT, 'data/state.json');
+const STATE = process.env.STATE_FILE || path.join(ROOT, 'data/state.json'); // demo recorder uses its own file
 const PORT = Number(process.env.PORT || 3000);
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || ''; // empty = admin open (local only)
 
