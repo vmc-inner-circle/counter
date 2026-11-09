@@ -87,7 +87,7 @@ svg.wire{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visi
 // C1 31 workflow: 42 agents → 3 Counters → owner phone; VO n3 @32 | C2 45 owner phone (시안 A): list → thread → Approve @49 → question → answer+remember @54–57 → memory payoff @59; VO n4 @50.5
 // D1 62 "받은 전화 0통" | D2 66 "모든 에이전트·언어·24시간" | D3 70 "확정은 사장님이" | E1 74 owner happy | E2 79 pickle happy | E3 83 slogan, VO n5 @83.4 | E4 87 end card
 const LANG = 'en';
-const W = 1920, H = 1080, DUR = 83.5;
+const W = 1920, H = 1080, DUR = 88.0;
 window.VIDEO = { w: W, h: H, duration: DUR };
 const ACC = '#FF6B3D';
 const COPY = {
@@ -239,12 +239,15 @@ const Q = s => scrTh.querySelector(s);
 const c2cur = el('div', 'cursor', C2.cam, CURSOR_SVG); const c2rip = el('div', 'ripple', C2.cam);
 const c2mock = el('div', 'abs', C2.cam, ''); c2mock.style.display = 'none'; Object.assign(c2mock.style, { right: '40px', bottom: '28px', fontSize: '20px', color: '#8A8A8A' });
 // D benefits
-const D = scene('D', 60, 68.3);
-// why-Counter checklist (replaces the old 3-phase single-stat cycle)
+const D = scene('D', 60, 72.8);
+// D1: "agent-native front door" slide (revived, standalone)
+const d0Big = el('div', 'big', D.cam); d0Big.innerHTML = `${COPY.d2}<br>${COPY.d2b}`; Object.assign(d0Big.style, { top: '400px', fontSize: '84px', lineHeight: '1.15' });
+const d0Av = ['muse_avatar.png', 'pickle_avatar.png', 'dots_avatar.png', 'grok_avatar.png'].map((s, i) => avatar(D.cam, s, 110, 720 + i * 160, 240));
+// D2: why-Counter checklist
 const dListItems = [
-  ['Calls answered: 0.', '20 agent requests, handled before they reach the owner.'],
-  ['Agent-native front door.', 'Not a phone number — structured info agents can actually read.'],
+  ['No phone calls.', '20 agent requests, handled before they reach the owner.'],
   ['One integration. Every language, 24/7.', ''],
+  [COPY.d3, COPY.d3s],
 ];
 const dRows = dListItems.map(([head, sub]) => {
   const row = el('div', 'abs', D.cam); Object.assign(row.style, { left: '430px', width: '1060px', display: 'flex', alignItems: 'flex-start', gap: '28px' });
@@ -254,20 +257,20 @@ const dRows = dListItems.map(([head, sub]) => {
   if (sub) { const s = el('div', '', txt, sub); Object.assign(s.style, { fontSize: '26px', fontWeight: '500', color: '#8A8A8A', marginTop: '8px', lineHeight: '1.3' }); }
   return { row };
 });
-dRows.forEach((r, i) => { r.row.style.top = (300 + i * 205) + 'px'; });
+dRows.forEach((r, i) => { r.row.style.top = (300 + i * 180) + 'px'; });
 // E1 owner happy, E2 pickle happy, E3 slogan, E4 end
-const E1 = scene('E1', 68, 73.3);
+const E1 = scene('E1', 72.5, 77.8);
 const e1owner = ownerAv(E1.cam, 480, 620, 330); e1owner.style.transformOrigin = 'center bottom'; setOwner(e1owner, 'happy');
 const e1checks = [0, 1, 2].map(i => { const c = el('div', 'badge', E1.cam, CHECK_SVG); c.style.padding = '12px'; c.style.left = (770 + i * 100) + 'px'; c.style.top = '240px'; c.style.borderRadius = '50%'; return c; });
 const e1b = bubble(E1.cam, '', 1150, 420); e1b.textContent = COPY.e1; e1b.style.maxWidth = '600px';
 const e1name = el('div', 'name', E1.cam, ''); e1name.style.display = 'none'; e1name.style.left = '560px'; e1name.style.width = '600px'; e1name.style.top = '840px';
-const E2 = scene('E2', 73, 77.3);
+const E2 = scene('E2', 77.5, 81.8);
 const e2av = avatar(E2.cam, 'pickle_avatar.png', 300, 810, 420); const e2face = face(E2.cam, 300, 810, 420);
 const e2b = bubble(E2.cam, 'acc', 1130, 480); e2b.textContent = COPY.e2; e2b.style.maxWidth = '560px';
 const e2name = el('div', 'name', E2.cam, ''); e2name.style.display = 'none'; e2name.style.left = '810px'; e2name.style.width = '300px'; e2name.style.top = '740px';
-const E3 = scene('E3', 77, 81.3);
+const E3 = scene('E3', 81.5, 85.8);
 const e3a = el('div', 'big', E3.cam, COPY.e3a); const e3b = el('div', 'big', E3.cam, COPY.e3b); e3a.style.top = '380px'; e3b.style.top = '520px'; e3a.style.fontSize = e3b.style.fontSize = '110px'; e3b.style.color = ACC;
-const E4 = scene('E4', 81, DUR + 1);
+const E4 = scene('E4', 85.5, DUR + 1);
 const e4wm = el('div', 'abs wm', E4.cam, `<span style="display:inline-block;width:84px;height:84px;vertical-align:-18px;margin-right:22px">${LOGO_SVG()}</span>COUNTER`); e4wm.style.top = '490px'; e4wm.style.fontSize = '72px';
 const e4url = el('div', 'abs sub', E4.cam, ''); e4url.style.display = 'none'; e4url.style.top = '590px'; e4url.style.fontSize = '34px'; e4url.setAttribute('data-todo', '도메인 가칭');
 const e4team = el('div', 'abs sub', E4.cam, ''); e4team.style.display = 'none'; e4team.style.top = '960px'; e4team.style.fontSize = '24px';
@@ -365,17 +368,20 @@ function render(t) {
     setCam(C2, lerp(1, 1.04, seg(tl, 0, 17))); C2.cam.style.opacity = Math.min(fadeIn(tl, 0, 0.3), 1 - seg(t, 59.95, 60.25)); }
   // D benefits
   if (D.style.display !== 'none') { const tl = t - 60;
-    const fo = 1 - seg(tl, 7.3, 7.8);
-    dRows.forEach((r, i) => { const q = pop(tl, 0.3 + i * 0.7, 14, 0.75); xf(r.row, { o: clamp(q * 2) * fo, y: 14 * (1 - fadeIn(tl, 0.3 + i * 0.7, 0.4)) }); });
-    setCam(D, 1 + 0.04 * (tl / 8.3)); D.cam.style.opacity = Math.min(fadeIn(tl, 0, 0.3), 1 - seg(t, 67.95, 68.25)); }
+    const p1fo = 1 - seg(tl, 4.0, 4.5);
+    const bq = Math.min(pop(tl, 0.15, 12, 0.75), 1); xf(d0Big, { o: clamp(bq * 2) * p1fo, y: 16 * (1 - fadeIn(tl, 0.15, 0.5)) });
+    d0Av.forEach((a, i) => { const q = pop(tl, 0.1 + i * 0.15, 14, 0.7); xf(a, { s: q, o: clamp(q * 2) * p1fo }); });
+    const tl2 = tl - 4.5; const fo = 1 - seg(tl2, 7.3, 7.8);
+    dRows.forEach((r, i) => { const q = pop(tl2, 0.3 + i * 0.7, 14, 0.75); xf(r.row, { o: clamp(q * 2) * fo, y: 14 * (1 - fadeIn(tl2, 0.3 + i * 0.7, 0.4)) }); });
+    setCam(D, 1 + 0.03 * (tl / 12.8)); D.cam.style.opacity = Math.min(fadeIn(tl, 0, 0.3), 1 - seg(t, 72.45, 72.75)); }
   // E1
-  if (E1.style.display !== 'none') { const tl = t - 68; const p = pop(tl, 0.15, 12, 0.8); const hop = Math.abs(Math.sin(tl * 5)) * 10 * Math.exp(-tl * 0.9); xf(e1owner, { s: p, o: clamp(p * 2), y: -hop }); e1checks.forEach((c, i) => { const q = pop(tl, 0.7 + i * 0.3, 18, 0.6); xf(c, { s: q, o: clamp(q * 2) }); }); const bp = pop(tl, 1.5); xf(e1b, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2) }); e1name.style.opacity = fadeIn(tl, 0.5); setCam(E1, lerp(1, 1.06, seg(tl, 0, 5))); E1.cam.style.opacity = 1 - seg(t, 72.95, 73.25); }
+  if (E1.style.display !== 'none') { const tl = t - 72.5; const p = pop(tl, 0.15, 12, 0.8); const hop = Math.abs(Math.sin(tl * 5)) * 10 * Math.exp(-tl * 0.9); xf(e1owner, { s: p, o: clamp(p * 2), y: -hop }); e1checks.forEach((c, i) => { const q = pop(tl, 0.7 + i * 0.3, 18, 0.6); xf(c, { s: q, o: clamp(q * 2) }); }); const bp = pop(tl, 1.5); xf(e1b, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2) }); e1name.style.opacity = fadeIn(tl, 0.5); setCam(E1, lerp(1, 1.06, seg(tl, 0, 5))); E1.cam.style.opacity = 1 - seg(t, 77.45, 77.75); }
   // E2
-  if (E2.style.display !== 'none') { const tl = t - 73; const p = pop(tl, 0.1, 12, 0.8); e2face.style.opacity = clamp(p * 2); setFace(e2face, tl < 0.8 ? 'tense' : 'happy'); const b = pop(tl, 1.2); xf(e2b, { s: 0.8 + 0.2 * b, o: clamp(b * 2) }); e2name.style.opacity = fadeIn(tl, 0.4); const bounce = tl > 0.8 ? Math.abs(Math.sin((tl - 0.8) * 6)) * 14 * Math.exp(-(tl - 0.8) * 1.2) : 0; e2av.style.transform = `translateY(${-bounce}px) scale(${p})`; e2av.style.opacity = clamp(p * 2); e2face.style.transform = `translateY(${-bounce}px)`; setCam(E2, lerp(1, 1.05, seg(tl, 0, 4))); E2.cam.style.opacity = 1 - seg(t, 76.95, 77.25); }
+  if (E2.style.display !== 'none') { const tl = t - 77.5; const p = pop(tl, 0.1, 12, 0.8); e2face.style.opacity = clamp(p * 2); setFace(e2face, tl < 0.8 ? 'tense' : 'happy'); const b = pop(tl, 1.2); xf(e2b, { s: 0.8 + 0.2 * b, o: clamp(b * 2) }); e2name.style.opacity = fadeIn(tl, 0.4); const bounce = tl > 0.8 ? Math.abs(Math.sin((tl - 0.8) * 6)) * 14 * Math.exp(-(tl - 0.8) * 1.2) : 0; e2av.style.transform = `translateY(${-bounce}px) scale(${p})`; e2av.style.opacity = clamp(p * 2); e2face.style.transform = `translateY(${-bounce}px)`; setCam(E2, lerp(1, 1.05, seg(tl, 0, 4))); E2.cam.style.opacity = 1 - seg(t, 81.45, 81.75); }
   // E3
-  if (E3.style.display !== 'none') { const tl = t - 77; const a = eo(seg(tl, 0.2, 0.9)), b = eo(seg(tl, 1.1, 1.8)); xf(e3a, { o: a, y: 24 * (1 - a) }); xf(e3b, { o: b, y: 24 * (1 - b) }); setCam(E3, lerp(1, 1.08, seg(tl, 0, 4.3))); E3.cam.style.opacity = 1 - seg(t, 80.95, 81.25); }
+  if (E3.style.display !== 'none') { const tl = t - 81.5; const a = eo(seg(tl, 0.2, 0.9)), b = eo(seg(tl, 1.1, 1.8)); xf(e3a, { o: a, y: 24 * (1 - a) }); xf(e3b, { o: b, y: 24 * (1 - b) }); setCam(E3, lerp(1, 1.08, seg(tl, 0, 4.3))); E3.cam.style.opacity = 1 - seg(t, 85.45, 85.75); }
   // E4
-  if (E4.style.display !== 'none') { const tl = t - 81; e4wm.style.opacity = fadeIn(tl, 0.1, 0.6); e4url.style.opacity = fadeIn(tl, 0.6, 0.5); e4team.style.opacity = fadeIn(tl, 0.9, 0.5); setCam(E4); }
+  if (E4.style.display !== 'none') { const tl = t - 85.5; e4wm.style.opacity = fadeIn(tl, 0.1, 0.6); e4url.style.opacity = fadeIn(tl, 0.6, 0.5); e4team.style.opacity = fadeIn(tl, 0.9, 0.5); setCam(E4); }
   fadeLayer.style.opacity = seg(t, DUR - 0.6, DUR);
 }
 window.seek = t => render(((t % DUR) + DUR) % DUR);
@@ -383,7 +389,7 @@ window.seek = t => render(((t % DUR) + DUR) % DUR);
 // ===== audio =====
 const SFX = {};
 async function loadBuf(ctx, name) { if (!SFX[name]) { const ab = await (await fetch('assets/' + name)).arrayBuffer(); SFX[name] = ab; } return await ctx.decodeAudioData(SFX[name].slice(0)); }
-const VO_T = { n1: 2.6, n2: 24.2, n3: 35.8, n4: 49.6, n6: 77.4 };
+const VO_T = { n1: 2.6, n2: 24.2, n3: 35.8, n4: 49.6, n6: 81.9 };
 window.buildAudio = async function (ctx) {
   const out = ctx.createGain(); out.connect(ctx.destination);
   const play = (buf, t, g = 1, { rate = 1, fadeOut = 0, dur = 0 } = {}) => { const s = ctx.createBufferSource(); s.buffer = buf; s.playbackRate.value = rate; const gn = ctx.createGain(); gn.gain.setValueAtTime(g, t); if (fadeOut && dur) { gn.gain.setValueAtTime(g, t + dur - fadeOut); gn.gain.linearRampToValueAtTime(0.0001, t + dur); } s.connect(gn); gn.connect(out); s.start(t); if (dur) s.stop(t + dur + 0.05); };
@@ -406,9 +412,10 @@ window.buildAudio = async function (ctx) {
   play(whoosh, 30.95, 0.5); for (let i = 0; i < 34; i++) play(tick, 31 + (i < 14 ? 0.6 + i * 0.26 : 5.2 + (i - 14) * 0.2) + 0.9, 0.2, { rate: 1.4 + (i % 4) * 0.1 }); play(impact, 31 + 4.6, 0.7); [40.9, 41.5, 42.1].forEach(t => play(popB, t, 0.4, { rate: 0.9 }));
   play(whoosh, 44.95, 0.5); [0.6, 1.1].forEach(d => play(tick, 45 + d, 0.35, { rate: 1.2 })); play(popB, 45 + 1.75, 0.7, { rate: 0.95 }); play(click, 45 + 2.6, 0.7); play(whoosh, 45 + 3.0, 0.35, { rate: 1.3 }); play(click, 45 + 4.6, 0.9); play(popB, 45 + 5.0, 0.8, { rate: 1.2 }); play(popB, 45 + 7.2, 0.6, { rate: 0.9 });
   for (let i = 0; i < PH.ans.length; i += 2) play(tick, 45 + 8.0 + i / 18, 0.15, { rate: 1.7 }); play(click, 45 + 10.4, 0.7); play(popB, 45 + 10.8, 0.6, { rate: 1.2 }); play(popB, 45 + 12.8, 0.6, { rate: 1.3 });
-  play(whoosh, 60.1, 0.4, { rate: 1.1 }); [60.4, 61.1, 61.8].forEach(t => play(popB, t, 0.45));
-  [68.7, 69.0, 69.3].forEach(t => play(popB, t, 0.6, { rate: 1.25 })); play(popB, 69.5, 0.5); play(popB, 74.2, 0.5); play(tick, 73.8, 0.5, { rate: 1.4 });
-  play(whoosh, 77.1, 0.4, { rate: 0.8 }); play(impact, 81.1, 0.5, { rate: 1.3 });
+  play(whoosh, 60.1, 0.4, { rate: 1.1 }); [60.25, 60.4, 60.55, 60.7].forEach(t => play(popB, t, 0.4));
+  play(whoosh, 64.5, 0.4, { rate: 1.1 }); [64.8, 65.5, 66.2].forEach(t => play(popB, t, 0.45));
+  [73.2, 73.5, 73.8].forEach(t => play(popB, t, 0.6, { rate: 1.25 })); play(popB, 74.0, 0.5); play(popB, 78.7, 0.5); play(tick, 78.3, 0.5, { rate: 1.4 });
+  play(whoosh, 81.6, 0.4, { rate: 0.8 }); play(impact, 85.6, 0.5, { rate: 1.3 });
 };
 
 // ===== preview =====

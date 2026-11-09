@@ -3,12 +3,14 @@
 > 아래는 [`video/soonhyung/`](../soonhyung/)의 v3(제출 후보, 영어)를 다시 복사해 왔다. mp4는 용량 때문에 이 폴더엔 안 두고 soonhyung 폴더 것을 그대로 링크한다. v2.5 때 반영했던 5가지 구조 변경은 **재적용하지 않았다** — 경완님 확인상 v3의 앞부분(문제/워크플로우)은 이미 충분히 가까운 방향이라 그대로 두고, 대신 `build/demo3_en.html`의 D(강점) 구간만 바꿨다:
 >
 > - 기존: "Time on the phone today: 100→0 min" 같은 통계를 한 번에 하나씩 보여주는 3단계 cycling
-> - 변경: **체크리스트 한 화면**으로 통합
->   1. Calls answered: 0. 20 agent requests, handled before they reach the owner.
->   2. Agent-native front door. Not a phone number — structured info agents can actually read.
->   3. One integration. Every language, 24/7.
+> - 1차 변경(이후 수정됨): 체크리스트 한 화면으로 통합 — 그런데 "Agent-native front door" 항목이 기존 단독 슬라이드와 내용이 겹쳐서 **다시 2단계로 분리**:
+>   1. **"In the age of agents, shops need an agent-native front door."** — 기존 단독 슬라이드(에이전트 4개 아바타) 그대로 복원
+>   2. 뒤이어 **체크리스트 3개**:
+>      - No phone calls. (20 agent requests, handled before they reach the owner.)
+>      - One integration. Every language, 24/7.
+>      - Scattered requests, one place. (Phone · Instagram · Maps → one Counter) — v3 원래 D에 있던 "Scattered requests" 항목을 재활용해 3번째 장점으로 채움
 >
-> 기존 D의 3단계(Time on phone / Agent-native front door / Scattered requests)를 다 유지하면 2번 항목이 리스트와 겹쳐서, D 구간 전체를 이 체크리스트 하나로 교체했다. DUR 87.5s → 83.5s. 한국어판(`demo21_ko.html`)은 손대지 않음 — v3 자체가 영어판만 있음.
+> DUR 87.5s → 88.0s. 한국어판(`demo21_ko.html`)은 손대지 않음 — v3 자체가 영어판만 있음.
 
 ## 영상 초안
 
