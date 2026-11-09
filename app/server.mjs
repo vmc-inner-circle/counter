@@ -8,6 +8,8 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const SEED = process.env.SEED_FILE ? path.resolve(ROOT, process.env.SEED_FILE) : path.join(ROOT, 'data/seed.json'); // deploy uses data/seed-drd.json
 const STATE = process.env.STATE_FILE || path.join(ROOT, 'data/state.json'); // demo recorder uses its own file
+// AI fetchers that read pages for an agent (they send a browser-like UA, so match their names) → markdown
+const AGENT_UA = /Claude|GPT|OpenAI|Perplexity|Grok|xAI|Gemini|Google-Extended|meta-external|Muse|Pickle|Dots|bot|agent|crawler|spider|-User\//i;
 const PORT = Number(process.env.PORT || 3000);
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || ''; // empty = admin open (local only)
 
@@ -171,7 +173,7 @@ const server = http.createServer(async (req, res) => {
   // store contact point: browsers get the page, agents/curl get markdown
   if (p === `/s/${slug}` || p === `/s/${slug}.md` || p === '/llms.txt') {
     const view = url.searchParams.get('view');
-    const wantsHtml = view === 'html' || view !== 'md' && p === `/s/${slug}` && (req.headers.accept || '').includes('text/html') && /Mozilla/.test(req.headers['user-agent'] || '') && !/Claude|bot|agent/i.test(req.headers['user-agent'] || '');
+    const wantsHtml = view === 'html' || view !== 'md' && p === `/s/${slug}` && (req.headers.accept || '').includes('text/html') && /Mozilla/.test(req.headers['user-agent'] || '') && !AGENT_UA.test(req.headers['user-agent'] || '');
     log(wantsHtml ? 'html' : 'md', req.headers['user-agent']);
     if (wantsHtml) { res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' }); return res.end(storePage(base)); }
     res.writeHead(200, { 'content-type': 'text/markdown; charset=utf-8' }); return res.end(agentDoc(base));
