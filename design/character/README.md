@@ -1,4 +1,8 @@
-# Counter 캐릭터 시안 1차 (11/09 13:20)
+# Counter 캐릭터
+
+> **확정 (11/09 13:42 최수민): [`counter.png`](counter.png)** — 3차 A2 GPT Image 2.6 원본(`round3/raw/A2_gpt.jpg`와 같은 생성본, 1024×1024 PNG). 카운터 상판 너머로 빼꼼 내민 광택 주황 돔 + 점 눈 두 개. 시안 경과는 아래 1차 → [`round2/`](round2/) → [`round3/`](round3/) → [`round4/`](round4/)(잘리지 않게 다시 뽑은 것 — 채택 안 함)
+
+## 시안 1차 (11/09 13:20)
 
 최수민 "우리도 귀여운 캐릭터가 들어가야 한다. Pickle과 그림체만 다르면 된다". 브랜드 컬러는 당근 SEED 팔레트(`carrot-500 #FF6F0F`, `carrot-400 #FF9E66`, `carrot-800 #CC4700`, `gray-900 #212124`). Higgsfield CLI로 방향 4개 × 모델 2개(GPT Image 2.6 · Nano Banana Pro)를 병렬 생성했다(약 2분, 30크레딧 안팎).
 
