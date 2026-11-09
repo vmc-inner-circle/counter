@@ -16,7 +16,7 @@ git pull --rebase origin main
 
 ## 2. 기준 문서
 
-- **무엇을 만들고 무엇을 찍는지는 [`docs/use-cases.md`](docs/use-cases.md)가 기준이다.** 대본, 데모 녹화, 빌드, 실측 모두 `UC-1`처럼 번호로 부른다. 바꾸려면 싱크에서 정한 뒤 이 문서부터 고친다
+- **무엇을 만들고 무엇을 찍는지는 [`docs/use-cases.md`](docs/use-cases.md)가 기준이다.** 대본, 데모 녹화, 빌드 모두 유스케이스 번호(`UC-1`)와 시나리오 이름(`피부과`)으로 부른다. 실측은 [`docs/measurement.md`](docs/measurement.md). 바꾸려면 싱크에서 정한 뒤 이 문서부터 고친다
 - 회의 결정은 [`docs/`](docs/README.md), 영상 작업 규칙은 [`video/README.md`](video/README.md)를 본다
 
 ## 3. 고치는 범위
