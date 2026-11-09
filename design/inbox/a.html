@@ -1,0 +1,92 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>시안 A — 채널톡형</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.hd{padding:6px 20px 10px;display:flex;align-items:baseline;justify-content:space-between}
+.hd h1{font-size:26px;margin:0}
+.seg{display:flex;gap:6px;padding:0 16px 10px}
+.seg span{font-size:13.5px;padding:7px 12px;border-radius:999px;background:var(--bg);color:var(--sub);font-weight:600}
+.seg span.on{background:var(--ink);color:#fff}
+.row{display:flex;gap:12px;padding:12px 20px;align-items:flex-start}
+.row+.row{border-top:1px solid var(--line)}
+.row .m{flex:1;min-width:0}
+.row .t{display:flex;justify-content:space-between;gap:8px}
+.row b{font-size:15.5px}
+.row .via{font-size:12.5px;color:var(--muted)}
+.row p{margin:2px 0 0;font-size:14px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row.need p{color:var(--ink);font-weight:600}
+.row .time{font-size:12px;color:var(--muted);white-space:nowrap}
+.need .time{color:var(--blue);font-weight:600}
+/* thread */
+.th{display:flex;gap:10px;align-items:center;padding:4px 14px 10px;border-bottom:1px solid var(--line)}
+.th .back{font-size:22px;color:var(--blue);padding:0 4px}
+.th b{display:block;font-size:16px}
+.th small{font-size:12.5px;color:var(--muted)}
+.facts{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line)}
+.msgs{padding:14px 14px;display:flex;flex-direction:column;gap:10px}
+.sys{align-self:center;font-size:12px;color:var(--muted)}
+.b{max-width:80%;padding:9px 13px;border-radius:18px;font-size:14.5px}
+.b.in{align-self:flex-start;background:var(--bg);border-bottom-left-radius:6px}
+.b.out{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:6px}
+.lbl{font-size:11.5px;color:var(--muted)}
+.lbl.r{align-self:flex-end}
+.req{align-self:stretch;border:1px solid var(--line);border-radius:16px;padding:14px}
+.req .k{font-size:12.5px;color:var(--muted)}
+.req .big{font-size:20px;font-weight:700;margin:2px 0}
+.dock{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 14px 26px}
+.dock .why{font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.dock .two{display:flex;gap:8px}.dock .two .pri{flex:1}
+.comp{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 14px 26px}
+.sugg{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.sugg span{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+.inp{display:flex;gap:8px;align-items:center}
+.inp div{flex:1;border:1px solid var(--line);border-radius:20px;padding:9px 14px;color:var(--muted);font-size:14.5px}
+.inp .send{background:var(--blue);color:#fff;border-radius:50%;width:38px;height:38px;display:grid;place-items:center;font-weight:700}
+.rem{display:flex;align-items:center;gap:8px;font-size:13.5px;margin-top:9px;color:var(--sub)}
+.tog{width:34px;height:20px;border-radius:10px;background:var(--blue);position:relative;flex:none}
+.tog:after{content:"";position:absolute;right:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+</style></head><body><div class="board">
+
+<!-- ① 대화 목록 -->
+<div class="col"><div class="cap">① Conversations<small>채널톡 상담 목록. 손님 1명 = 대화 1개</small></div>
+<div class="phone"><div class="status"><span>11:27</span><span>●●● 100%</span></div>
+<div class="hd"><h1>Soi Dermatology</h1></div>
+<div class="seg"><span class="on">Needs you · 2</span><span>All · 4</span></div>
+<div class="scroll">
+  <div class="row need"><img class="av" src="../../video/common/agents/muse.png"><div class="m"><div class="t"><b>Yuki Tanaka</b><span class="time">now</span></div><div class="via">via Muse · 🇯🇵 Japan</div><p>Booking: Rejuran Healer, Tue 15:00 — approve?</p></div></div>
+  <div class="row need"><img class="av" src="../../video/common/agents/pickle.png"><div class="m"><div class="t"><b>Wang Fang</b><span class="time">1m</span></div><div class="via">via Pickle</div><p>“Can I bring my 7-year-old son to wait…”</p></div></div>
+  <div class="row"><span class="av txt">C</span><div class="m"><div class="t"><b>Haruto Sato</b><span class="time">1m</span></div><div class="via">via Claude</div><p>Answered from memory: Ms. Sato speaks Japanese…</p></div></div>
+  <div class="row"><img class="av" src="../../video/common/agents/dots.png"><div class="m"><div class="t"><b>Nguyen Thi Lan</b><span class="time">2m</span></div><div class="via">via Dots · 🇻🇳 Vietnam</div><p>Confirmed · Laser Toning, Wed 13:00</p></div></div>
+</div>
+<div class="tabs"><span class="on">Inbox</span><span>Memory</span><span>Store info</span></div>
+</div></div>
+
+<!-- ② 스레드 + 승인 -->
+<div class="col"><div class="cap">② Yuki의 대화 — 승인<small>질문·답·예약이 한 스레드. 승인은 하단 고정</small></div>
+<div class="phone"><div class="status"><span>11:27</span><span>●●● 100%</span></div>
+<div class="th"><span class="back">‹</span><img class="av s" src="../../video/common/agents/muse.png"><div><b>Yuki Tanaka</b><small>via Muse · +81 90 1234 5678</small></div></div>
+<div class="facts"><span class="chip">🇯🇵 Japan</span><span class="chip">♿ Uses a wheelchair</span><span class="chip">Prefers Japanese-speaking staff</span></div>
+<div class="scroll"><div class="msgs">
+  <div class="sys">Muse read your store info · 11:24</div>
+  <div class="b in">Do you have Japanese-speaking staff?</div>
+  <div class="b out">Yes — Ms. Sato at the front desk speaks Japanese, weekdays 10:00–18:00.</div>
+  <div class="lbl r">You answered in 12s · saved to memory</div>
+  <div class="req"><div class="k">Booking request · slot held for Muse</div><div class="big">Tue, Nov 10 · 15:00</div><div class="sub">Rejuran Healer (full face) · ₩350,000</div></div>
+</div></div>
+<div class="dock"><div class="why">Nothing is booked until you approve.</div><div class="two"><button class="btn sec">Decline</button><button class="btn pri">Approve</button></div></div>
+</div></div>
+
+<!-- ③ 스레드 + 모르는 질문 -->
+<div class="col"><div class="cap">③ Wang Fang의 대화 — 모르는 질문<small>입력창 = 답장. 추천 답 + 기억 토글</small></div>
+<div class="phone"><div class="status"><span>11:27</span><span>●●● 100%</span></div>
+<div class="th"><span class="back">‹</span><img class="av s" src="../../video/common/agents/pickle.png"><div><b>Wang Fang</b><small>via Pickle</small></div></div>
+<div class="scroll"><div class="msgs">
+  <div class="sys">Pickle read your store info · 11:25</div>
+  <div class="b in">Can I bring my 7-year-old son to wait in the clinic during the treatment?</div>
+  <div class="lbl">Not in your store info · Pickle is waiting</div>
+</div></div>
+<div class="comp"><div class="sugg"><span>Yes, there's a waiting area</span><span>Sorry, adults only</span></div>
+<div class="inp"><div>Reply to Pickle…</div><span class="send">↑</span></div>
+<div class="rem"><span class="tog"></span>Remember for next time</div></div>
+</div></div>
+
+</div></body></html>

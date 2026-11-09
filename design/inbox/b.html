@@ -1,0 +1,104 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>시안 B — 할 일 우선형</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.top{padding:4px 22px 14px}
+.top small{font-size:13px;color:var(--muted)}
+.top h1{font-size:28px;margin:2px 0 0;line-height:1.2}
+.task{margin:0 16px 12px;border-radius:20px;background:var(--bg);padding:16px}
+.who{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.who b{display:block;font-size:15px}.who small{font-size:12.5px;color:var(--muted)}
+.when{font-size:24px;font-weight:700;line-height:1.2}
+.what{color:var(--sub);margin:2px 0 10px}
+.facts{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.facts .chip{background:#fff}
+.two{display:flex;gap:8px}.two .pri{flex:1}.two .sec{background:#fff}
+.q{font-size:17px;font-weight:600;margin:0 0 12px}
+.more{margin:0 16px 12px;font-size:13.5px;color:var(--muted)}
+.sec-h{padding:14px 22px 6px;font-size:13px;color:var(--muted);font-weight:600}
+.done{display:flex;gap:12px;padding:10px 22px;align-items:center}
+.done+.done{border-top:1px solid var(--line)}
+.done .m{flex:1;min-width:0}
+.done b{font-size:14.5px}
+.done p{margin:1px 0 0;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* answer sheet */
+.dim{position:absolute;inset:0;background:rgba(15,27,42,.38)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:22px 22px 0 0;padding:10px 18px 30px}
+.grab{width:40px;height:5px;border-radius:3px;background:#D5DAE0;margin:0 auto 14px}
+.field{border:1.5px solid var(--blue);border-radius:14px;padding:12px 14px;min-height:92px;font-size:15px}
+.caret{display:inline-block;width:2px;height:18px;background:var(--blue);vertical-align:-3px}
+.sugg{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.sugg span{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+.rem{display:flex;align-items:center;gap:10px;font-size:14px;margin:4px 0 14px}
+.rem small{display:block;color:var(--muted);font-size:12.5px}
+.tog{width:44px;height:26px;border-radius:13px;background:var(--blue);position:relative;flex:none;margin-left:auto}
+.tog:after{content:"";position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff}
+.full{width:100%}
+/* history */
+.hh{padding:4px 22px 12px}
+.hh h2{font-size:22px;margin:0}
+.search{margin:0 16px 8px;background:var(--bg);border-radius:12px;padding:10px 14px;color:var(--muted);font-size:14px}
+.day{padding:12px 22px 4px;font-size:12.5px;color:var(--muted);font-weight:600}
+.log{padding:10px 22px}
+.log+.log{border-top:1px solid var(--line)}
+.log .t{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.log .qq{font-size:14.5px;margin:3px 0}
+.log .aa{font-size:13.5px;color:var(--sub)}
+.src{font-size:12px;font-weight:600}
+.src.mem{color:var(--ok)}.src.you{color:var(--blue)}
+</style></head><body><div class="board">
+
+<!-- ① 홈 = 할 일 -->
+<div class="col"><div class="cap">① Home — 할 일만<small>열자마자 승인 버튼. 처리된 건은 아래 한 줄씩</small></div>
+<div class="phone"><div class="status"><span>11:27</span><span>●●● 100%</span></div>
+<div class="top"><small>Soi Dermatology</small><h1>2 things need you</h1></div>
+<div class="scroll">
+  <div class="task">
+    <div class="who"><img class="av" src="../../video/common/agents/muse.png"><div><b>Muse wants to book for Yuki Tanaka</b><small>🇯🇵 Japan · just now</small></div></div>
+    <div class="when">Tue, Nov 10 · 15:00</div>
+    <div class="what">Rejuran Healer (full face) · ₩350,000</div>
+    <div class="facts"><span class="chip">♿ Uses a wheelchair</span><span class="chip">Prefers Japanese-speaking staff</span></div>
+    <div class="two"><button class="btn sec">Decline</button><button class="btn pri">Approve</button></div>
+  </div>
+  <div class="task">
+    <div class="who"><img class="av" src="../../video/common/agents/pickle.png"><div><b>Pickle asks for Wang Fang</b><small>1 min ago · not in your store info</small></div></div>
+    <p class="q">“Can I bring my 7-year-old son to wait in the clinic during the treatment?”</p>
+    <button class="btn pri full">Answer</button>
+  </div>
+  <div class="sec-h">Counter handled</div>
+  <div class="done"><span class="av s txt">C</span><div class="m"><b>Claude · Haruto Sato</b><p>Japanese-speaking staff? → from memory, instantly</p></div></div>
+  <div class="done"><img class="av s" src="../../video/common/agents/dots.png"><div class="m"><b>Dots · Nguyen Thi Lan</b><p>Confirmed Laser Toning, Wed 13:00 · SOI-1111-1300</p></div></div>
+</div>
+<div class="tabs"><span class="on">Today</span><span>History</span><span>Memory</span><span>Store info</span></div>
+</div></div>
+
+<!-- ② 답변 시트 -->
+<div class="col"><div class="cap">② Answer — 바텀시트<small>홈 위에 뜬다. 답 1줄 + 기억 토글 + 보내기</small></div>
+<div class="phone"><div class="status"><span>11:27</span><span>●●● 100%</span></div>
+<div class="top"><small>Soi Dermatology</small><h1>2 things need you</h1></div>
+<div class="dim"></div>
+<div class="sheet"><div class="grab"></div>
+  <div class="who"><img class="av s" src="../../video/common/agents/pickle.png"><div><b>Pickle asks for Wang Fang</b></div></div>
+  <p class="q">“Can I bring my 7-year-old son to wait in the clinic during the treatment?”</p>
+  <div class="field">Yes, he can wait in our lounge next to reception. Staff will keep an eye on him.<span class="caret"></span></div>
+  <div class="sugg"><span>Yes</span><span>No</span><span>Please ask at the desk</span></div>
+  <div class="rem"><div>Remember for next time<small>Counter will answer this itself from now on</small></div><span class="tog"></span></div>
+  <button class="btn pri full">Send to Pickle</button>
+</div>
+</div></div>
+
+<!-- ③ 문의 내역 -->
+<div class="col"><div class="cap">③ History — 문의 내역<small>조회 전용. 누가·무엇을·누가 답했는지</small></div>
+<div class="phone"><div class="status"><span>11:27</span><span>●●● 100%</span></div>
+<div class="hh"><h2>History</h2></div>
+<div class="search">Search guests or questions</div>
+<div class="scroll">
+  <div class="day">Today</div>
+  <div class="log"><div class="t"><span>Haruto Sato · via Claude</span><span>11:25</span></div><div class="qq">Is there any staff who speaks Japanese?</div><div class="aa"><span class="src mem">From memory · 0s</span> — Yes — Ms. Sato at the front desk speaks Japanese…</div></div>
+  <div class="log"><div class="t"><span>Nguyen Thi Lan · via Dots</span><span>11:25</span></div><div class="qq">Booking · Laser Toning, Wed Nov 11 13:00</div><div class="aa"><span class="src you">You approved · 2s</span> — SOI-1111-1300</div></div>
+  <div class="log"><div class="t"><span>Yuki Tanaka · via Muse</span><span>11:25</span></div><div class="qq">Do you have Japanese-speaking staff?</div><div class="aa"><span class="src you">You answered · 12s</span> — Yes — Ms. Sato at the front desk…</div></div>
+  <div class="log"><div class="t"><span>Yuki Tanaka · via Muse</span><span>11:24</span></div><div class="qq">Read your store info</div><div class="aa"><span class="src mem">No staff needed</span></div></div>
+</div>
+<div class="tabs"><span>Today</span><span class="on">History</span><span>Memory</span><span>Store info</span></div>
+</div></div>
+
+</div></body></html>
