@@ -16,9 +16,11 @@
 | 파일 | 내용 |
 |---|---|
 | [`characters.md`](characters.md) | 캐릭터 시트 — 등장인물·에이전트의 이름, 생김새, 언어, 장면 |
+| [`counter-logo.png`](counter-logo.png) | **Counter 로고 = 캐릭터** (11/09 최수민 확정). 카운터 상판 너머로 빼꼼 내민 광택 주황 돔 + 점 눈 두 개, 1024×1024 PNG, 크림 바탕 `#F6F5F0`. 영상의 Counter 로고·아바타 자리는 모두 이 파일로 쓴다. 색은 당근 SEED `#FF6F0F` · 시안 경과는 [`design/character/`](../../design/character/README.md) |
 | [`agents/`](agents/README.md) | 개인 에이전트 공식 이미지 — Muse · Grok Bot · Pickle · Dots |
 
 ## 격상 기록
 
 | 싱크 | 파일 | 원래 위치 | 만든 사람 |
 |---|---|---|---|
+| 11/09 13:45 | `counter-logo.png` | `design/character/counter.png` (3차 A2) | 최수민 |

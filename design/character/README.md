@@ -1,6 +1,6 @@
 # Counter 캐릭터
 
-> **확정 (11/09 13:42 최수민): [`counter.png`](counter.png)** — 3차 A2 GPT Image 2.6 원본(`round3/raw/A2_gpt.jpg`와 같은 생성본, 1024×1024 PNG). 카운터 상판 너머로 빼꼼 내민 광택 주황 돔 + 점 눈 두 개. 시안 경과는 아래 1차 → [`round2/`](round2/) → [`round3/`](round3/) → [`round4/`](round4/)(잘리지 않게 다시 뽑은 것 — 채택 안 함)
+> **확정 (11/09 13:42 최수민) · 로고로 쓴다 (13:45): [`video/common/counter-logo.png`](../../video/common/counter-logo.png)** (팀 공용 소재라 그쪽으로 옮겼다) — 3차 A2 GPT Image 2.6 원본(`round3/raw/A2_gpt.jpg`와 같은 생성본, 1024×1024 PNG). 카운터 상판 너머로 빼꼼 내민 광택 주황 돔 + 점 눈 두 개. 시안 경과는 아래 1차 → [`round2/`](round2/) → [`round3/`](round3/) → [`round4/`](round4/)(잘리지 않게 다시 뽑은 것 — 채택 안 함)
 
 ## 시안 1차 (11/09 13:20)
 
