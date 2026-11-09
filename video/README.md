@@ -6,7 +6,7 @@ R&R(11/09 현장 회의): **영상 = 황준식·이성렬·조순형·채경완*
 
 | 폴더 | 주인 | 넣는 것 |
 |---|---|---|
-| [`junsik/`](junsik/) | 황준식 | 대본·초안 링크·소재 |
+| [`junshik/`](junshik/) | 황준식 | 대본·초안 링크·소재 |
 | [`seongryeol/`](seongryeol/) | 이성렬 | 〃 |
 | [`soonhyung/`](soonhyung/) | 조순형 | 〃 |
 | [`kyoungwan/`](kyoungwan/) | 채경완 | 〃 |
