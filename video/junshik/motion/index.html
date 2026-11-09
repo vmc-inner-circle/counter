@@ -148,8 +148,14 @@ svg.lines{position:absolute;inset:0;pointer-events:none}
 .heart13.on{opacity:1;transform:none}
 .desk13{position:absolute;left:1020px;top:760px;width:740px;height:46px;border-radius:23px;background:#fff;border:3px solid var(--ink)}
 .desk13 span{position:absolute;right:30px;top:-72px;font-size:64px;opacity:.6}
+/* C17 company row */
+.cos{display:inline-flex;gap:22px;margin-bottom:18px}
+.co{display:inline-flex;align-items:center;gap:14px;background:#fff;border:3px solid var(--line);border-radius:999px;padding:8px 26px 8px 8px;font-size:46px;font-weight:800;opacity:0;animation:coin .35s cubic-bezier(.3,1.5,.5,1) forwards}
+.co i{--s:72px;border-width:2px}
+.co:nth-child(1){animation-delay:.05s}.co:nth-child(2){animation-delay:.3s}.co:nth-child(3){animation-delay:.55s}.co:nth-child(4){animation-delay:.8s}
+@keyframes coin{from{opacity:0;transform:translateY(30px) scale(.7)}to{opacity:1;transform:none}}
 /* C17 dots */
-.dotmap{position:absolute;left:260px;right:260px;top:300px;bottom:140px;display:grid;grid-template-columns:repeat(34,1fr);gap:10px}
+.dotmap{position:absolute;left:260px;right:260px;top:380px;bottom:90px;display:grid;grid-template-columns:repeat(34,1fr);gap:10px}
 .dm{width:22px;height:22px;border-radius:50%;background:#DCD8CE;transition:background .2s,transform .2s}
 .dm.lit{background:var(--acc);transform:scale(1.25)}
 
@@ -354,7 +360,7 @@ const HEADS = [
   [60.2, 67, 'Every shop focuses on <span class="hl">its craft</span>.'],
   [67.2, 73, 'Agents <span class="hl">welcomed</span>, not hung up.'],
   [73.2, 80, 'Shops win. Agents win. <span class="hl">People win.</span>'],
-  [80.2, 82.6, 'Tech spreads agents.'],
+  [80.2, 82.6, '<span class="cos"><span class="co"><i class="av a-dots"></i>OpenAI</span><span class="co"><i class="av a-muse"></i>Meta</span><span class="co"><i class="av a-grok"></i>xAI</span><span class="co"><i class="av a-pickle"></i>Pickle</span></span><br>spread <span class="hl">agents</span>.'],
   [82.6, 85, 'We build their <span class="hl">front door</span>.'],
 ];
 /*CUES*/const CUES = [
@@ -376,7 +382,7 @@ const HEADS = [
   [60.0, 'whoosh.ogg', 0.6], [60.3, 'pop.ogg', 0.5], [61.0, 'pop.ogg', 0.5], [61.7, 'pop.ogg', 0.5], [62.4, 'pop.ogg', 0.5],
   [67.0, 'whoosh.ogg', 0.6],
   [73.0, 'whoosh.ogg', 0.6], [74.4, 'impact.ogg', 0.8], [75.6, 'impact.ogg', 0.8], [76.8, 'impact.ogg', 0.9],
-  [80.0, 'whoosh.ogg', 0.6], [82.4, 'riser.ogg', 0.5],
+  [80.0, 'whoosh.ogg', 0.6], [80.25, 'pop.ogg', 0.6], [80.5, 'pop.ogg', 0.6], [80.75, 'pop.ogg', 0.6], [81.0, 'pop.ogg', 0.6], [82.4, 'riser.ogg', 0.5],
   [85.0, 'whoosh.ogg', 0.6], [85.6, 'impact.ogg', 1.0],
 ];/*/CUES*/
 const AG = ['muse', 'pickle', 'dots', 'grok'];
