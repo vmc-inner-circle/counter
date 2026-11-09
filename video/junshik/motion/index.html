@@ -131,6 +131,15 @@ svg.lines{position:absolute;inset:0;pointer-events:none}
 .ind.on{opacity:1;transform:none}
 .ind .logo{position:absolute;right:20px;bottom:20px;--s:66px}
 
+/* C13a owners free */
+.f13{position:absolute;--s:96px;z-index:2;transition:transform .5s cubic-bezier(.4,0,.2,1),opacity .2s}
+.f13.done13:after{content:'✓';position:absolute;right:-8px;bottom:-8px;width:40px;height:40px;border-radius:50%;background:var(--ok);color:#fff;font-size:26px;font-weight:800;display:grid;place-items:center}
+.ok13{position:absolute;left:600px;top:680px;width:200px;text-align:center;font-size:52px;font-weight:800;color:var(--ok);font-variant-numeric:tabular-nums}
+.wall13{position:absolute;left:900px;top:330px;width:10px;height:560px;background:repeating-linear-gradient(var(--ink) 0 22px,transparent 22px 38px);opacity:.5}
+.heart13{position:absolute;left:1380px;top:400px;font-size:90px;opacity:0;transition:opacity .3s,transform .4s;transform:scale(.5)}
+.heart13.on{opacity:1;transform:none}
+.desk13{position:absolute;left:1020px;top:760px;width:740px;height:46px;border-radius:23px;background:#fff;border:3px solid var(--ink)}
+.desk13 span{position:absolute;right:30px;top:-72px;font-size:64px;opacity:.6}
 /* C17 dots */
 .dotmap{position:absolute;left:260px;right:260px;top:300px;bottom:140px;display:grid;grid-template-columns:repeat(34,1fr);gap:10px}
 .dm{width:22px;height:22px;border-radius:50%;background:#DCD8CE;transition:background .2s,transform .2s}
@@ -246,7 +255,16 @@ body.rec #ctl,body.hidectl #ctl{display:none}
 
   <!-- C13 54–60 benefits -->
   <section class="scene" id="c13" data-s="54" data-e="60">
-    <div class="panel" id="p13a"><div class="owner" style="width:360px;height:360px"></div><div style="font-size:200px">🙂</div><div style="font-size:120px;opacity:.5">🔕</div></div>
+    <div class="panel" id="p13a" style="display:block">
+      <div class="f13 av a-muse" data-k="0"></div><div class="f13 av a-pickle" data-k="1"></div><div class="f13 av a-dots" data-k="2"></div><div class="f13 av a-grok" data-k="3"></div><div class="f13 av a-muse" data-k="4"></div><div class="f13 av a-pickle" data-k="5"></div>
+      <div class="logo" style="position:absolute;left:600px;top:450px;--s:200px">C</div>
+      <div class="ok13" id="ok13">✓ <span id="n13">0</span></div>
+      <div class="wall13"></div>
+      <div class="owner" id="own13" style="position:absolute;left:1040px;top:430px;width:320px;height:320px"></div>
+      <div class="person" style="position:absolute;left:1500px;top:500px;--s:220px"></div>
+      <div class="heart13" id="h13">🙂</div>
+      <div class="desk13"><span>📵</span></div>
+    </div>
     <div class="panel" id="p13b"><div class="av a-muse" style="--s:220px"></div><div class="av a-pickle" style="--s:220px"></div><div class="av a-dots" style="--s:220px"></div><div class="badge b-ok" style="position:static;width:150px;height:150px;font-size:96px">✓</div></div>
     <div class="panel" id="p13c" style="font-size:190px;gap:60px"><span class="pick" data-k="0">🇬🇧</span><span class="pick" data-k="1">🇨🇳</span><span class="pick" data-k="2">🇻🇳</span><span class="pick" data-k="3">🇯🇵</span></div>
   </section>
@@ -316,9 +334,10 @@ const HEADS = [
   [43.2, 48, 'Most end <span class="hl">here</span>.'],
   [48.2, 51.3, 'Answer <span class="hl">once</span>.', 'left'],
   [51.3, 54, '<span class="hl">Remembered</span><br>for every agent.', 'left'],
-  [54.2, 56, 'Owners stay <span class="hl">free</span>.'],
-  [56, 58, 'Agents get <span class="hl">answers</span>.'],
-  [58, 60, 'Any <span class="hl">language</span>.'],
+  [54.2, 55.6, '<span class="hl">Counter</span> takes the agents.'],
+  [55.6, 57, 'Owners serve <span class="hl">real customers</span>.'],
+  [57, 58.5, 'Agents get <span class="hl">answers</span>.'],
+  [58.5, 60, 'Any <span class="hl">language</span>.'],
   [60.2, 67, 'Every shop focuses on <span class="hl">its craft</span>.'],
   [67.2, 73, 'Agents <span class="hl">welcomed</span>, not hung up.'],
   [73.2, 80, 'Shops win. Agents win. <span class="hl">People win.</span>'],
@@ -340,7 +359,7 @@ const HEADS = [
   [38.0, 'whoosh.ogg', 0.6], [38.2, 'pop.ogg', 0.5], [38.4, 'pop.ogg', 0.5], [38.6, 'pop.ogg', 0.5], [38.8, 'pop.ogg', 0.5],
   [43.0, 'whoosh.ogg', 0.6], [43.6, 'tick.ogg', 0.7], [44.0, 'tick.ogg', 0.7], [44.4, 'tick.ogg', 0.7], [44.8, 'tick.ogg', 0.7], [45.2, 'tick.ogg', 0.7], [45.6, 'pop.ogg', 0.6],
   [48.0, 'whoosh.ogg', 0.6],
-  [54.0, 'whoosh.ogg', 0.5], [54.3, 'pop.ogg', 0.6], [56.0, 'whoosh.ogg', 0.5], [56.3, 'pop.ogg', 0.6], [58.0, 'whoosh.ogg', 0.5], [58.2, 'pop.ogg', 0.5], [58.5, 'pop.ogg', 0.5], [58.8, 'pop.ogg', 0.5], [59.1, 'pop.ogg', 0.5],
+  [54.0, 'whoosh.ogg', 0.5], [54.5, 'pop.ogg', 0.4], [54.7, 'pop.ogg', 0.4], [54.9, 'pop.ogg', 0.4], [55.1, 'pop.ogg', 0.4], [55.6, 'click.ogg', 0.8], [55.8, 'pop.ogg', 0.6], [57.0, 'whoosh.ogg', 0.5], [57.3, 'pop.ogg', 0.6], [58.5, 'whoosh.ogg', 0.5], [58.7, 'pop.ogg', 0.5], [58.9, 'pop.ogg', 0.5], [59.1, 'pop.ogg', 0.5], [59.3, 'pop.ogg', 0.5],
   [60.0, 'whoosh.ogg', 0.6], [60.3, 'pop.ogg', 0.5], [61.0, 'pop.ogg', 0.5], [61.7, 'pop.ogg', 0.5], [62.4, 'pop.ogg', 0.5],
   [67.0, 'whoosh.ogg', 0.6],
   [73.0, 'whoosh.ogg', 0.6], [74.4, 'impact.ogg', 0.8], [75.6, 'impact.ogg', 0.8], [76.8, 'impact.ogg', 0.9],
@@ -427,8 +446,17 @@ function render() {
   } else if (!v12.paused) v12.pause();
   // C13 sub-panels
   const l13 = t - ST.c13;
-  ['#p13a', '#p13b', '#p13c'].forEach((id, i) => { const on = l13 >= i * 2 && l13 < i * 2 + 2; const p = $(id); p.style.opacity = on ? 1 : 0; p.style.transform = on ? 'none' : 'scale(.92)'; p.style.transition = 'opacity .25s,transform .35s'; });
-  $$('#p13c .pick').forEach((e) => e.classList.toggle('on', l13 >= 4.2 + +e.dataset.k * 0.3));
+  const W13 = [[0, 3], [3, 4.5], [4.5, 6]];
+  ['#p13a', '#p13b', '#p13c'].forEach((id, i) => { const on = l13 >= W13[i][0] && l13 < W13[i][1]; const p = $(id); p.style.opacity = on ? 1 : 0; p.style.transform = on ? 'none' : 'scale(.92)'; p.style.transition = 'opacity .25s,transform .35s'; });
+  $$('#p13c .pick').forEach((e) => e.classList.toggle('on', l13 >= 4.7 + +e.dataset.k * 0.2));
+  // C13a: agents fly into Counter (left of the wall), owner serves a customer (right)
+  const FROM = [[60, 260], [160, 760], [40, 520], [300, 160], [280, 860], [120, 380]];
+  $$('#p13a .f13').forEach((el) => { const k = +el.dataset.k, p = l13 - 0.15 - k * 0.22, [fx, fy] = FROM[k];
+    const SLOT = [[420, 330], [300, 470], [420, 610], [300, 750], [190, 400], [190, 680]], [tx, ty] = SLOT[k];
+    el.style.opacity = p > 0 ? 1 : 0; el.style.transform = `translate(${p < 0 ? fx - 300 : tx}px,${p < 0 ? fy : ty}px)`;
+    el.classList.toggle('done13', p > 0.6); });
+  $('#n13').textContent = Math.round(clamp((l13 - 0.4) / 1.4, 0, 1) * 120);
+  $('#h13').classList.toggle('on', l13 > 1.5 && l13 < 3);
   // C15 calm
   const l15 = t - ST.c15;
   for (const f of FL15) { const p = l15 - f.at; const tx = 960, ty = 820;
