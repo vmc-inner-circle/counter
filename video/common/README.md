@@ -16,6 +16,7 @@
 | 파일 | 내용 |
 |---|---|
 | [`characters.md`](characters.md) | 캐릭터 시트 — 등장인물·에이전트의 이름, 생김새, 언어, 장면 |
+| [`agents/`](agents/README.md) | 개인 에이전트 공식 이미지 — Muse · Grok Bot · Pickle · Dots |
 
 ## 격상 기록
 
