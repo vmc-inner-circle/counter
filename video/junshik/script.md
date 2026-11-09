@@ -1,59 +1,64 @@
-# 황준식 안 — 대본·화면 지시서 v3.5
+# 황준식 안 — 시나리오 v4 (90초 = 서론 30 · 본론 30 · 결론 30)
 
-> **12:35 v2 영상(`motion/index.html`)은 이 대본과 다르다** — 11:30 싱크 원칙(글자 최소·한 컷 한 시선·속도 삭제·예약 확정 비강조)에 맞춰 화면을 먼저 다시 짰다. 다음 단계에서 git 에 올라온 결정으로 시나리오를 새로 쓴다.
+- 만든 때: 2026-11-09 12:45경 (황준식 지시 + Claude). 이전 판(v3.x)은 git 기록에 있다
+- 형식: 9:16 세로(1080×1920) 모션 그래픽 + BGM·효과음. **화면 글자는 컷마다 한 줄**, 나머지는 그림·모션
+- 따른 결정: [상시녹음 2](../../docs/meeting-logs/261109_상시녹음2-영상시안리뷰-메시지.md) · [`video/README.md`](../README.md) 영상 원칙
+  - 메인 = 자동화(에이전트 요청을 Counter가 대신 받아 처리), 글로벌(다국어)은 덧붙는 가치
+  - 속도 비교 없음 · 예약 확정을 효용으로 내세우지 않음
+  - 흐름 = 사용자 → 개인 에이전트 → Counter → 사장님, 대부분 Counter에서 끝나고 일부만 사장님에게
+  - Counter는 채팅 UI가 아니다 — 로고·캐릭터가 사장님 앞에서 막아 준다
+  - 한 컷에 시선 하나(2~3초), 문구는 두 호흡으로
+- 스타일: **레퍼런스 승인 뒤 확정**(아래 「스타일」 칸은 비워 둠)
 
-- 만든 때: 2026-11-09 11시경 (황준식 + Claude) · v3.1 11:20경 — 회의록 d3fef95·1edbea7 반영(숙소 에이전트 Grok→**Dots**, 엔딩 = 사람 4분할 실사 컷)
-- v3.2 11:25경 — `docs/use-cases.md` UC 번호 표기, 엔딩 4×1 가로 분할(e472174), 에이전트 아이콘 = `../common/agents/` 공식 이미지, 4번째 에이전트 Claude Duet→Grok Bot(common 기준)
-- v3.3 11:35경 (황준식 지시) — **식당·숙소 장면 삭제, 피부과 하나로 시스템 데모를 자세히**(지도 발견 → UC-1 → UC-2 → UC-3 → 완료·기억, 단계 표시줄), **도입부 6–10s 에 침공이 낳은 문제 카드**. 엔딩 4칸은 모두 피부과 예약
-- v3.4 11:45경 (황준식 지시) — 도입부 문제를 카드 글이 아니라 **여러 업종 가게에 에이전트가 무차별로 전화하는 화면**으로(5–10s), 그 가운데 병원으로 줌인해 이야기를 잇는다
-- v3.5 11:50경 (황준식 지시) — **화면을 휴대폰 비율 9:16 세로(1080×1920)로**. 엔딩 4칸은 세로로 쌓은 1×4
-- 모션 그래픽 초안: [`motion/index.html`](motion/index.html) — 브라우저로 열고 Space
-- 기준: 11/09 현장 R&R·스펙 회의, 후속 데모 시나리오·영상 흐름 회의, Notion Kickoff 「System Demo Scenarios」, `server.mjs` 데모(f2d442b)
-- 형식: **9:16 세로(1080×1920) 모션 그래픽** + 데모 녹화(플레이스홀더 → `../demo-clips.md` 번호)
-- 흐름(후속 회의 결정 + 11:30 황준식 수정): 인트로 ~10초 → **병원 클로즈업, 병원에서의 문제 ~5초** → **다시 클로즈업, 시스템 데모** → 클로징 · 전체 83초 (식당 문제 장면은 뺐음)
+## 한 줄 이야기
 
-## 대본 (영어 내레이션 = 자막)
+에이전트가 쏟아지자 동네 가게들은 전화에 묻히고, 에이전트는 끊긴다(서론) → Counter가 가게 앞에서 에이전트를 대신 맞아 대부분 처리하고 사장님에게는 꼭 필요한 것만 올린다(본론) → 가게는 일에 집중하고, 에이전트는 환영받아 쓸모가 커지고, 사람은 원하는 것을 얻는다 — 모두가 이기는 채널(결론)
 
-| 시간 | 장면 | 내레이션 (EN) | 한국어 뜻 |
+## 서론 0–30초 — 문제 제기
+
+| 시간 | 화면 (한 컷 한 시선) | 화면 문구 | 소리 |
 |---|---|---|---|
-| 0–2s | 우주, 노란 글자가 비스듬히 멀어짐 | *(글자만)* **The Agent Invasion Has Begun.** | 에이전트들의 침공이 시작되었다. |
-| 2–5s | Muse·Pickle·Dots·Grok Bot 아이콘이 지구 위로 쏟아져 사람마다 하나씩 붙음 → 동네로 줌인 | "Every AI company is racing to give a billion people their own agent." | 모든 AI 회사가 10억 명에게 각자의 에이전트를 쥐여 주려고 경쟁 중이에요. |
-| 5–10s | **침공이 낳은 문제 — 무차별 전화**: 「Every agent. Every shop. All day.」 식당·공장·병원·미용실·숙소·정비소·빵집·치과·꽃집·세탁소 10곳에 에이전트들이 번갈아 전화 → 전화기 흔들림·빨간 테두리, 「Robot again?!」「*click*」「We're busy!」, 가게마다 부재중 숫자 증가 → 병원 카드로 줌인 | "And those agents call every business — restaurants, clinics, factories, salons. Nonstop, all day. Owners hang up. Agents get yelled at." | 그리고 그 에이전트들이 모든 가게에 전화해요 — 식당, 병원, 공장, 미용실. 가리지 않고, 하루 종일. 사장님은 끊고, 에이전트는 혼나요. |
-| 10–15s | **병원 클로즈업 · 문제** (Soi Dermatology 접수대): 전화가 쉬지 않고 울림, AI 전화 말풍선이 영어·중국어·베트남어로 쌓임, 부재중 0→47, 직원 😵‍💫 → 끊음, 줄 선 진짜 환자들 😤. 오른쪽 아래 848 카운터 + 출처 | "And they all call the same small shops. One agent called 848 businesses in a few hours. Staff just hang up." | 그리고 모두 같은 작은 가게에 전화해요. 에이전트 하나가 몇 시간 만에 848곳에 전화했어요. 직원은 그냥 끊어요. |
-| 15–20s | **다시 클로즈업** — 접수대 전화로 들어가 → 전화기 X → 병원 지도 카드에 🤖 `Agent: …/s/soi-derm`, 에이전트 말풍선이 그 링크로 빨려 들어감 | "Phones are for people. Counter is for agents. One link on your map listing." | 전화는 사람을 위한 것. Counter 는 에이전트를 위한 것. 지도 프로필에 링크 하나. |
-| 20–25s | **피부과 시스템 데모 ①** 지도에서 발견 — Emma(휠체어를 쓰는 영국인 관광객, 영어)가 Muse 에 "Find a skin clinic in Seoul for Thursday. I use a wheelchair." → Muse 가 Google Maps 검색 → 지도 카드의 🤖 Counter 링크 강조 → 연다 | "A tourist asks Muse for a clinic. Muse finds Counter on the map listing." | 관광객이 Muse 에게 병원을 부탁해요. Muse 는 지도에서 Counter 를 찾아요. |
-| 25–30s | **② UC-1** Counter 문서(Facts·Slots) 읽기 → "wheelchair accessible?" → 0.4초 즉답, 직원 폰은 「Quiet」 | "It reads the clinic's facts — wheelchair access, answered instantly. No staff needed." | 병원 정보를 읽고 — 휠체어 접근은 바로 답해요. 직원은 필요 없어요. |
-| 30–38s | **③ UC-2** "Is there a female doctor?"(등록 정보에 없음 — use-cases.md 확정 예시) → 직원 폰 「Counter doesn't know this yet」 → 답 입력 + Remember → Muse 에 전달 | "A new question? Counter asks the staff once, on their phone." | 처음 듣는 질문은? Counter 가 직원 폰으로 한 번 물어요. |
-| 38–47s | **④ UC-3** Rejuran Healer · Thu 15:00 예약 요청 → 슬롯 잡아 둠 → 원장 폰 Approve 탭 → SOI-1112-1500 | "Muse requests a booking. The slot is held — the owner approves with one tap." | Muse 가 예약을 요청하면 슬롯을 잡아 두고 — 원장은 한 번 탭해 승인해요. |
-| 47–51s | **⑤ 완료** Muse → Emma "✅ You're booked…" · 직원 폰 「Today: 3 questions · 2 taps · 0 calls」 | "Muse tells Emma: booked." | Muse 가 Emma 에게 알려요: 예약 완료. |
-| 51–55s | 다른 에이전트(Pickle)가 "Do you have a woman doctor?" → 🧠 from memory 0.3초 | "And the next agent gets the answer from memory." | 그리고 다음 에이전트는 기억으로 바로 답을 받아요. |
-| 55–65s | **실측** (`docs/measurement.md`): 전화 예약 타이머 vs Counter 타이머 나란히 | "Phone booking: [N] minutes. Counter: 24 seconds — staff approval included." | 전화 예약 [N]분. Counter 24초 — 직원 승인 포함. |
-| 65–75s | 16:9 화면 가로 4칸(4×1) — 칸마다 다른 나라 사용자가 폰을 내려다보며 웃는 실사 컷(정면), 칸이 탁탁탁탁 차례로 켜지고 「Booking confirmed」 | "No calls. No hang-ups. Your staff get back to real customers." | 전화도, 끊는 일도 없어요. 직원은 다시 진짜 손님에게. |
-| 75–83s | 로고 | **"Counter. Every shop, ready for AI customers."** | Counter. 모든 가게를 AI 손님 맞을 준비가 된 가게로. |
+| 0–3 | 에이전트 아이콘이 화면 가득 퍼진 위로 노란 글자가 비스듬히 멀어짐 | The Agent Invasion Has Begun. | 낮은 드론 → 휙 |
+| 3–7 | 지구 위로 Muse·Pickle·Dots·Grok Bot 아이콘이 사람마다 하나씩 내려앉음, 숫자 0 → 1,000,000,000 | (숫자만) | 뿅뿅뿅, BGM 시작 |
+| 7–11 | 사람이 아이콘에게 말을 건넴(🏥 ♿ 📅 말풍선) → 에이전트가 출발 | Everyone has an agent. | 휙 |
+| 11–17 | 동네 지도로 줌인 — 식당·병원·공장·미용실·숙소·정비소 타일에 에이전트가 무차별로 전화, 타일이 빨갛게 흔들림 | They call every shop. / All day. | 전화벨 여러 겹 |
+| 17–22 | 한 가게 클로즈업 — 사장님이 땀, 부재중 0 → 47, 줄 선 진짜 손님은 기다림 → 수화기 쾅 | Owners hang up. | 통화 중 신호음 |
+| 22–26 | 848 숫자가 크게 (출처 작게: SF Standard 2026-10-29) | One agent. 848 shops. | 쿵 |
+| 26–30 | 화면 셋으로 나뉨: 사장님 😩 · 에이전트 ✕(끊김) · 사람 ❓(못 받음) | Everyone loses. | BGM 가라앉음 |
 
-- 내레이션 약 150단어 → 음성(ElevenLabs 등) 1.1~1.2배속이면 약 60~65초 + 음악·여백.
-- 줄이려면 51–55s(기억)와 65–75s(엔딩)를 먼저 줄인다.
+## 본론 30–60초 — Counter가 하는 일, 그래서 좋아지는 것
 
-## 화면 지시 (모션 그래픽)
+| 시간 | 화면 | 화면 문구 | 소리 |
+|---|---|---|---|
+| 30–34 | 전화기에 X → Counter 캐릭터가 가게 문 앞, 사장님 앞에 내려앉아 막아섬 | Meet Counter. | 쿵, BGM 다시 밝아짐 |
+| 34–38 | 문구 두 호흡 | Phones are for people. / Counter is for agents. | |
+| 38–43 | 흐름 도식: 사람 → 에이전트 → **Counter** → 사장님. 여러 에이전트·여러 경로(전화·DM·예약앱)의 요청이 Counter 한 곳으로 모임 | One front door for every agent. | 휙, 뿅 |
+| 43–49 | 요청 점들이 Counter로 쏟아져 대부분 ✓로 바로 끝남, 사장님 쪽으로는 1건만 내려감. 숫자 ✓ 47 · 👆 1 | Most end here. / Only what needs you. | 틱틱틱, 탭 |
+| 49–54 | 처음 듣는 질문 → 사장님 폰에 한 번 → ✓ + 🧠 → 다음 에이전트는 바로 ✓ | Ask once. Remembered. | 탭, 뿅 |
+| 54–60 | 혜택 세 컷 빠르게: ① 사장님이 진짜 손님을 맞음(🔕) ② 에이전트가 끊기지 않음(✓ 100%) ③ 국기 넷 — 어떤 언어로 와도 | Owners stay free. / Agents get answers. / Any language. | 뿅 ×3 |
 
-- **한 줄 시각 언어**: 에이전트 = 회사 아이콘이 붙은 작은 말풍선. 0s 우주에서 쏟아져 → 9s 가게 전화로 몰려가 튕겨 나감 → 19s 지도 위 🤖 링크로 빨려 들어감 → 데모 화면 안으로. 같은 꼴을 끝까지 이어 쓴다.
-- **아이콘**: `../common/agents/` 공식 이미지(Muse·Pickle·Dots·Grok Bot)를 작게. 돕는 구도로만, 제휴처럼 보이지 않게. 데모 장면 오른쪽 위에 `Simulated agents — no official integration` (실제 연동은 Claude Code 를 각 에이전트 역할로 붙인 것).
-- **0–2s**: 우주풍 오프닝은 연출 방식만 빌린다 — 특정 영화 이름·로고·음악·글꼴은 쓰지 않는다. 2초 안에 다 올라가야 한다(현장 회의).
-- **10–15s**: 병원 접수대 일러스트. 848 숫자 카운터는 0→848 빠르게, 출처 `Source: The San Francisco Standard, Oct 29, 2026`. AI 전화 말풍선은 영어·중국어·베트남어 — 모든 나라 에이전트가 같은 가게에 전화한다는 뜻.
-- **15–20s**: 지도 카드는 특정 지도 앱 화면을 흉내 내지 않은 일반 카드로 그린다.
-- **20–55s 데모**: 노트북(에이전트 쪽 터미널/마크다운) + 폰(직원 화면 `/admin`) 두 틀 안에 실제 녹화를 끼운다. 클립 = `demo-clips.md` #1·#2·#3·#4.
-- **55–65s**: 클립 #5(실측). 전화 쪽 [N]은 Pickle 실측 뒤 채운다. 24초는 `docs/measurement.md` 참고치(영어 프롬프트, 자동 직원 스크립트가 요청마다 5초 뒤 응답) — 최종 녹화 때 다시 잰 값으로 바꾼다.
-- **65–75s**: 후속 회의 결정(1edbea7) — 알림 UI 4개가 아니라 **사람 가로 4칸(4×1) 실사 컷**. 촬영 필요(팀원 4명이 폰 보며 웃기, 정면). 초안은 이모지 자리표시.
+## 결론 60–90초 — 앞으로의 방향·포부 (모두가 이기는 채널)
 
-## demo-clips.md 에 요청할 것
+| 시간 | 화면 | 화면 문구 | 소리 |
+|---|---|---|---|
+| 60–67 | 여러 업종이 한 컷씩: 셰프가 요리, 의사가 환자를, 공장 기계, 미용사 — 각 가게 문 앞에 작은 Counter | Every shop focuses on its craft. | BGM 고조 |
+| 67–73 | 에이전트들이 가게마다 문 앞 Counter에서 ✓를 받고 사람에게 돌아감 — 끊기던 장면의 반대 | Agents welcomed, not hung up. | 뿅뿅 |
+| 73–80 | 세 원이 겹치는 그림: 가게 · 에이전트 회사 · 사람, 가운데 Counter. 세 원에 차례로 ✓ | Shops win. Agents win. People win. | 쿵 ×3 |
+| 80–85 | 지구 위 가게 점들이 하나씩 켜짐 | Tech spreads agents. / We build their front door. | 리프트 |
+| 85–90 | 로고 | Counter. Every shop, ready for AI customers. | 마지막 쿵, 페이드 |
 
-| # | 이 안에서 쓰는 곳 | 필요한 화면 |
-|---|---|---|
-| 1 | 20–55s (한 번에 이어서) | 피부과 전체 흐름: Muse 쪽 화면(지도 발견 → 문서 읽기 → 휠체어 즉답 → 여성 의사 질문 대기 → 예약 대기 → 확정 → 사용자에게 알림) + 직원 폰(`/admin`: 질문 답 + Remember → Approve 탭) + 다른 에이전트의 from memory 답 |
-| 5 | 55–65s | 타이머 둘 (전화 vs Counter) |
+## 스타일 (레퍼런스 승인 뒤 채움)
+
+- 레퍼런스: _미정_
+- 바탕·색·서체·전환: _미정_
+
+## 열린 것
+
+- 결론 문구 「We build their front door.」 = 상시녹음 2의 포부(「테크 기업들이 에이전트 확산에 힘쓸 때 우리는 그들을 위한 채널을 판다」)를 줄인 것 — 13:15 싱크 슬로건 후보로 낸다
+- 나레이션을 넣을지(상시녹음 2 의견) — 넣으면 위 화면 문구를 그대로 읽는 짧은 줄
+- 26–30 「Everyone loses.」와 73–80 「Everyone wins.」는 짝 — 같은 3분할 구도로 맞춘다
 
 ## 사실 근거
 
-- 848곳: The San Francisco Standard, 2026-10-29, 「Press 1 if you're a robot: AI agents keep calling local businesses」 — Voygr 의 AI 에이전트가 10월 초 몇 시간 동안 동네 가게 848곳에 전화. https://sfstandard.com/2026/10/29/ai-agents-calling-local-businesses/
-- 「Agents get yelled at」: 후속 회의에서 나온 팀원 관찰(Pickle 이 전화했다가 원성을 듣고 소극적이 됨) — 공개 출처는 아직 확인 안 함. 발표에서 숫자처럼 말하지 않는다.
-- 24초: `docs/measurement.md` 「기존 참고치」 (2026-11-09 영어 사용자 프롬프트). 3회·중앙값·사람 직원 조건으로 다시 잰 값이 아니다.
+- 848곳: The San Francisco Standard, 2026-10-29, 「Press 1 if you're a robot: AI agents keep calling local businesses」 https://sfstandard.com/2026/10/29/ai-agents-calling-local-businesses/
+- 「Agents get answers / 끊기지 않음」: 상시녹음 2 「Counter 덕분에 에이전트도 무시당하지 않고(수락률 100%) 응답이 빠르다」 — 팀 주장, 측정값 아님. 화면에 % 숫자는 넣지 않는다
