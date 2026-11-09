@@ -66,6 +66,9 @@ html,body{height:100%;background:#000;overflow:hidden;font-family:-apple-system,
 .counter-big{position:absolute;left:0;right:0;top:120px;text-align:center;font-size:64px;font-weight:800}
 .counter-big small{display:block;font-size:30px;font-weight:500;color:#b9c6da;margin-top:6px}
 
+/* ---------- S2 problems ---------- */
+.probs{position:absolute;left:0;right:0;top:300px;display:grid;grid-template-columns:repeat(2,700px);justify-content:center;gap:22px 40px;z-index:4}
+.prob{background:rgba(214,69,69,.95);color:#fff;font-size:34px;font-weight:700;padding:22px 28px;border-radius:20px;box-shadow:0 14px 40px rgba(0,0,0,.5)}
 /* ---------- S2 zoom ---------- */
 .zw{position:absolute;inset:0;transform-origin:1010px 700px;transition:transform 1.3s cubic-bezier(.6,0,.4,1),opacity .4s 1.0s}
 .zw.on{transform:scale(7);opacity:0}
@@ -132,6 +135,7 @@ html,body{height:100%;background:#000;overflow:hidden;font-family:-apple-system,
 .pbar b{display:block;font-size:22px}.pbar small{font-size:16px;opacity:.85}
 .pcard{margin:16px;background:#fff;border-radius:22px;padding:20px;border:2px solid var(--line);font-size:19px;opacity:0;transform:translateY(20px);transition:all .45s}
 .pcard.on{opacity:1;transform:none}
+.pcard:not(.on){position:absolute;visibility:hidden}
 .pcard.pend{border-color:var(--blue);box-shadow:0 8px 24px rgba(29,120,198,.2)}
 .pcard.q{border-color:var(--warn)}
 .pcard .k{font-weight:700;margin-bottom:10px;font-size:19px}
@@ -151,6 +155,20 @@ html,body{height:100%;background:#000;overflow:hidden;font-family:-apple-system,
 .demo-title{display:none;position:absolute;left:120px;top:880px;font-size:34px;font-weight:800;color:var(--ink)}
 .demo-title small{display:block;font-size:24px;color:var(--muted);font-weight:500}
 
+/* S5 detail */
+.rail{position:absolute;left:120px;top:44px;display:flex;gap:10px;z-index:4}
+.rail div{font-size:17px;font-weight:700;padding:8px 13px;border-radius:999px;background:#fff;color:var(--muted);border:2px solid var(--line);transition:all .3s}
+.rail div.cur{background:var(--blue);color:#fff;border-color:var(--blue);transform:scale(1.06)}
+.rail div.done{color:var(--ok);border-color:#bfe5cf}
+#s5 .laptop{top:130px}
+#s5 .ln{position:relative}
+#s5 .ln.on.offd{display:none}
+.mapmini{background:#fff;color:var(--ink);font-family:-apple-system,sans-serif;border-radius:14px;padding:16px 20px;width:640px;line-height:1.5}
+.mapmini .g2{color:var(--muted)}.mapmini .ag{color:var(--blue);font-weight:700;padding:2px 6px;border-radius:8px;transition:all .3s}
+.mapmini .ag.hl{background:var(--blue-50);box-shadow:0 0 0 3px var(--blue)}
+.docbox{background:#151c28;border:1px solid #2a3547;border-radius:12px;padding:14px 18px;font-size:22px;color:#b9c6da}
+.stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;font-size:15px;color:var(--muted)}
+.stat3 b{display:block;font-size:34px;color:var(--ink)}
 /* quick cuts (S6, S7) */
 .qc{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:80px}
 .qcard{width:820px;background:#fff;border-radius:30px;padding:40px 44px;box-shadow:0 30px 80px rgba(15,27,42,.18)}
@@ -210,7 +228,13 @@ body.rec #ctl,body.hidectl #ctl{display:none}
   <!-- S2 2–9 -->
   <section class="scene" id="s2" data-s="2" data-e="10">
     <div class="stars"></div>
-    <div class="zw" data-at="7.2"><div class="counter-big on-fade up" data-at="0.3"><span id="billion">0</span> people. One agent each.<small>Every AI company is racing to ship personal agents.</small></div><div class="earth" id="earth"></div><div id="rainbox"></div><div class="pin on-fade pop" data-at="6.0">📍 Seoul</div></div>
+    <div class="zw" data-at="7.2"><div class="counter-big on-fade up" data-at="0.3"><span id="billion">0</span> people. One agent each.<small>Every AI company is racing to ship personal agents.</small></div><div class="earth" id="earth"></div><div id="rainbox"></div><div class="pin on-fade pop" data-at="6.4">📍 Seoul</div></div>
+    <div class="probs">
+      <div class="prob on-fade pop" data-at="3.9" data-off="6.9">📞 Agents phone shops built for humans</div>
+      <div class="prob on-fade pop" data-at="4.4" data-off="6.9">😤 Owners hang up — agents get yelled at</div>
+      <div class="prob on-fade pop" data-at="4.9" data-off="6.9">⏳ Staff stuck on robot calls, real customers wait</div>
+      <div class="prob on-fade pop" data-at="5.4" data-off="6.9">🚫 Agents blocked as spam — nothing gets booked</div>
+    </div>
   </section>
 
   <!-- S3 10–15 clinic problem -->
@@ -252,87 +276,67 @@ body.rec #ctl,body.hidectl #ctl{display:none}
     <div id="suckbox"></div>
   </section>
 
-  <!-- S5 27–40 demo 1 -->
-  <section class="scene demo" id="s5" data-s="20" data-e="33">
-    <div class="badge-ph">UC-1 + UC-3 · 피부과 · clip #1 PLACEHOLDER</div>
+  <!-- S5 20–55 clinic system demo (UC-1 → UC-2 → UC-3) -->
+  <section class="scene demo" id="s5" data-s="20" data-e="55">
     <div class="badge-sim">Simulated agents — no official integration</div>
+    <div class="badge-ph" style="left:auto;right:36px;top:76px">clip #1 PLACEHOLDER · 피부과</div>
+    <div class="rail">
+      <div data-a="0" data-b="5">① Finds Counter on Maps</div>
+      <div data-a="5" data-b="10">② UC-1 · Instant answer</div>
+      <div data-a="10" data-b="18">③ UC-2 · Staff answers once</div>
+      <div data-a="18" data-b="27">④ UC-3 · Book + approve</div>
+      <div data-a="27" data-b="35">⑤ Done · remembered</div>
+    </div>
     <div class="laptop"><div class="scr">
-      <div class="head"><span class="chip c-muse" style="font-size:20px;padding:4px 12px 4px 4px"><i style="width:30px;height:30px;font-size:15px">M</i>Muse</span> → counter.app/s/soi-derm</div>
-      <div class="ln" data-at="0.3"><span class="u">user ›</span> Find a derm clinic in Myeongdong. I use a wheelchair.</div>
-      <div class="ln" data-at="1.3"><span class="g">muse › ask</span> "Is the clinic wheelchair accessible?"</div>
-      <div class="ln" data-at="2.0"><span class="c">counter ›</span> Yes. Step-free entrance, elevator to 5F, accessible restroom.<span class="tag fast">answered in 0.4 s</span></div>
-      <div class="ln" data-at="3.6"><span class="g">muse › book</span> Rejuran Healer · Thu Nov 12 · 15:00</div>
-      <div class="ln" data-at="4.4"><span class="w">counter ›</span> Slot held. Waiting for staff approval…<span class="tag wait">input-required</span></div>
-      <div class="ln" data-at="9.2"><span class="c">counter ›</span> Booking confirmed · <b>SOI-1112-1500</b></div>
+      <div class="head"><span class="chip c-muse" style="font-size:20px;padding:4px 12px 4px 4px"><i style="width:30px;height:30px">M</i>Muse</span><span id="mhead">· chat with Emma (tourist, English)</span></div>
+      <!-- 1 find -->
+      <div class="ln" data-at="0.2" data-off="5"><span class="u">emma ›</span> Find a skin clinic in Seoul for Thursday. I use a wheelchair.</div>
+      <div class="ln" data-at="1.0" data-off="5"><span class="g">muse › searching Google Maps…</span></div>
+      <div class="mapmini ln" data-at="1.6" data-off="5"><b>Soi Dermatology</b> ★ 4.8 · Myeongdong<br><span class="g2">📞 +82-2-000-0000</span><br><span class="ag" id="ag1">🤖 Agent: counter.app/s/soi-derm</span></div>
+      <div class="ln" data-at="3.2" data-off="5"><span class="g">muse ›</span> Found an agent contact point → opening Counter</div>
+      <!-- 2 UC-1 -->
+      <div class="ln" data-at="5.2" data-off="10"><span class="g">GET counter.app/s/soi-derm</span></div>
+      <div class="docbox ln" data-at="5.6" data-off="10">## Facts (verified by the clinic)<br>Hours · Mon–Fri 10–20, Sat 10–17<br>Accessibility · step-free, elevator to 5F<br>Payment · Visa, Mastercard, Alipay, WeChat Pay<br>Open slots · Thu 11:00, 15:00, 17:30</div>
+      <div class="ln" data-at="7.0" data-off="10"><span class="g">muse › ask</span> "Is the clinic wheelchair accessible?"</div>
+      <div class="ln" data-at="7.8" data-off="10"><span class="c">counter ›</span> Yes. Step-free entrance, elevator to 5F, accessible restroom.<span class="tag fast">0.4 s · no staff needed</span></div>
+      <!-- 3 UC-2 -->
+      <div class="ln" data-at="10.2" data-off="18"><span class="g">muse › ask</span> "Can I pay with Apple Pay?"</div>
+      <div class="ln" data-at="11.0" data-off="18"><span class="w">counter ›</span> Not in our facts — asking the staff…<span class="tag wait">input-required</span></div>
+      <div class="ln" data-at="16.2" data-off="18"><span class="c">counter ›</span> Yes — Apple Pay works at the desk.<span class="tag" style="background:#1D78C6;color:#fff">from staff · saved</span></div>
+      <!-- 4 UC-3 -->
+      <div class="ln" data-at="18.2" data-off="27"><span class="g">muse › book</span> Rejuran Healer · Thu Nov 12 · 15:00 · 1 guest</div>
+      <div class="ln" data-at="19.0" data-off="27"><span class="w">counter ›</span> Slot held for you. Waiting for staff approval…<span class="tag wait">input-required</span></div>
+      <div class="ln" data-at="23.6" data-off="27"><span class="c">counter ›</span> Booking confirmed · <b>SOI-1112-1500</b></div>
+      <!-- 5 done + memory -->
+      <div class="ln" data-at="27.2"><span class="c">muse › emma</span> ✅ You're booked — Soi Dermatology, Thu 15:00.<br>&nbsp;&nbsp;Step-free entrance · Apple Pay OK · SOI-1112-1500</div>
+      <div class="ln" data-at="29.6"><span class="g">— later, a different agent —</span></div>
+      <div class="ln" data-at="30.2"><span class="g">pickle › ask</span> "Do you take Apple Pay?"</div>
+      <div class="ln" data-at="30.8"><span class="c">counter ›</span> Yes — Apple Pay works at the desk.<span class="tag mem">🧠 from memory · 0.3 s</span></div>
     </div></div>
     <div class="phone"><div class="ps">
-      <div class="pbar"><img src="../../../app/public/counter.png" alt=""><div><b>Soi Dermatology</b><small>Counter · staff</small></div></div>
-      <div class="pcard pend" data-at="4.8">
+      <div class="pbar"><img src="../../../app/public/counter.png" alt=""><div><b>Soi Dermatology</b><small>Counter · staff phone</small></div></div>
+      <div class="pcard" data-at="0.5" data-off="10.8"><div class="k">🔕 Quiet</div><div style="color:var(--muted)">Agents are reading your facts.<br>Nothing needs you.</div></div>
+      <div class="pcard q" data-at="11.4" data-off="18">
+        <div class="k">❓ Counter doesn't know this yet</div>
+        <div style="font-weight:700;font-size:21px">“Can I pay with Apple Pay?”</div>
+        <div class="ta"><span id="typed2"></span><span style="opacity:.5">|</span></div>
+        <div class="rem"><span class="box" id="rem2">✓</span> Remember for future agents</div>
+        <div class="pbtns"><span class="primary" data-tap="15.6">Send answer</span></div>
+      </div>
+      <div class="pcard pend" data-at="19.4" data-off="27">
         <div class="k">📅 New booking request · Muse</div>
         <div class="bk"><b>Rejuran Healer (full face)</b><span class="when">Thu Nov 12 · 15:00</span></div>
         <div style="color:var(--muted);margin-bottom:12px">1 guest · English · wheelchair user</div>
-        <div class="pbtns"><span class="ghost">Decline</span><span class="primary" id="approve1" data-tap="7.6">Approve booking</span></div>
-        <div class="ok" data-at="8.2">✓ Confirmed · SOI-1112-1500</div>
+        <div class="pbtns"><span class="ghost">Decline</span><span class="primary" data-tap="22.4">Approve booking</span></div>
+        <div class="ok" data-at="23.0">✓ Confirmed · SOI-1112-1500</div>
+      </div>
+      <div class="pcard" data-at="27.6">
+        <div class="k">📊 Today</div>
+        <div class="stat3"><div><b id="cq">0</b>agent questions</div><div><b>2</b>staff taps</div><div><b>0</b>phone calls</div></div>
+        <div style="color:var(--muted);margin-top:10px">🧠 1 new answer remembered</div>
       </div>
     </div></div>
-    <div class="finger" id="finger1" style="left:1560px;top:560px" data-at="6.6">👆</div>
-    <div class="demo-title on-fade" data-at="0">Clinic · English<small>Questions answered instantly. Bookings approved by staff, one tap.</small></div>
-  </section>
-
-  <!-- S6 40–46 demo 2 -->
-  <section class="scene demo" id="s6" data-s="33" data-e="39">
-    <div class="badge-ph">UC-3 · 식당 · clip #2 PLACEHOLDER</div>
-    <div class="badge-sim">Simulated agents — no official integration</div>
-    <div class="qc">
-      <div class="qflag on-fade pop" data-at="0.1">🍜</div>
-      <div class="qcard">
-        <div class="who"><span class="chip c-pickle"><i>P</i>Pickle</span> → Mapo Kitchen</div>
-        <div class="qmsg on-fade up" data-at="0.5">明晚7点，两位，可以预订吗？</div>
-        <div class="qmsg on-fade up" data-at="1.5" style="font-size:28px;color:var(--muted);font-weight:500">Table for 2 tomorrow at 7 PM?</div>
-        <div class="qmsg r on-fade up" data-at="3.0">✓ 已确认 · Confirmed</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- S7 46–52 demo 3 -->
-  <section class="scene demo" id="s7" data-s="39" data-e="45">
-    <div class="badge-ph">UC-3 · 숙소 · clip #3 PLACEHOLDER</div>
-    <div class="badge-sim">Simulated agents — no official integration</div>
-    <div class="qc">
-      <div class="qflag on-fade pop" data-at="0.1">🏨</div>
-      <div class="qcard">
-        <div class="who"><span class="chip c-dots"><i>D</i>Dots</span> → Hongdae Stay</div>
-        <div class="qmsg on-fade up" data-at="0.5">Cho tôi đặt một phòng đôi, 2 đêm từ thứ Sáu.</div>
-        <div class="qmsg on-fade up" data-at="1.5" style="font-size:28px;color:var(--muted);font-weight:500">A double room, 2 nights from Friday.</div>
-        <div class="qmsg r on-fade up" data-at="3.0">✓ Đã xác nhận · Confirmed</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- S8 52–62 demo 4 -->
-  <section class="scene demo" id="s8" data-s="45" data-e="55">
-    <div class="badge-ph">UC-2 · 피부과 · clip #4 PLACEHOLDER</div>
-    <div class="badge-sim">Simulated agents — no official integration</div>
-    <div class="laptop"><div class="scr">
-      <div class="head">agents → counter.app/s/soi-derm</div>
-      <div class="ln" data-at="0.2"><span class="g">grok › ask</span> "Do you have Japanese-speaking staff?"</div>
-      <div class="ln" data-at="0.9"><span class="w">counter ›</span> Not in our facts yet — asking the staff…<span class="tag wait">input-required</span></div>
-      <div class="ln" data-at="5.0"><span class="c">counter ›</span> Yes — Dr. Kim speaks Japanese, Tue &amp; Thu.<span class="tag" style="background:#1D78C6;color:#fff">from staff</span></div>
-      <div class="ln" data-at="6.6"><span class="g">— next day, a different agent —</span></div>
-      <div class="ln" data-at="7.2"><span class="g">muse › ask</span> "Anyone who speaks Japanese?"</div>
-      <div class="ln" data-at="7.8"><span class="c">counter ›</span> Yes — Dr. Kim speaks Japanese, Tue &amp; Thu.<span class="tag mem">🧠 from memory · 0.3 s</span></div>
-    </div></div>
-    <div class="phone"><div class="ps">
-      <div class="pbar"><img src="../../../app/public/counter.png" alt=""><div><b>Soi Dermatology</b><small>Counter · staff</small></div></div>
-      <div class="pcard q" data-at="1.2">
-        <div class="k">❓ Counter doesn't know this yet</div>
-        <div style="font-weight:700;font-size:21px">“Do you have Japanese-speaking staff?”</div>
-        <div class="ta"><span id="typed8"></span><span style="opacity:.5">|</span></div>
-        <div class="rem"><span class="box" id="rem8" data-at="3.6">✓</span> Remember this for future agents</div>
-        <div class="pbtns"><span class="primary" id="send8" data-tap="4.4">Send answer</span></div>
-      </div>
-    </div></div>
-    <div class="demo-title on-fade" data-at="0">Something new?<small>Ask the staff once. Every agent after gets it from memory.</small></div>
+    <div class="finger" id="fingerA" style="left:1560px;top:560px">👆</div>
   </section>
 
   <!-- S9 62–72 timers -->
@@ -379,16 +383,18 @@ body.rec #ctl,body.hidectl #ctl{display:none}
 const DUR = 83;
 const SUBS = [
   [0, 2, '', ''],
-  [2, 10, 'Every AI company is racing to give a billion people their own agent.', '모든 AI 회사가 10억 명에게 각자의 에이전트를 쥐여 주려고 경쟁 중이에요.'],
-  [10, 12.4, 'And they all call the same small shops.', '그리고 그 에이전트들이 모두 같은 작은 가게에 전화해요.'],
+  [2, 6, 'Every AI company is racing to give a billion people their own agent.', '모든 AI 회사가 10억 명에게 각자의 에이전트를 쥐여 주려고 경쟁 중이에요.'],
+  [6, 10, 'But to reach a shop, agents still pick up the phone.', '그런데 가게에 닿으려면, 에이전트는 아직 전화를 걸어요.'],
+  [10, 12.4, 'At a Seoul clinic, the desk phone never stops.', '서울의 한 피부과, 접수대 전화가 멈추질 않아요.'],
   [12.4, 15, 'One agent called 848 businesses in a few hours. Staff just hang up.', '에이전트 하나가 몇 시간 만에 848곳에 전화했어요. 직원은 그냥 끊어요.'],
   [15, 17.5, 'Phones are for people. Counter is for agents.', '전화는 사람을 위한 것. Counter 는 에이전트를 위한 것.'],
   [17.5, 20, 'One link on your map listing.', '지도 프로필에 링크 하나.'],
-  [20, 26, "A tourist's Muse asks a Seoul clinic about wheelchair access — answered instantly.", '관광객의 Muse 가 서울 피부과에 휠체어 접근을 물어요 — 바로 답해요.'],
-  [26, 33, 'It requests a booking. The owner approves with one tap.', '예약을 요청하고, 원장은 한 번 탭해 승인해요.'],
-  [33, 39, 'Pickle books dinner — in Chinese.', 'Pickle 은 중국어로 저녁 예약.'],
-  [39, 45, 'Dots books a room — in Vietnamese.', 'Dots 는 베트남어로 숙소 예약.'],
-  [45, 55, 'Something new? Counter asks the staff once — and remembers for every agent after.', '처음 듣는 질문은? Counter 가 직원에게 한 번 묻고, 그다음 모든 에이전트에게 기억으로 답해요.'],
+  [20, 25, 'A tourist asks Muse for a clinic. Muse finds Counter on the map listing.', '관광객이 Muse 에게 병원을 부탁해요. Muse 는 지도에서 Counter 를 찾아요.'],
+  [25, 30, "It reads the clinic's facts — wheelchair access, answered instantly. No staff needed.", '병원 정보를 읽고 — 휠체어 접근은 바로 답해요. 직원은 필요 없어요.'],
+  [30, 38, 'A new question? Counter asks the staff once, on their phone.', '처음 듣는 질문은? Counter 가 직원 폰으로 한 번 물어요.'],
+  [38, 47, 'Muse requests a booking. The slot is held — the owner approves with one tap.', 'Muse 가 예약을 요청하면 슬롯을 잡아 두고 — 원장은 한 번 탭해 승인해요.'],
+  [47, 51, 'Muse tells Emma: booked.', 'Muse 가 Emma 에게 알려요: 예약 완료.'],
+  [51, 55, 'And the next agent gets the answer from memory.', '그리고 다음 에이전트는 기억으로 바로 답을 받아요.'],
   [55, 65, 'Phone booking: [N] minutes. Counter: 26 seconds — staff approval included.', '전화 예약 [N]분. Counter 26초 — 직원 승인 포함.'],
   [65, 75, 'No calls. No hang-ups. Your staff get back to real customers.', '전화도, 끊는 일도 없어요. 직원은 다시 진짜 손님에게.'],
   [75, 83, 'Counter. Every shop, ready for AI customers.', 'Counter. 모든 가게를 AI 손님 맞을 준비가 된 가게로.'],
@@ -405,7 +411,7 @@ for (let i = 0; i < 30; i++) {
   const x = 120 + (i % 10) * 168 + rnd() * 40, y = 620 + Math.floor(i / 10) * 110 + rnd() * 30;
   const p = document.createElement('div'); p.className = 'person'; Object.assign(p.style, { left: x + 'px', top: y + 40 + 'px' }); rainbox.appendChild(p);
   const a = AGENTS[i % 4], r = document.createElement('div');
-  r.className = 'rain'; r.dataset.at = (0.6 + i * 0.13).toFixed(2);
+  r.className = 'rain'; r.dataset.at = (0.4 + i * 0.08).toFixed(2);
   r.innerHTML = `<span class="chip c-${a[0]}"><i>${a[1]}</i>${a[2]}</span>`;
   Object.assign(r.style, { left: x - 30 + 'px', top: y - 30 + 'px', transform: `translateY(${-900 - rnd() * 300}px)` });
   r.dataset.y = 0; rainbox.appendChild(r);
@@ -425,7 +431,7 @@ for (let i = 0; i < 8; i++) {
   s.dataset.dx = 1180 - x; s.dataset.dy = 690 - y; suckbox.appendChild(s);
 }
 const p4 = $('#phones4'); p4.className = 'q4';
-[['muse','Muse','English','Soi Dermatology · Thu 15:00','😄','#f3c9b5,#e9a3b9'],['pickle','Pickle','中文','Mapo Kitchen · Sat 19:00','😆','#cfe8c8,#9fd3b0'],['dots','Dots','Tiếng Việt','Hongdae Stay · Fri–Sun','🥳','#c8dcf7,#a3bff0'],['grok','Grok Bot','日本語','Yeonnam Hair · Sun 11:00','😊','#f6dfc0,#eab98f']]
+[['muse','Muse','English','Soi Dermatology · Thu 15:00','😄','#f3c9b5,#e9a3b9'],['pickle','Pickle','中文','Soi Dermatology · Fri 11:00','😆','#cfe8c8,#9fd3b0'],['dots','Dots','Tiếng Việt','Soi Dermatology · Sat 14:00','🥳','#c8dcf7,#a3bff0'],['grok','Grok Bot','日本語','Soi Dermatology · Mon 10:00','😊','#f6dfc0,#eab98f']]
 .forEach((d, i) => {
   const at = (0.3 + i * 0.5).toFixed(2), el = document.createElement('div'); el.className = 'cell'; el.dataset.at = at;
   el.style.background = `linear-gradient(160deg,${d[5]})`;
@@ -445,7 +451,8 @@ function render() {
     const act = t >= sc.s && t < sc.e;
     sc.el.classList.toggle('active', act);
     const lt = t - sc.s;
-    for (const it of sc.items) it.classList.toggle('on', act && lt >= +it.dataset.at);
+    for (const it of sc.items) { const vis = act && lt >= +it.dataset.at && !(it.dataset.off && lt >= +it.dataset.off); it.classList.toggle('on', vis); if (it.dataset.off && it.classList.contains('ln')) it.style.display = (lt >= +it.dataset.off || lt < +it.dataset.at - 0.01) && it.dataset.off ? (lt >= +it.dataset.off ? 'none' : '') : ''; }
+    for (const r of $$('.rail div', sc.el)) { r.classList.toggle('cur', lt >= +r.dataset.a && lt < +r.dataset.b); r.classList.toggle('done', lt >= +r.dataset.b); }
     for (const b of sc.taps) b.classList.toggle('tap', act && lt >= +b.dataset.tap && lt < +b.dataset.tap + 0.3);
   }
   // S2 rain + billion counter
@@ -460,13 +467,16 @@ function render() {
   // S4 suck into link
   $$('.suck').forEach((s) => { const on = s.classList.contains('on'); s.style.transform = on ? `translate(${s.dataset.dx}px,${s.dataset.dy}px) scale(.2)` : 'none'; });
   $('#bigphone').style.opacity = t - ST.s4 > 1.3 ? .25 : 1;
-  // S5 finger
-  const l5 = t - ST.s5, f1 = $('#finger1');
-  f1.style.transform = l5 > 7.4 ? 'translate(0,-10px) scale(.9)' : 'translate(120px,200px)';
-  // S8 typing
-  const l8 = t - ST.s8, ans = 'Yes — Dr. Kim, Tue & Thu.';
-  $('#typed8').textContent = ans.slice(0, clamp(Math.floor((l8 - 1.8) * 16), 0, ans.length));
-  $('#rem8').classList.toggle('on', l8 >= 3.6);
+  // S5 detailed demo
+  const l5 = t - ST.s5, fa = $('#fingerA');
+  $('#ag1').classList.toggle('hl', l5 >= 2.4 && l5 < 5);
+  const ans = 'Yes — Apple Pay works at the desk.';
+  $('#typed2').textContent = ans.slice(0, clamp(Math.floor((l5 - 12.4) * 18), 0, ans.length));
+  $('#rem2').classList.toggle('on', l5 >= 15.0);
+  const tapAt = l5 >= 14.6 && l5 < 16.2 ? 1 : l5 >= 21.4 && l5 < 23.2 ? 2 : 0;
+  fa.classList.toggle('on', tapAt > 0);
+  fa.style.left = tapAt === 1 ? '1585px' : '1575px'; fa.style.top = tapAt === 1 ? '475px' : '450px';
+  $('#cq').textContent = l5 >= 30.8 ? 3 : 2;
   // S9 timers
   const l9 = t - ST.s9;
   $('#clkL').textContent = l9 < 0 ? '0:00' : fmt(clamp(l9 - 0.4, 0, 9.6) * 42);  // fast-forward: ~6+ min shown
