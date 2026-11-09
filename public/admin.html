@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1D78C6">
+<title>Counter · Staff</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body class="admin">
+<header class="bar"><img src="/counter.png" alt=""><div><b id="storeName">Counter</b><small id="sub">Staff console</small></div><span id="live" class="live">● Live</span></header>
+
+<main class="wrap" id="view"></main>
+
+<nav class="tabs">
+  <button data-tab="inbox" class="on">Inbox<span id="badge" class="badge" hidden></span></button>
+  <button data-tab="memory">Memory</button>
+  <button data-tab="settings">Settings</button>
+</nav>
+
+<script>
+let S = null, tab = 'inbox', drafts = {}, editing = false;
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const ago = (iso) => { const s = Math.round((Date.now() - new Date(iso)) / 1000); return s < 60 ? `${s}s ago` : s < 3600 ? `${Math.floor(s / 60)}m ago` : new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); };
+const day = (d) => new Date(d + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+const post = (u, b) => fetch(u, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(b || {}) }).then((r) => r.json());
+const avatar = (agent) => /muse/i.test(agent) ? '<img class="av" src="/muse.png">' : `<span class="av txt">${esc((agent || '?')[0])}</span>`;
+
+function who(t) {
+  return `<div class="who">${avatar(t.agent)}<div><b>${esc(t.agent)}</b><small>on behalf of ${esc(t.onBehalfOf || 'unknown')} · ${ago(t.createdAt)}</small></div></div>`;
+}
+
+function card(t) {
+  const pending = t.status === 'input-required';
+  if (t.type === 'booking') {
+    const p = t.patient || {};
+    return `<article class="card task ${pending ? 'pending' : t.status}">
+      ${who(t)}
+      <div class="kind">${pending ? '⏳ Booking request — needs your approval' : t.status === 'completed' ? '✅ Booking confirmed' : '✕ Declined'}</div>
+      <div class="booking"><div class="big">${esc(t.serviceName)}</div><div class="when">${day(t.date)} · ${esc(t.time)}</div><div class="muted">${esc(t.price)}</div></div>
+      <dl><dt>Patient</dt><dd>${esc(p.name || t.onBehalfOf)}${p.nationality ? ' · ' + esc(p.nationality) : ''}</dd>${p.phone ? `<dt>Phone</dt><dd>${esc(p.phone)}</dd>` : ''}${t.notes ? `<dt>Notes</dt><dd>${esc(t.notes)}</dd>` : ''}</dl>
+      ${pending ? `<p class="hold">Slot is held for this agent until you decide.</p><div class="row"><button class="ghost" onclick="act('${t.id}','reject')">Decline</button><button class="primary" onclick="act('${t.id}','approve')">Approve booking</button></div>`
+        : `<p class="done">${t.status === 'completed' ? `Confirmation <b>${esc(t.confirmation)}</b> sent to agent` : 'Agent notified'} · ${t.seconds}s end to end</p>`}
+    </article>`;
+  }
+  return `<article class="card task ${pending ? 'pending q' : t.status}">
+    ${who(t)}
+    <div class="kind">${pending ? '❓ Counter doesn\'t know this yet' : t.source === 'memory' ? '🧠 Answered from memory' : '💬 Answered by staff'}</div>
+    <p class="question">“${esc(t.question)}”</p>
+    ${pending ? `<textarea id="a_${t.id}" rows="2" placeholder="Type your answer…" oninput="drafts['${t.id}']=this.value">${esc(drafts[t.id] || '')}</textarea>
+      <label class="remember"><input type="checkbox" id="r_${t.id}" checked> Remember this for future agents</label>
+      <div class="row"><button class="primary" onclick="answer('${t.id}')">Send answer</button></div>`
+      : `<p class="answer">${esc(t.answer)}</p><p class="done">${t.source === 'memory' ? 'Instant · no staff needed' : `Replied in ${t.seconds}s`}</p>`}
+  </article>`;
+}
+
+function render() {
+  if (!S) return;
+  $('#storeName').textContent = S.store.name;
+  const pending = S.tasks.filter((t) => t.status === 'input-required').length;
+  $('#badge').hidden = !pending; $('#badge').textContent = pending;
+  document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.tab === tab));
+  if (tab === 'inbox') {
+    const done = S.tasks.filter((t) => t.status !== 'input-required');
+    const auto = done.filter((t) => t.source === 'memory').length;
+    $('#view').innerHTML = `
+      <section class="stats"><div><b>${S.tasks.length}</b><small>agent requests</small></div><div><b>${pending}</b><small>need you</small></div><div><b>${auto}</b><small>answered by memory</small></div></section>
+      ${S.tasks.filter((t) => t.status === 'input-required').map(card).join('')}
+      ${done.length ? '<h3 class="sec">Handled</h3>' + done.map(card).join('') : ''}
+      ${!S.tasks.length ? '<p class="empty">No agent requests yet.<br>Share your Counter link: <code>/s/' + S.store.slug + '</code></p>' : ''}`;
+  } else if (tab === 'memory') {
+    $('#view').innerHTML = `<p class="lead">What Counter tells agents, besides your settings. Anything you answer with “remember” lands here.</p>
+      ${S.memory.length ? S.memory.map((m, i) => `<article class="card mem"><small class="muted">Learned ${ago(m.learnedAt)}</small><p class="question">“${esc(m.question)}”</p><p class="answer">${esc(m.answer)}</p><button class="link" onclick="forget(${i})">Forget</button></article>`).join('') : '<p class="empty">Nothing learned yet.</p>'}`;
+  } else if (!editing) {
+    const f = [['hours', 'Opening hours'], ['holidays', 'Public holidays'], ['accessibility', 'Accessibility'], ['languages', 'Languages'], ['payment', 'Payment'], ['medical', 'Medical questions policy']];
+    $('#view').innerHTML = `<p class="lead">Agents read this at <code>/s/${S.store.slug}</code>. Changes go live instantly.</p>
+      <article class="card"><h3>Services</h3><ul class="svc">${S.services.map((s) => `<li><b>${esc(s.name)}</b><span>${esc(s.price)} · ${esc(s.duration)}</span></li>`).join('')}</ul></article>
+      <article class="card settings">${f.map(([k, l]) => `<label>${l}<textarea data-k="${k}" rows="2" onfocus="editing=true">${esc(S.settings[k])}</textarea></label>`).join('')}
+      <div class="row"><button class="primary" onclick="saveSettings()">Save</button></div></article>
+      <article class="card"><h3>Approval rules</h3><p class="muted">Bookings, cancellations and payments always need staff approval. Medical questions always go to staff.</p></article>
+      <p class="center"><button class="link" onclick="resetDemo()">Reset demo data</button></p>`;
+  }
+}
+
+async function load() { try { S = await (await fetch('/admin/api/state')).json(); $('#live').classList.remove('off'); render(); } catch { $('#live').classList.add('off'); } }
+async function act(id, a) { await post(`/admin/api/tasks/${id}/${a}`); load(); }
+async function answer(id) { const v = $('#a_' + id).value.trim(); if (!v) return; await post(`/admin/api/tasks/${id}/answer`, { answer: v, remember: $('#r_' + id).checked }); delete drafts[id]; load(); }
+async function forget(i) { await post('/admin/api/memory/delete', { index: i }); load(); }
+async function saveSettings() { const b = {}; document.querySelectorAll('[data-k]').forEach((t) => (b[t.dataset.k] = t.value)); await post('/admin/api/settings', b); editing = false; load(); }
+async function resetDemo() { if (confirm('Reset all demo data?')) { await post('/admin/api/reset'); load(); } }
+document.querySelectorAll('.tabs button').forEach((b) => (b.onclick = () => { tab = b.dataset.tab; editing = false; render(); }));
+// don't re-render while typing an answer
+setInterval(() => { if (!document.activeElement?.matches('textarea')) load(); }, 1000);
+load();
+</script>
+</body>
+</html>
