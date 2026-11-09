@@ -77,17 +77,23 @@ svg.wire{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visi
 .rem{display:flex;align-items:center;gap:8px;font-size:13.5px;margin-top:9px;color:#4A5563}.tog{width:34px;height:20px;border-radius:10px;background:#1D78C6;position:relative;flex:none}.tog:after{content:"";position:absolute;right:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
 .toast{position:absolute;left:14px;right:14px;top:60px;background:#12A15F;color:#fff;border-radius:14px;padding:12px 14px;font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(18,161,95,.3)}
 #ctl{position:fixed;left:0;right:0;bottom:0;background:#222;color:#ddd;font:14px P,sans-serif;padding:8px 12px;display:flex;gap:12px;align-items:center}#ctl input{flex:1}
+#partbar{position:fixed;left:0;right:0;top:0;z-index:50;display:flex;justify-content:center;gap:28px;padding:16px 10px 12px;background:linear-gradient(180deg,rgba(17,17,17,.78),rgba(17,17,17,0));pointer-events:none}
+#partbar .pb-item{font:700 20px P,sans-serif;letter-spacing:.02em;color:rgba(255,255,255,.4);transition:color .15s}
+#partbar .pb-item.on{color:#FF6B3D}
 </style></head><body>
 <div id="stage"></div>
 <div id="ctl"><button id="pp">play</button><span id="tm">0.00</span><input id="sc" type="range" min="0" max="1" step="0.001" value="0"></div>
+<div id="partbar"><span class="pb-item">Problem</span><span class="pb-item">Solution</span><span class="pb-item">App Demo</span><span class="pb-item">Closing</span></div>
 <script>
 // ===== beat sheet (s) — v2.1 =====
-// A1 0 wordmark+click | A2 2.2 hook title, VO n1 @2.6 | B1 6.6 agents get errands (pop×3) | B2 11.4 "100곳 동시 전화" phone grid (ring builds)
-// B3 15.6 owner flustered, phones rain (busy tone) | B4 22.4 owner slides right, chain user→Pickle→Counter→owner builds, VO n2 @24.2, COUNTER wordmark @27.6
-// C1 31 workflow: 42 agents → 3 Counters → owner phone; VO n3 @32 | C2 45 owner phone (시안 A): list → thread → Approve @49 → question → answer+remember @54–57 → memory payoff @59; VO n4 @50.5
-// D1 62 "받은 전화 0통" | D2 66 "모든 에이전트·언어·24시간" | D3 70 "확정은 사장님이" | E1 74 owner happy | E2 79 pickle happy | E3 83 slogan, VO n5 @83.4 | E4 87 end card
+// v2.2: A2(hook title) 삭제, B2를 "에이전트가 사장님 폰으로 직접" 챗오스 장면으로 교체, B4 카피/비주얼을 다자 사용자→Counter 깔때기로, C1 타이틀 순서 역전(수미상관)
+// A1 0 wordmark+click | B1 2.3 agents get errands (pop×3) | B2 7.1 agents pour straight into owner's phone (direct, no Counter)
+// B3 11.3 owner flustered, phones rain (busy tone) | B4 18.1 owner slides right, multi-user→Counter funnel builds, VO n2 @19.9, COUNTER wordmark @23.3
+// C1 26.7 workflow: "확인이 필요한 것만" first, then "수백 개의 문의를 Counter가 받습니다" (bookend w/ B2); 42 agents → 3 Counters → owner phone; VO n3 @27.7
+// C2 40.7 owner phone (시안 A): list → thread → Approve @44 → question → answer+remember @48.7–51.7 → memory payoff @54.3; VO n4 @46.3
+// D1 57.7 "받은 전화 0통" | D2 61.7 "모든 에이전트·언어·24시간" | D3 65.7 "확정은 사장님이" | E1 69.7 owner happy | E2 74.7 pickle happy | E3 78.7 slogan, VO n5 @79.1 | E4 82.7 end card
 const LANG = 'en';
-const W = 1920, H = 1080, DUR = 89.5;
+const W = 1920, H = 1080, DUR = 85.2;
 window.VIDEO = { w: W, h: H, duration: DUR };
 const ACC = '#FF6B3D';
 const COPY = {
@@ -106,9 +112,9 @@ ko: {
 en: {
   a2: 'Your next customer is an AI agent.', a2hl: 'AI agent',
   b1: [['Muse', 'Book my whole weekend'], ['Pickle', "Dinner for mom's birthday"], ['Dots', 'Derm clinic near work, Saturday']],
-  b2: 'They call 100 shops at once.', b2hl: 'at once',
+  b2: "Dozens of agents. Straight to the owner's phone.", b2hl: 'Straight',
   b3a: 'Another bot?', b3b: "Booking or spam? Can't tell anymore…",
-  b4t: 'So, every shop gets an agent of its own.', b4hl: 'every shop', b4n: ['User', 'Pickle', 'Counter', 'Owner'], b4u: "Dinner for mom's birthday", b4c: 'An agent at every shop',
+  b4t: "Every request goes to Counter, not the owner.", b4hl: 'Counter', b4n: ['User', 'Pickle', 'Counter', 'Owner'], b4u: "Dinner for mom's birthday", b4c: 'An agent at every shop',
   c1t: 'Counter takes the hundreds of requests.', c1t2: 'The owner sees only what needs a decision.', c1hl: 'only what needs a decision', c1shops: [['Soy Dermatology', 'Counter'], ['Hanok House', 'Counter'], ['Namsan Guesthouse', 'Counter']], c1a: 'answered', c1b: 'needs owner', c1owner: "Owner's phone",
   c2k: ['One tap.', 'Answer once.', 'Counter remembers.'], c2s: ['Nothing is booked until you approve', 'Counter relays your answer to the agent', 'The same question never reaches you twice'],
   d1: 'Calls answered: zero.', d1s: '18 agent requests today', d2: 'Every agent. Every language. 24/7.', d2s: 'Muse · Pickle · Dots · Claude', d3: 'You always have the final say.', d3s: 'Nothing is booked until you approve.',
@@ -170,14 +176,17 @@ const stageBg = el('div', 'abs', stage); stageBg.style.inset = '0'; stageBg.styl
 const A1 = scene('A1', 0, 2.3);
 const a1wm = el('div', 'abs wm', A1.cam, 'COUNTER'); a1wm.style.top = '505px'; a1wm.style.fontSize = '46px';
 const a1cur = el('div', 'cursor', A1.cam, CURSOR_SVG); const a1rip = el('div', 'ripple', A1.cam);
-const A2 = scene('A2', 2.2, 6.8); const a2T = titleLine(A2.cam, 505);
-const B1 = scene('B1', 6.6, 11.6);
+const B1 = scene('B1', 2.3, 7.3);
 const b1 = COPY.b1.map(([nm, msg], i) => { const x = 290 + i * 520; const av = avatar(B1.cam, ['muse_avatar.png', 'pickle_avatar.png', 'dots_avatar.png'][i], 280, x, 440); const bb = bubble(B1.cam, '', x - 60, 270); bb.textContent = msg; const nmE = el('div', 'name', B1.cam, nm); nmE.style.left = (x - 60) + 'px'; nmE.style.width = '400px'; nmE.style.top = '740px'; return { av, bb, nmE }; });
-const B2 = scene('B2', 11.4, 15.8); const b2grid = el('div', 'abs', B2.cam); b2grid.style.inset = '0';
-const b2ph = []; for (let r = 0; r < 5; r++) for (let c = 0; c < 10; c++) { const p = el('div', 'ph', b2grid, PHONE_SVG('#BDB9AE')); p.style.width = p.style.height = '72px'; p.style.left = (190 + c * 170) + 'px'; p.style.top = (140 + r * 200) + 'px'; b2ph.push(p); }
-const b2bg = el('div', 'abs', B2.cam); Object.assign(b2bg.style, { left: '0', right: '0', top: '470px', height: '130px', background: 'rgba(246,245,240,.92)' }); const b2T = titleLine(B2.cam, 505);
+const B2 = scene('B2', 7.1, 11.5);
+const b2owner = el('img', 'abs', B2.cam); b2owner.src = 'assets/owner.png'; b2owner.style.width = '420px'; b2owner.style.left = '750px'; b2owner.style.top = '430px'; b2owner.style.transformOrigin = 'center bottom';
+const b2wire = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); b2wire.setAttribute('class', 'wire'); b2wire.setAttribute('viewBox', '0 0 1920 1080'); B2.cam.appendChild(b2wire);
+const b2agents = []; { const srcs = ['off_muse.png', 'off_pickle.png', 'off_dots.png', 'off_grok-bot.png']; const r = rng(5); for (let i = 0; i < 20; i++) { const ang = (i / 20) * Math.PI * 2 + r() * 0.3; const rad = 430 + r() * 110; const x = 960 + Math.cos(ang) * rad, y = 430 + Math.sin(ang) * rad * 0.62; const a = el('div', 'tiny', B2.cam, `<img src="assets/${srcs[i % 4]}">`); a.style.left = x + 'px'; a.style.top = y + 'px'; a.x = x; a.y = y; a.seed = r(); b2agents.push(a); } }
+const b2lines = b2agents.map(() => { const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('fill', 'none'); p.setAttribute('stroke', '#FF6B3D'); p.setAttribute('stroke-width', '2.5'); b2wire.appendChild(p); return p; });
+const b2dots = b2agents.map(() => el('div', 'flowdot', B2.cam));
+const b2T = titleLine(B2.cam, 150);
 // B3 + B4 share one scene so the owner can slide instead of cutting
-const B3 = scene('B3', 15.6, 31.2);
+const B3 = scene('B3', 11.3, 26.9);
 const b3rain = []; { const r = rng(7); for (let i = 0; i < 26; i++) { const p = el('div', 'ph', B3.cam, PHONE_SVG('#FF6B3D')); p.x0 = 200 + r() * 1500; p.t0 = r() * 4.5; p.rot = (r() - .5) * 90; p.sp = 0.8 + r() * 0.6; p.style.width = p.style.height = '48px'; b3rain.push(p); } }
 const b3owner = el('img', 'abs', B3.cam); b3owner.src = 'assets/owner.png'; b3owner.style.width = '600px'; b3owner.style.left = '560px'; b3owner.style.top = '300px'; b3owner.style.transformOrigin = 'center bottom';
 const b3b1 = bubble(B3.cam, '', 1150, 380); b3b1.textContent = COPY.b3a; const b3b2 = bubble(B3.cam, '', 1150, 520); b3b2.textContent = COPY.b3b;
@@ -193,8 +202,15 @@ const b4dots = [0, 1, 2].map(() => el('div', 'flowdot', B3.cam));
 const b4uchip = el('div', 'chip', B3.cam, COPY.b4u); b4uchip.style.left = '230px'; b4uchip.style.top = '380px';
 const b4wm = el('div', 'abs wm', B3.cam, 'COUNTER'); b4wm.style.top = '230px'; b4wm.style.fontSize = '120px'; b4wm.style.letterSpacing = '.12em'; b4wm.style.transformOrigin = 'center';
 const b4sub = el('div', 'abs sub', B3.cam, COPY.b4c); b4sub.style.top = '395px'; b4sub.style.fontSize = '34px';
+// extra converging sources: more users x more agents, all into the same Counter node (item 4)
+const b4extra = [['muse_avatar.png', chainY - 140], ['dots_avatar.png', chainY + 140]].map(([src, y]) => {
+  const av = el('div', 'avatar', B3.cam, `<img src="assets/${src}">`); av.style.width = av.style.height = '90px'; av.style.left = (chainX[1] - 45) + 'px'; av.style.top = (y - 45) + 'px';
+  const l = el('div', 'link', B3.cam); l.style.left = (chainX[1] + 45) + 'px'; l.style.top = (y - 2) + 'px'; l.style.width = (chainX[2] - 80 - (chainX[1] + 45)) + 'px'; l.x0 = chainX[1] + 45; l.x1 = chainX[2] - 80;
+  const d = el('div', 'flowdot', B3.cam);
+  return { av, l, d, y };
+});
 // C1 workflow
-const C1 = scene('C1', 31, 45.3);
+const C1 = scene('C1', 26.7, 41);
 const c1T = titleLine(C1.cam, 70, 50);
 const c1agents = []; { const srcs = ['off_muse.png', 'off_pickle.png', 'off_dots.png', 'off_grok-bot.png']; const r = rng(3); for (let i = 0; i < 42; i++) { const col = i % 14, row = Math.floor(i / 14); const x = 170 + col * 122 + (row % 2) * 30, y = 200 + row * 76; const a = el('div', 'tiny', C1.cam, `<img src="assets/${srcs[i % 4]}">`); a.style.left = x + 'px'; a.style.top = y + 'px'; a.x = x; a.y = y; a.seed = r(); c1agents.push(a); } }
 const c1wire = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); c1wire.setAttribute('class', 'wire'); c1wire.setAttribute('viewBox', '0 0 1920 1080'); C1.cam.appendChild(c1wire);
@@ -209,7 +225,7 @@ const c1cntB = el('div', 'cnt', C1.cam); c1cntB.style.left = '150px'; c1cntB.sty
 const c1lines = c1flows.map(f => { const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('fill', 'none'); p.setAttribute('stroke', '#D9D6CD'); p.setAttribute('stroke-width', '2'); c1wire.appendChild(p); return p; });
 const c1olines = [0, 1, 2].map(() => { const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('fill', 'none'); p.setAttribute('stroke', '#FF6B3D'); p.setAttribute('stroke-width', '3'); p.setAttribute('stroke-dasharray', '10 10'); c1wire.appendChild(p); return p; });
 // C2 owner phone (시안 A)
-const C2 = scene('C2', 45, 62.3);
+const C2 = scene('C2', 40.7, 58);
 const c2keys = COPY.c2k.map((k, i) => { const e = el('div', 'abs', C2.cam); Object.assign(e.style, { left: '120px', top: '400px', fontSize: '80px', fontWeight: '800', letterSpacing: '-0.04em', whiteSpace: 'normal', width: '900px', lineHeight: '1.1' }); e.textContent = k; return e; });
 const c2subs = COPY.c2s.map((k, i) => { const e = el('div', 'abs', C2.cam); Object.assign(e.style, { left: '124px', top: '610px', fontSize: '32px', fontWeight: '500', color: '#8A8A8A', whiteSpace: 'normal', width: '900px' }); e.textContent = k; return e; });
 const phone = el('div', 'phone', C2.cam); phone.style.left = '1200px'; phone.style.top = '120px';
@@ -226,7 +242,7 @@ const Q = s => scrTh.querySelector(s);
 const c2cur = el('div', 'cursor', C2.cam, CURSOR_SVG); const c2rip = el('div', 'ripple', C2.cam);
 const c2mock = el('div', 'abs', C2.cam, COPY.mock); Object.assign(c2mock.style, { right: '40px', bottom: '28px', fontSize: '20px', color: '#8A8A8A' });
 // D benefits
-const D = scene('D', 62, 74.3);
+const D = scene('D', 57.7, 70);
 const dBig = [0, 1, 2].map(() => { const e = el('div', 'big', D.cam); e.style.top = '430px'; e.style.fontSize = '96px'; return e; });
 const dSub = [0, 1, 2].map(() => { const e = el('div', 'abs sub', D.cam); e.style.top = '570px'; e.style.fontSize = '34px'; return e; });
 dBig[0].textContent = COPY.d1; dSub[0].textContent = COPY.d1s; dBig[1].textContent = COPY.d2; dSub[1].textContent = COPY.d2s; dBig[2].textContent = COPY.d3; dSub[2].textContent = COPY.d3s;
@@ -234,23 +250,23 @@ const dPh = el('div', 'abs', D.cam); dPh.style.left = '0'; dPh.style.right = '0'
 const dAv = ['muse_avatar.png', 'pickle_avatar.png', 'dots_avatar.png'].map((s, i) => avatar(D.cam, s, 110, 800 + i * 160, 260));
 const dTap = el('div', 'abs', D.cam, `<svg viewBox="0 0 24 24" width="96" height="96" fill="none" stroke="#FF6B3D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V5a2 2 0 0 1 4 0v6"/><path d="M13 10V8a2 2 0 0 1 4 0v3"/><path d="M17 11a2 2 0 0 1 4 0v4a7 7 0 0 1-7 7h-2a7 7 0 0 1-6-3.4L3 15a2 2 0 0 1 3-2.6l3 2.6"/></svg>`); dTap.style.left = '912px'; dTap.style.top = '270px';
 // E1 owner happy, E2 pickle happy, E3 slogan, E4 end
-const E1 = scene('E1', 74, 79.3);
+const E1 = scene('E1', 69.7, 75);
 const e1owner = el('img', 'abs', E1.cam); e1owner.src = 'assets/owner.png'; e1owner.style.width = '600px'; e1owner.style.left = '560px'; e1owner.style.top = '300px'; e1owner.style.transformOrigin = 'center bottom';
 const e1checks = [0, 1, 2].map(i => { const c = el('div', 'badge', E1.cam, CHECK_SVG); c.style.padding = '12px'; c.style.left = (770 + i * 100) + 'px'; c.style.top = '220px'; c.style.borderRadius = '50%'; return c; });
 const e1b = bubble(E1.cam, '', 1150, 400); e1b.textContent = COPY.e1; e1b.style.maxWidth = '600px';
 const e1name = el('div', 'name', E1.cam, COPY.owner); e1name.style.left = '560px'; e1name.style.width = '600px'; e1name.style.top = '930px';
-const E2 = scene('E2', 79, 83.3);
+const E2 = scene('E2', 74.7, 79);
 const e2av = avatar(E2.cam, 'pickle_avatar.png', 300, 810, 420); const e2face = face(E2.cam, 300, 810, 420);
 const e2b = bubble(E2.cam, 'acc', 1130, 480); e2b.textContent = COPY.e2; e2b.style.maxWidth = '560px';
 const e2name = el('div', 'name', E2.cam, 'Pickle'); e2name.style.left = '810px'; e2name.style.width = '300px'; e2name.style.top = '740px';
-const E3 = scene('E3', 83, 87.3);
+const E3 = scene('E3', 78.7, 83);
 const e3a = el('div', 'big', E3.cam, COPY.e3a); const e3b = el('div', 'big', E3.cam, COPY.e3b); e3a.style.top = '380px'; e3b.style.top = '520px'; e3a.style.fontSize = e3b.style.fontSize = '110px'; e3b.style.color = ACC;
-const E4 = scene('E4', 87, DUR + 1);
+const E4 = scene('E4', 82.7, DUR + 1);
 const e4wm = el('div', 'abs wm', E4.cam, 'COUNTER'); e4wm.style.top = '470px'; e4wm.style.fontSize = '72px';
 const e4url = el('div', 'abs sub', E4.cam, COPY.e4); e4url.style.top = '590px'; e4url.style.fontSize = '34px'; e4url.setAttribute('data-todo', '도메인 가칭');
 const e4team = el('div', 'abs sub', E4.cam, COPY.e4b); e4team.style.top = '960px'; e4team.style.fontSize = '24px';
 const fadeLayer = el('div', 'abs', stage); Object.assign(fadeLayer.style, { inset: '0', background: '#F6F5F0', pointerEvents: 'none', opacity: 0 });
-const SCENES = [A1, A2, B1, B2, B3, C1, C2, D, E1, E2, E3, E4];
+const SCENES = [A1, B1, B2, B3, C1, C2, D, E1, E2, E3, E4];
 
 // ===== render =====
 const curve = (x0, y0, x1, y1) => `M${x0} ${y0} C ${x0} ${(y0 + y1) / 2}, ${x1} ${(y0 + y1) / 2}, ${x1} ${y1}`;
@@ -259,14 +275,18 @@ function render(t) {
   for (const S of SCENES) show(S, t >= S.a && t < S.b);
   // A1
   if (A1.style.display !== 'none') { const tl = t; const cx = kf([[0.6, 1500], [1.5, 1010, ease]])(tl), cy = kf([[0.6, 900], [1.5, 560, ease]])(tl); a1cur.style.left = cx + 'px'; a1cur.style.top = cy + 'px'; a1cur.style.opacity = tl > 0.6 ? 1 : 0; a1wm.style.transform = `scale(${tl > 1.6 && tl < 1.75 ? 0.94 : 1})`; const rp = seg(tl, 1.65, 2.1); a1rip.style.left = '990px'; a1rip.style.top = '528px'; a1rip.style.width = a1rip.style.height = (20 + 90 * eo(rp)) + 'px'; a1rip.style.opacity = rp > 0 && rp < 1 ? 1 - rp : 0; a1wm.style.opacity = Math.min(fadeIn(tl, 0.1, 0.6), 1 - seg(tl, 1.95, 2.25)); setCam(A1); }
-  // A2
-  if (A2.style.display !== 'none') { const tl = t - 2.2; setTitle(a2T, COPY.a2, t, 2.5, { hlWord: COPY.a2hl, hlT: 4.5 }); setCam(A2, lerp(1, 1.55, ease(seg(tl, 1.4, 3.0)))); A2.cam.style.opacity = 1 - seg(t, 6.4, 6.75); }
   // B1
-  if (B1.style.display !== 'none') { b1.forEach((o, i) => { const t0 = 6.9 + i * 1.1; const p = pop(t, t0); xf(o.av, { s: p, o: clamp(p * 2) }); const bp = pop(t, t0 + 0.3); xf(o.bb, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2), y: -8 * (1 - bp) }); o.nmE.style.opacity = fadeIn(t, t0 + 0.2); }); setCam(B1, lerp(1, 1.06, seg(t, 6.6, 11.6))); B1.cam.style.opacity = 1 - seg(t, 11.2, 11.55); }
+  if (B1.style.display !== 'none') { b1.forEach((o, i) => { const t0 = 2.6 + i * 1.1; const p = pop(t, t0); xf(o.av, { s: p, o: clamp(p * 2) }); const bp = pop(t, t0 + 0.3); xf(o.bb, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2), y: -8 * (1 - bp) }); o.nmE.style.opacity = fadeIn(t, t0 + 0.2); }); setCam(B1, lerp(1, 1.06, seg(t, 2.3, 7.3))); B1.cam.style.opacity = 1 - seg(t, 6.9, 7.25); }
   // B2
-  if (B2.style.display !== 'none') { const tl = t - 11.4; b2ph.forEach((p, i) => { const t0 = 1.4 + (i === 24 ? 0 : 0.25 + (Math.abs((i % 10) - 4.5) + Math.abs(Math.floor(i / 10) - 2)) * 0.22); const pp = pop(tl, t0, 18, 0.7); xf(p, { s: pp, o: clamp(pp * 2) }); }); setTitle(b2T, COPY.b2, t, 11.7, { hlWord: COPY.b2hl, hlT: 14.1 }); setCam(B2, lerp(1, 1.18, seg(tl, 0.5, 4.4))); B2.cam.style.opacity = 1 - seg(t, 15.45, 15.75); }
+  if (B2.style.display !== 'none') { const tl = t - 7.1;
+    const oq = pop(tl, 0.1, 12, 0.8); b2owner.style.transform = `scale(${oq})`; b2owner.style.opacity = clamp(oq * 2);
+    b2agents.forEach((a, i) => { const t0 = 0.4 + a.seed * 2.6; const q = pop(tl, t0, 16, 0.7); a.style.transform = `translate(-50%,-50%) scale(${q})`; a.style.opacity = clamp(q * 2);
+      const line = b2lines[i]; const ex = 960, ey = 560; line.setAttribute('d', curve(a.x, a.y, ex, ey)); line.style.opacity = tl > t0 ? 0.55 : 0;
+      const u = seg(tl, t0 + 0.2, t0 + 0.75); const [dx, dy] = onCurve(a.x, a.y, ex, ey, eo(u)); b2dots[i].style.left = dx + 'px'; b2dots[i].style.top = dy + 'px'; b2dots[i].style.opacity = tl > t0 && u < 1 ? 1 : 0; });
+    setTitle(b2T, COPY.b2, t, 7.4, { hlWord: COPY.b2hl, hlT: 9.5 });
+    setCam(B2, lerp(1, 1.1, seg(tl, 0, 4.4))); B2.cam.style.opacity = 1 - seg(t, 11.15, 11.45); }
   // B3 + B4
-  if (B3.style.display !== 'none') { const tl = t - 15.6; const slide = ease(seg(tl, 6.8, 8.0)); // 22.4 -> 23.6
+  if (B3.style.display !== 'none') { const tl = t - 11.3; const slide = ease(seg(tl, 6.8, 8.0)); // 18.1 -> 19.3
     const p = pop(tl, 0.15, 12, 0.8); const ox = lerp(560, 1250, slide), oscale = lerp(1, 0.78, slide);
     b3owner.style.left = ox + 'px'; b3owner.style.transform = `scale(${p * oscale}) rotate(${Math.sin(tl * 18) * 1.6 * seg(tl, 0.8, 1.2) * (1 - slide)}deg)`; b3owner.style.opacity = clamp(p * 2);
     b3rain.forEach(ph => { const u = (tl - ph.t0) * ph.sp; const y = -80 + u * 420; ph.style.left = ph.x0 + 'px'; ph.style.top = y + 'px'; ph.style.opacity = (u > 0 && y < 1100 ? 0.9 : 0) * (1 - slide); ph.style.transform = `rotate(${ph.rot + u * 60}deg)`; });
@@ -274,19 +294,22 @@ function render(t) {
     b3sweat.style.opacity = fadeIn(tl, 1.4) * (1 - slide * 2); b3sweat.style.transform = `translateY(${6 * Math.sin(tl * 6)}px)`; b3name.style.opacity = fadeIn(tl, 0.5) * (1 - slide * 2);
     b4ownerLab.style.opacity = fadeIn(tl, 8.0); b4ownerLab.style.left = (ox - 20) + 'px'; b4ownerLab.style.width = '640px'; b4ownerLab.style.top = '930px';
     // chain appears left -> right after the slide
-    setTitle(b4T, COPY.b4t, t, 23.2, { hlWord: COPY.b4hl, hlT: 25.2 });
-    const t4 = tl - 7.6; // chain clock starts 23.2
+    setTitle(b4T, COPY.b4t, t, 18.9, { hlWord: COPY.b4hl, hlT: 20.9 });
+    const t4 = tl - 7.6; // chain clock starts 18.9
     b4nodes.forEach((n, i) => { const q = pop(t4, 0.6 + i * 0.9, 12, 0.75); xf(n, { s: q, o: clamp(q * 2) }); });
     b4links.forEach((l, i) => { const q = eo(seg(t4, 1.0 + i * 0.9, 1.6 + i * 0.9)); l.style.transform = `scaleX(${q})`; l.style.opacity = q > 0 ? 1 : 0; });
     b4dots.forEach((d, i) => { const l = b4links[i]; const u = ((t4 - 1.6 - i * 0.9) * 0.9) % 1; const on = t4 > 1.6 + i * 0.9; d.style.opacity = on ? 1 : 0; d.style.left = lerp(l.x0, l.x1, clamp(u)) + 'px'; d.style.top = chainY + 'px'; });
     const uq = pop(t4, 0.9); xf(b4uchip, { s: 0.8 + 0.2 * uq, o: clamp(uq * 2), y: -6 * (1 - uq) });
+    b4extra.forEach((e, i) => { const q = pop(t4, 0.9 + i * 0.5, 12, 0.75); e.av.style.transform = `scale(${q})`; e.av.style.opacity = clamp(q * 2);
+      const lq = eo(seg(t4, 1.3 + i * 0.5, 1.9 + i * 0.5)); e.l.style.transform = `scaleX(${lq})`; e.l.style.opacity = lq > 0 ? 1 : 0;
+      const u = ((t4 - 1.9 - i * 0.5) * 0.9) % 1; const on = t4 > 1.9 + i * 0.5; e.d.style.opacity = on ? 1 : 0; e.d.style.left = lerp(e.l.x0, e.l.x1, clamp(u)) + 'px'; e.d.style.top = e.y + 'px'; });
     const wq = pop(t4, 4.4, 10, 0.7); xf(b4wm, { s: 0.7 + 0.3 * wq, o: clamp(wq * 2) }); b4sub.style.opacity = fadeIn(t4, 5.0, 0.5);
     // counter node pulses once the wordmark lands
     if (t4 > 4.4) { const pu = 1 + 0.08 * Math.max(0, Math.sin((t4 - 4.4) * 6)) * Math.exp(-(t4 - 4.4) * 1.5); b4nodes[2].style.transform = `scale(${pu})`; }
-    setCam(B3, 1 + 0.06 * seg(tl, 0, 6.8) * (1 - slide) + 0.04 * seg(t4, 2, 8)); B3.cam.style.opacity = 1 - seg(t, 30.85, 31.15); }
+    setCam(B3, 1 + 0.06 * seg(tl, 0, 6.8) * (1 - slide) + 0.04 * seg(t4, 2, 8)); B3.cam.style.opacity = 1 - seg(t, 26.55, 26.85); }
   // C1 workflow
-  if (C1.style.display !== 'none') { const tl = t - 31;
-    setTitle(c1T, tl < 7.2 ? COPY.c1t : COPY.c1t2, t, tl < 7.2 ? 31.3 : 38.2, tl < 7.2 ? {} : { hlWord: COPY.c1hl, hlT: 40.3 });
+  if (C1.style.display !== 'none') { const tl = t - 26.7;
+    setTitle(c1T, tl < 7.2 ? COPY.c1t2 : COPY.c1t, t, tl < 7.2 ? 27.0 : 33.9, tl < 7.2 ? { hlWord: COPY.c1hl, hlT: 29.1 } : {});
     c1agents.forEach((a, i) => { const q = pop(tl, 0.2 + a.seed * 1.2, 14, 0.75); a.style.transform = `translate(-50%,-50%) scale(${q})`; a.style.opacity = clamp(q * 2); });
     c1shops.forEach((c, i) => { const q = pop(tl, 1.0 + i * 0.2, 12, 0.8); c.style.transform = `translate(-50%,-50%) scale(${q})`; c.style.opacity = clamp(q * 2); });
     const oq = pop(tl, 6.8, 12, 0.8); c1owner.style.transform = `translate(-50%,-50%) scale(${oq})`; c1owner.style.opacity = clamp(oq * 2);
@@ -301,9 +324,9 @@ function render(t) {
     });
     c1olines.forEach((p, i) => { const [sx, sy] = c1shopPos[i]; p.setAttribute('d', curve(sx, sy + 44, c1ownerPos[0], c1ownerPos[1] - 44)); p.style.opacity = tl > 6.9 ? eo(seg(tl, 6.9, 7.6)) * 0.9 : 0; });
     c1cntA.innerHTML = `<b>${nA}</b> ${COPY.c1a}`; c1cntB.innerHTML = `<b style="color:${ACC}">${nB}</b> ${COPY.c1b}`; c1cntA.style.opacity = fadeIn(tl, 2.2); c1cntB.style.opacity = fadeIn(tl, 7.4);
-    setCam(C1, lerp(1, 1.04, seg(tl, 0, 14))); C1.cam.style.opacity = Math.min(fadeIn(tl, 0, 0.35), 1 - seg(t, 44.95, 45.25)); }
+    setCam(C1, lerp(1, 1.04, seg(tl, 0, 14))); C1.cam.style.opacity = Math.min(fadeIn(tl, 0, 0.35), 1 - seg(t, 40.65, 40.95)); }
   // C2 owner phone
-  if (C2.style.display !== 'none') { const tl = t - 45;
+  if (C2.style.display !== 'none') { const tl = t - 40.7;
     const tapRow = 1.6, thIn = 2.0, tapApr = 4.0, toastT = 4.4, qT = 7.0, typeT = 8.0, sendT = 10.6, savedT = 11.0, s2T = 13.6;
     const pq = pop(tl, 0.1, 10, 0.85); phone.style.transform = `scale(${1.25 * (0.9 + 0.1 * pq)})`; phone.style.opacity = clamp(pq * 2);
     const sl = eo(seg(tl, thIn, thIn + 0.45)); scrList.style.transform = `translateX(${-120 * sl}px)`; scrList.style.opacity = 1 - sl; scrTh.style.transform = `translateX(${390 * (1 - sl)}px)`; scrTh.style.display = tl > thIn - 0.05 ? '' : 'none';
@@ -323,30 +346,34 @@ function render(t) {
     // left keylines
     const ks = [[tapApr - 0.2, qT - 0.2], [qT + 0.4, s2T - 0.4], [s2T, 99]];
     c2keys.forEach((k, i) => { const [a, b] = ks[i]; const o = Math.min(fadeIn(tl, a, 0.4), 1 - seg(tl, b - 0.3, b)); xf(k, { o, y: 20 * (1 - fadeIn(tl, a, 0.5)) }); c2subs[i].style.opacity = o * fadeIn(tl, a + 0.3, 0.4); });
-    setCam(C2, lerp(1, 1.04, seg(tl, 0, 17))); C2.cam.style.opacity = Math.min(fadeIn(tl, 0, 0.3), 1 - seg(t, 61.95, 62.25)); }
+    setCam(C2, lerp(1, 1.04, seg(tl, 0, 17))); C2.cam.style.opacity = Math.min(fadeIn(tl, 0, 0.3), 1 - seg(t, 57.65, 57.95)); }
   // D benefits
-  if (D.style.display !== 'none') { const tl = t - 62; const idx = tl < 4 ? 0 : tl < 8 ? 1 : 2; const lt = tl - idx * 4;
+  if (D.style.display !== 'none') { const tl = t - 57.7; const idx = tl < 4 ? 0 : tl < 8 ? 1 : 2; const lt = tl - idx * 4;
     dBig.forEach((e, i) => { const on = i === idx; const o = on ? Math.min(fadeIn(lt, 0.15, 0.4), 1 - seg(lt, 3.7, 4.0)) : 0; xf(e, { o, y: 16 * (1 - fadeIn(lt, 0.15, 0.5)) }); dSub[i].style.opacity = on ? Math.min(fadeIn(lt, 0.6, 0.4), 1 - seg(lt, 3.7, 4.0)) : 0; });
     const iq = Math.min(pop(lt, 0.05, 12, 0.75), 1) * (1 - seg(lt, 3.7, 4.0)); dPh.style.opacity = idx === 0 ? iq : 0; dPh.style.transform = `scale(${0.8 + 0.2 * iq})`;
     dAv.forEach((a, i) => { const q = pop(lt, 0.1 + i * 0.15, 14, 0.7); xf(a, { s: q, o: idx === 1 ? clamp(q * 2) * (1 - seg(lt, 3.7, 4.0)) : 0 }); });
     dTap.style.opacity = idx === 2 ? iq : 0; dTap.style.transform = `scale(${0.8 + 0.2 * iq})`;
-    setCam(D, 1 + 0.05 * (lt / 4)); D.cam.style.opacity = 1 - seg(t, 73.95, 74.25); }
+    setCam(D, 1 + 0.05 * (lt / 4)); D.cam.style.opacity = 1 - seg(t, 69.65, 69.95); }
   // E1
-  if (E1.style.display !== 'none') { const tl = t - 74; const p = pop(tl, 0.15, 12, 0.8); xf(e1owner, { s: p, o: clamp(p * 2) }); e1checks.forEach((c, i) => { const q = pop(tl, 0.7 + i * 0.3, 18, 0.6); xf(c, { s: q, o: clamp(q * 2) }); }); const bp = pop(tl, 1.5); xf(e1b, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2) }); e1name.style.opacity = fadeIn(tl, 0.5); setCam(E1, lerp(1, 1.06, seg(tl, 0, 5))); E1.cam.style.opacity = 1 - seg(t, 78.95, 79.25); }
+  if (E1.style.display !== 'none') { const tl = t - 69.7; const p = pop(tl, 0.15, 12, 0.8); xf(e1owner, { s: p, o: clamp(p * 2) }); e1checks.forEach((c, i) => { const q = pop(tl, 0.7 + i * 0.3, 18, 0.6); xf(c, { s: q, o: clamp(q * 2) }); }); const bp = pop(tl, 1.5); xf(e1b, { s: 0.8 + 0.2 * bp, o: clamp(bp * 2) }); e1name.style.opacity = fadeIn(tl, 0.5); setCam(E1, lerp(1, 1.06, seg(tl, 0, 5))); E1.cam.style.opacity = 1 - seg(t, 74.65, 74.95); }
   // E2
-  if (E2.style.display !== 'none') { const tl = t - 79; const p = pop(tl, 0.1, 12, 0.8); e2face.style.opacity = clamp(p * 2); setFace(e2face, tl < 0.8 ? 'tense' : 'happy'); const b = pop(tl, 1.2); xf(e2b, { s: 0.8 + 0.2 * b, o: clamp(b * 2) }); e2name.style.opacity = fadeIn(tl, 0.4); const bounce = tl > 0.8 ? Math.abs(Math.sin((tl - 0.8) * 6)) * 14 * Math.exp(-(tl - 0.8) * 1.2) : 0; e2av.style.transform = `translateY(${-bounce}px) scale(${p})`; e2av.style.opacity = clamp(p * 2); e2face.style.transform = `translateY(${-bounce}px)`; setCam(E2, lerp(1, 1.05, seg(tl, 0, 4))); E2.cam.style.opacity = 1 - seg(t, 82.95, 83.25); }
+  if (E2.style.display !== 'none') { const tl = t - 74.7; const p = pop(tl, 0.1, 12, 0.8); e2face.style.opacity = clamp(p * 2); setFace(e2face, tl < 0.8 ? 'tense' : 'happy'); const b = pop(tl, 1.2); xf(e2b, { s: 0.8 + 0.2 * b, o: clamp(b * 2) }); e2name.style.opacity = fadeIn(tl, 0.4); const bounce = tl > 0.8 ? Math.abs(Math.sin((tl - 0.8) * 6)) * 14 * Math.exp(-(tl - 0.8) * 1.2) : 0; e2av.style.transform = `translateY(${-bounce}px) scale(${p})`; e2av.style.opacity = clamp(p * 2); e2face.style.transform = `translateY(${-bounce}px)`; setCam(E2, lerp(1, 1.05, seg(tl, 0, 4))); E2.cam.style.opacity = 1 - seg(t, 78.65, 78.95); }
   // E3
-  if (E3.style.display !== 'none') { const tl = t - 83; const a = eo(seg(tl, 0.2, 0.9)), b = eo(seg(tl, 1.1, 1.8)); xf(e3a, { o: a, y: 24 * (1 - a) }); xf(e3b, { o: b, y: 24 * (1 - b) }); setCam(E3, lerp(1, 1.08, seg(tl, 0, 4.3))); E3.cam.style.opacity = 1 - seg(t, 86.95, 87.25); }
+  if (E3.style.display !== 'none') { const tl = t - 78.7; const a = eo(seg(tl, 0.2, 0.9)), b = eo(seg(tl, 1.1, 1.8)); xf(e3a, { o: a, y: 24 * (1 - a) }); xf(e3b, { o: b, y: 24 * (1 - b) }); setCam(E3, lerp(1, 1.08, seg(tl, 0, 4.3))); E3.cam.style.opacity = 1 - seg(t, 82.65, 82.95); }
   // E4
-  if (E4.style.display !== 'none') { const tl = t - 87; e4wm.style.opacity = fadeIn(tl, 0.1, 0.6); e4url.style.opacity = fadeIn(tl, 0.6, 0.5); e4team.style.opacity = fadeIn(tl, 0.9, 0.5); setCam(E4); }
+  if (E4.style.display !== 'none') { const tl = t - 82.7; e4wm.style.opacity = fadeIn(tl, 0.1, 0.6); e4url.style.opacity = fadeIn(tl, 0.6, 0.5); e4team.style.opacity = fadeIn(tl, 0.9, 0.5); setCam(E4); }
   fadeLayer.style.opacity = seg(t, DUR - 0.6, DUR);
+  { let idx = 0; for (let i = 0; i < PART_BOUNDS.length - 1; i++) if (t >= PART_BOUNDS[i]) idx = i; partItems.forEach((el, i) => el.classList.toggle('on', i === idx)); }
 }
 window.seek = t => render(((t % DUR) + DUR) % DUR);
+// 4-part labels (Problem/Solution/App Demo/Closing) — preview only, hidden under ?render
+const PART_BOUNDS = [0, 18.1, 26.7, 57.7, DUR];
+const partItems = [...document.querySelectorAll('#partbar .pb-item')];
 
 // ===== audio =====
 const SFX = {};
 async function loadBuf(ctx, name) { if (!SFX[name]) { const ab = await (await fetch('assets/' + name)).arrayBuffer(); SFX[name] = ab; } return await ctx.decodeAudioData(SFX[name].slice(0)); }
-const VO_T = { n1: 2.6, n2: 24.2, n3: 32.0, n4: 50.6, n5: 83.4 };
+const VO_T = { n2: 19.9, n3: 27.7, n4: 46.3, n5: 79.1 };
 window.buildAudio = async function (ctx) {
   const out = ctx.createGain(); out.connect(ctx.destination);
   const play = (buf, t, g = 1, { rate = 1, fadeOut = 0, dur = 0 } = {}) => { const s = ctx.createBufferSource(); s.buffer = buf; s.playbackRate.value = rate; const gn = ctx.createGain(); gn.gain.setValueAtTime(g, t); if (fadeOut && dur) { gn.gain.setValueAtTime(g, t + dur - fadeOut); gn.gain.linearRampToValueAtTime(0.0001, t + dur); } s.connect(gn); gn.connect(out); s.start(t); if (dur) s.stop(t + dur + 0.05); };
@@ -362,20 +389,20 @@ window.buildAudio = async function (ctx) {
   for (const [k, t0] of Object.entries(VO_T)) play(B[`vo/${LANG}_${k}.wav`], t0, 1.0);
   // cues
   play(click, 1.6, 0.8);
-  [6.9, 8.0, 9.1].forEach(t => play(popB, t, 0.55));
-  { const rg = ctx.createGain(); rg.gain.setValueAtTime(0.0001, 12.8); rg.gain.exponentialRampToValueAtTime(0.45, 15.0); rg.gain.setValueAtTime(0.45, 21.6); rg.gain.linearRampToValueAtTime(0.0001, 23.0); const rs = ctx.createBufferSource(); rs.buffer = ring; rs.loop = true; rs.connect(rg); rg.connect(out); rs.start(12.8); rs.stop(23.1); }
-  play(busy, 16.8, 0.22, { dur: 3.5, fadeOut: 1.0 }); play(popB, 16.6, 0.5); play(popB, 18.8, 0.5);
-  play(whoosh, 22.4, 0.6); [23.8, 24.7, 25.6].forEach(t => play(popB, t, 0.5)); play(impact, 27.6, 0.8);
-  play(whoosh, 30.95, 0.5); for (let i = 0; i < 28; i++) play(tick, 31 + 1.2 + i * 0.32 + 0.9, 0.22, { rate: 1.4 + (i % 4) * 0.1 }); [37.9, 38.4, 38.9].forEach(t => play(popB, t, 0.4, { rate: 0.9 }));
-  play(whoosh, 44.95, 0.5); play(click, 45 + 1.6, 0.7); play(whoosh, 45 + 2.0, 0.35, { rate: 1.3 }); play(click, 45 + 4.0, 0.9); play(popB, 45 + 4.4, 0.8, { rate: 1.2 }); play(popB, 45 + 7.0, 0.6, { rate: 0.9 });
-  for (let i = 0; i < PH.ans.length; i += 2) play(tick, 45 + 8.0 + i / 18, 0.15, { rate: 1.7 }); play(click, 45 + 10.6, 0.7); play(popB, 45 + 11.0, 0.6, { rate: 1.2 }); play(popB, 45 + 13.6, 0.6, { rate: 1.3 });
-  [62.1, 66.1, 70.1].forEach(t => play(whoosh, t, 0.4, { rate: 1.1 })); [66.2, 66.35, 66.5].forEach(t => play(popB, t, 0.4));
-  [74.7, 75.0, 75.3].forEach(t => play(popB, t, 0.6, { rate: 1.25 })); play(popB, 75.5, 0.5); play(popB, 80.2, 0.5); play(tick, 79.8, 0.5, { rate: 1.4 });
-  play(whoosh, 83.1, 0.4, { rate: 0.8 }); play(impact, 87.1, 0.5, { rate: 1.3 });
+  [2.6, 3.7, 4.8].forEach(t => play(popB, t, 0.55));
+  { const rg = ctx.createGain(); rg.gain.setValueAtTime(0.0001, 8.5); rg.gain.exponentialRampToValueAtTime(0.45, 10.7); rg.gain.setValueAtTime(0.45, 17.3); rg.gain.linearRampToValueAtTime(0.0001, 18.7); const rs = ctx.createBufferSource(); rs.buffer = ring; rs.loop = true; rs.connect(rg); rg.connect(out); rs.start(8.5); rs.stop(18.8); }
+  play(busy, 12.5, 0.22, { dur: 3.5, fadeOut: 1.0 }); play(popB, 12.3, 0.5); play(popB, 14.5, 0.5);
+  play(whoosh, 18.1, 0.6); [19.5, 20.4, 21.3].forEach(t => play(popB, t, 0.5)); play(impact, 23.3, 0.8);
+  play(whoosh, 26.65, 0.5); for (let i = 0; i < 28; i++) play(tick, 26.7 + 1.2 + i * 0.32 + 0.9, 0.22, { rate: 1.4 + (i % 4) * 0.1 }); [33.6, 34.1, 34.6].forEach(t => play(popB, t, 0.4, { rate: 0.9 }));
+  play(whoosh, 40.65, 0.5); play(click, 40.7 + 1.6, 0.7); play(whoosh, 40.7 + 2.0, 0.35, { rate: 1.3 }); play(click, 40.7 + 4.0, 0.9); play(popB, 40.7 + 4.4, 0.8, { rate: 1.2 }); play(popB, 40.7 + 7.0, 0.6, { rate: 0.9 });
+  for (let i = 0; i < PH.ans.length; i += 2) play(tick, 40.7 + 8.0 + i / 18, 0.15, { rate: 1.7 }); play(click, 40.7 + 10.6, 0.7); play(popB, 40.7 + 11.0, 0.6, { rate: 1.2 }); play(popB, 40.7 + 13.6, 0.6, { rate: 1.3 });
+  [57.8, 61.8, 65.8].forEach(t => play(whoosh, t, 0.4, { rate: 1.1 })); [61.9, 62.05, 62.2].forEach(t => play(popB, t, 0.4));
+  [70.4, 70.7, 71.0].forEach(t => play(popB, t, 0.6, { rate: 1.25 })); play(popB, 71.2, 0.5); play(popB, 75.9, 0.5); play(tick, 75.5, 0.5, { rate: 1.4 });
+  play(whoosh, 78.8, 0.4, { rate: 0.8 }); play(impact, 82.8, 0.5, { rate: 1.3 });
 };
 
 // ===== preview =====
-if (location.search.includes('render')) { document.getElementById('ctl').style.display = 'none'; document.body.style.background = '#F6F5F0'; }
+if (location.search.includes('render')) { document.getElementById('ctl').style.display = 'none'; document.getElementById('partbar').style.display = 'none'; document.body.style.background = '#F6F5F0'; }
 else { const fit = () => { const k = Math.min(innerWidth / W, (innerHeight - 40) / H); stage.style.transform = `scale(${k})`; }; addEventListener('resize', fit); fit();
   let buf, ac, src, startAt = 0, offset = 0, playing = false; const pp = document.getElementById('pp'), sc = document.getElementById('sc'), tm = document.getElementById('tm');
   async function play() { ac ??= new AudioContext(); if (!buf) { pp.textContent = '…'; const off = new OfflineAudioContext(2, Math.ceil(48000 * DUR), 48000); await buildAudio(off); buf = await off.startRendering(); } src = ac.createBufferSource(); src.buffer = buf; src.connect(ac.destination); src.start(0, offset % DUR); startAt = ac.currentTime; playing = true; pp.textContent = 'pause'; }
