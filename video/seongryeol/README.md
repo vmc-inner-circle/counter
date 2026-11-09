@@ -4,7 +4,7 @@
 
 | 버전 | 시각 | 링크 | 바뀐 점 |
 |---|---|---|---|
-| v6 (English) | 11/09 11:21 | [Counter_v6_English.mp4](Counter_v6_English.mp4) | 영어판 |
+| v7 (가게 중심, English) | 11/09 11:47 | [Counter_v7_가게중심.mp4](Counter_v7_가게중심.mp4) | 비행기 컨셉(회의 기각)을 빼고 Counter가 하는 3가지(UC-1~3)로 재구성. 실제 `/admin` UI·API 재현, 손님 모국어 음성, 실측 26초 |
 
 ## 모션 그래픽 키트
 
@@ -12,7 +12,7 @@
 
 ## 대본
 
-(여기에 붙여 넣거나 `script.md`로 따로 올린다)
+[`script.md`](script.md) — v7 내레이션·장면 표
 
 ## 코멘트
 
