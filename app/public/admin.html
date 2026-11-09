@@ -57,6 +57,43 @@ body.admin{background:#fff;--sub:#4A5563;--mut:#8A94A3}
 .rem input:checked+.tog{background:var(--blue)}.rem input:checked+.tog:after{left:16px}
 .tabs{position:static;flex:none}
 .wrap{padding-bottom:24px}
+
+/* 다듬기: design/polish 시안 1 Clean (11/09 최수민 선택) */
+body.admin{--ink:#0B0F14;--sub:#5B6470;--mut:#9AA2AD;--line:#EEF0F3;--bg:#F2F3F5;--blue:#0A6CFF;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif;letter-spacing:-.01em}
+.hd{padding:22px 20px 12px}.hd h1{font-size:30px;font-weight:800;letter-spacing:-.03em}
+.seg button{background:none;padding:6px 2px;margin-right:14px;border-radius:0;font-size:15px;color:var(--mut)}
+.seg button.on{background:none;color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
+.conv{padding:14px 20px;gap:14px}.conv+.conv{border-top:0}
+.conv .av{width:50px;height:50px}
+.conv b{font-size:16.5px;font-weight:600}
+.conv p{font-size:14.5px;color:var(--mut)}
+.conv.need p{color:var(--ink);font-weight:500}
+.conv.need .time{color:var(--blue)}
+.conv.need .time:before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--blue);margin-right:6px;vertical-align:1px}
+.th{border-bottom:0;padding:14px 14px 6px}.th b{font-size:17px}
+.facts{border-bottom:1px solid var(--line);padding:6px 16px 14px}
+.chip{background:none;border:1px solid var(--line);color:var(--sub)}
+.b{font-size:15px;border-radius:20px;padding:10px 14px}
+.b.in{background:var(--bg)}.b.out{background:var(--blue)}
+.req{border:0;background:var(--bg);border-radius:22px;padding:18px}
+.req .k{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.req .big{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 0 2px}
+.req .sub{color:var(--sub)}
+.req.done{background:#E9F8EF}.req.done .big{color:var(--ink)}
+.dock{border-top:0;padding-top:6px}
+.dock .why{text-align:center}
+.dock .two{flex-direction:row-reverse}
+.dock .primary{height:54px;border-radius:16px;font-size:17px}
+.dock .ghost{background:none;color:var(--sub);font-weight:600;padding:0 18px}
+.inp textarea{background:var(--bg);border:0}
+.tabs{border-top:1px solid var(--line)}.tabs button.on{color:var(--ink)}
+/* 탭바: 아이콘 + 글자 */
+.tabs{padding:6px 6px calc(10px + env(safe-area-inset-bottom))}
+.tabs button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;font-size:11.5px;font-weight:600;color:var(--mut)}
+.tabs svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabs button.on svg{stroke-width:2.2}
+.tabs .ic{position:relative;display:block;line-height:0}
+.tabs .badge{position:absolute;top:-4px;left:16px;margin:0}
 </style>
 </head>
 <body class="admin">
@@ -64,9 +101,9 @@ body.admin{background:#fff;--sub:#4A5563;--mut:#8A94A3}
   <main class="main" id="view"></main>
   <div id="dock"></div>
   <nav class="tabs">
-    <button data-tab="inbox" class="on">Inbox<span id="badge" class="badge" hidden></span></button>
-    <button data-tab="memory">Memory</button>
-    <button data-tab="settings">Store info</button>
+    <button data-tab="inbox" class="on"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span id="badge" class="badge" hidden></span></span>Inbox</button>
+    <button data-tab="memory"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg></span>Memory</button>
+    <button data-tab="settings"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5 4.6 4h14.8L21 9.5"/><path d="M3 9.5h18v.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 12.5V20h14v-7.5"/><path d="M10 20v-4.5h4V20"/></svg></span>Store info</button>
   </nav>
 </div>
 

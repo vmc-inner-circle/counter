@@ -23,6 +23,6 @@
 | [uc2-answer.mp4](demo-clips/uc2-answer.mp4) | 11.1s | 사장님 폰: 목록에 Emma(Muse) 등장 → 대화 열기 → "여성 의사?"에 답 입력 → "Remember" 켠 채 보냄 |
 | [uc2-memory.mp4](demo-clips/uc2-memory.mp4) | 6.8s | 사장님 폰: Dots가 같은 질문 → 목록에 "Answered from memory" → 대화를 열면 사장님 손 안 댄 답 |
 | [uc3-approve.mp4](demo-clips/uc3-approve.mp4) | 8.6s | 사장님 폰: 목록에 예약 요청 → Emma 대화 → 하단 Approve 탭 → "✓ Booked" 확정번호 |
-| [full.mp4](demo-clips/full.mp4) | 21.1s | Emma 대화에서 Approve → 질문에 답(기억) → Dots가 같은 질문, 기억으로 즉답 (`soonhyung` C2 순서) |
+| [full.mp4](demo-clips/full.mp4) | 20.6s | Emma 대화에서 Approve → 질문에 답(기억) → Dots가 같은 질문, 기억으로 즉답 (`soonhyung` C2 순서) |
 
 손님 에이전트 쪽 화면(가게 웹페이지에서 예약 폼을 채우는 장면)은 예약 폼을 만든 뒤 추가한다.
