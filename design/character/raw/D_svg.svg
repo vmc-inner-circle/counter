@@ -1,0 +1,24 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="1024" height="1024">
+<title>Friendly orange counter mascot</title>
+<desc>A rounded orange C-shaped mascot with dot eyes, a smile, a waving hand, and an integrated front counter on a cream background.</desc>
+<rect width="1024" height="1024" fill="#F6F5F0" />
+<g stroke="#212124" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+<g id="feet" fill="#FF6F0F">
+<path d="M366 824 L357 874 C335 884 320 903 324 921 C327 938 340 943 361 943 H414 C441 943 455 932 454 907 L453 844 Z" />
+<path d="M572 850 L569 907 C568 931 580 943 604 943 H663 C686 943 700 933 699 916 C698 897 683 881 666 875 L662 834 Z" />
+</g>
+<path id="waving-arm" d="M590 619 C628 590 660 548 677 508 C661 488 660 471 667 458 C675 443 689 446 698 454 C705 430 713 415 728 416 C745 417 750 431 748 445 C763 429 781 438 784 455 C790 478 765 509 733 522 C720 558 704 588 688 614 Z" fill="#FF6F0F" stroke-width="19" />
+<path id="body" d="M824 677 C816 756 755 815 672 844 C620 861 570 864 515 863 C413 865 340 837 280 782 C200 710 153 616 155 515 C156 398 215 285 309 212 C390 149 471 127 546 131 C619 132 688 150 718 193 C745 230 738 269 714 300 C690 331 664 338 635 324 C592 302 559 295 525 299 C469 300 413 330 373 371 C337 407 318 445 317 484 C313 534 337 566 375 587 C404 604 428 612 460 615 H826 Z" fill="#FF6F0F" stroke="none" />
+<path id="lower-body-shading" d="M219 663 H824 C816 756 755 815 672 844 C620 861 570 864 515 863 C413 865 340 837 280 782 C251 755 232 719 219 663 Z" fill="#CC4700" stroke="none" />
+<path id="body-outline" d="M824 677 C816 756 755 815 672 844 C620 861 570 864 515 863 C413 865 340 837 280 782 C200 710 153 616 155 515 C156 398 215 285 309 212 C390 149 471 127 546 131 C619 132 688 150 718 193 C745 230 738 269 714 300 C690 331 664 338 635 324 C592 302 559 295 525 299 C469 300 413 330 373 371 C337 407 318 445 317 484 C313 534 337 566 375 587 C404 604 428 612 460 615 H826" fill="none" />
+<path id="body-highlight" d="M273 327 C312 268 369 225 440 203" fill="none" stroke="#FF9E66" stroke-width="47" />
+<path id="counter-inset" d="M451 682 H676 C669 707 661 731 650 745 C645 752 638 754 628 754 H495 C479 754 472 745 467 732 C460 716 455 699 451 682 Z" fill="#FFFFFF" stroke-width="18" />
+<path id="counter" d="M273 612 H828 C851 612 871 629 872 650 C873 671 856 683 833 683 H258 C237 683 223 674 223 656 C222 631 245 612 273 612 Z" fill="#FF9E66" stroke-width="22" />
+<path id="resting-hand" d="M266 614 C274 579 303 553 338 553 C373 552 409 569 420 595 C430 619 420 644 399 651 C370 660 343 646 329 616 Z" fill="#FF6F0F" stroke-width="19" />
+</g>
+<g id="face" fill="#212124">
+<circle cx="434" cy="452" r="24" />
+<circle cx="585" cy="452" r="24" />
+<path d="M477 496 C487 523 534 524 547 496" fill="none" stroke="#212124" stroke-width="22" stroke-linecap="round" />
+</g>
+</svg>
