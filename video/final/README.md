@@ -7,9 +7,9 @@
 
 ## 최종본
 
-- 링크 (YouTube/Loom): 
-- 길이: 
-- 업로드 시각: 
+- 링크 (YouTube/Loom): https://youtu.be/wFJxaOTiWDo
+- 길이: 90초 (video/seongryeol/Counter_v13_최종.mp4)
+- 업로드 시각: 2026-11-09 (VMC 유튜브 채널, 전체 공개)
 
 ## 제출 폼 답변 (11/09 최수민 확정 — 영상 링크만 남음)
 
@@ -21,7 +21,7 @@
 | 팀원 (최대 4명) | 최수민 · 황준식 · 이성렬 · 조순형 — 채경완은 현장 스태프 판단으로 제외 |
 | Project Description | 아래 |
 | GitHub | https://github.com/vmc-inner-circle/counter (공개) |
-| 90초 영상 | **미정 — 최종본 제작 중** |
+| 90초 영상 | https://youtu.be/wFJxaOTiWDo (이성렬 v13 최종, 전체 공개) |
 | YC RFS Track | AI Powered Consumer Products for a Billion People |
 | Applying to YC? | Yes |
 | Extra Tracks | Transpose Award |
