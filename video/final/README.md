@@ -26,4 +26,4 @@
 | Applying to YC? | Yes |
 | Extra Tracks | Transpose Award |
 
-> Every person will soon have an AI agent, but local businesses aren't ready to talk to one: owners are drowning in AI phone slop, and agents fail to get things done because people hang up on them — all because agents are forced through channels built for humans. Counter is the agent-native front door each store needs — owners are freed from AI phone slop, while every agent gets answered automatically and turns into bookings instead of missed calls.
+> Every person will soon have an AI agent, but local businesses aren't ready to talk to one: owners are drowning in AI phone slop, and agents fail to get things done because people hang up on them — all because agents are forced through channels built for humans. Counter is the agent-native front door each store needs — owners are freed from AI phone slop, while every agent gets answered automatically and turns into bookings instead of missed calls, so the billions of people relying on agents can actually get served.
