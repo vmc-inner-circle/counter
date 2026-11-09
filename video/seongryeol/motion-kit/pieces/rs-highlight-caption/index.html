@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="brand/gsap.min.js"></script>
+<script src="brand/rs-motion.js"></script>
+<style>
+@font-face { font-family: "Pretendard"; src: url("brand/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; color: #111;
+  font-family: "Pretendard", sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+.shot { position: absolute; inset: 0; overflow: hidden; opacity: 0; }
+.shot video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#top-shade { position: absolute; left: 0; right: 0; top: 0; height: 520px; opacity: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,.42), rgba(0,0,0,0)); }
+#caps { position: absolute; left: 0; right: 0; top: 0; height: 1920px; }
+/* 자막 한 개 = 줄마다 박스 하나. 박스가 먼저 왼→오로 그려지고 안에서 낱말이 올라온다 */
+.cap { position: absolute; left: 60px; right: 60px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.ln { position: relative; display: block; width: max-content; max-width: 100%; }
+.ln .box { position: absolute; inset: 0; border-radius: 12px; }
+.ln .txt { position: relative; display: block; white-space: nowrap; font-weight: 800; letter-spacing: -.02em; line-height: 1.2;
+  padding: .16em .42em .2em; }
+.ln .w { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 .02em; margin: 0 -.02em; }
+.ln .w i { display: inline-block; font-style: normal; will-change: transform; }
+#logo { position: absolute; left: 50%; top: 236px; height: 58px; transform: translateX(-50%); opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="rs-highlight-caption" data-start="0" data-duration="10" data-width="1080" data-height="1920"
+  data-composition-variables='[{"id":"captions","type":"string","label":"자막 목록 JSON — [[시작초, 끝초, \"글자(\\n 줄바꿈)\", 강조(true/false)], …]","default":"[[0.35,2.25,\"옷 사진 한 장으로\",false],[2.75,4.75,\"뉴욕 거리 화보까지\",false],[5.25,7.25,\"룩마다 다른 장면\\n촬영은 없이\",false],[7.7,9.75,\"RealSnap 으로 지금\",true]]"},{"id":"box_color","type":"color","label":"자막 박스 색","default":"#CCFF4D"},{"id":"text_color","type":"color","label":"자막 글자 색","default":"#111111"},{"id":"emph_box","type":"color","label":"강조 자막 박스 색","default":"#111111"},{"id":"emph_text","type":"color","label":"강조 자막 글자 색","default":"#CCFF4D"},{"id":"font_size","type":"number","label":"자막 글자 크기(px)","default":62},{"id":"cap_y","type":"number","label":"자막 맨 아랫줄 아래 끝 위치(px, 1632 이하 = 아래 안전영역 위)","default":1500},{"id":"zoom","type":"number","label":"컷마다 천천히 당기는 정도(1=끔)","default":1.06},{"id":"logo","type":"boolean","label":"마지막 컷에 RealSnap 로고","default":true},{"id":"logo_white","type":"boolean","label":"로고 흰색(false 면 검정)","default":true}]'>
+  <div class="shot" id="shot0"><video id="v-clip1" class="clip" data-start="0" data-duration="2.5" data-media-start="0.2" data-track-index="0" src="assets/slots/clip-1.mp4" muted playsinline></video></div>
+  <div class="shot" id="shot1"><video id="v-clip2" class="clip" data-start="2.5" data-duration="2.5" data-media-start="0.2" data-track-index="1" src="assets/slots/clip-2.mp4" muted playsinline></video></div>
+  <div class="shot" id="shot2"><video id="v-clip3" class="clip" data-start="5" data-duration="2.5" data-media-start="0.2" data-track-index="0" src="assets/slots/clip-3.mp4" muted playsinline></video></div>
+  <div class="shot" id="shot3"><video id="v-clip4" class="clip" data-start="7.5" data-duration="2.5" data-media-start="0.2" data-track-index="1" src="assets/slots/clip-4.mp4" muted playsinline></video></div>
+  <div id="top-shade"></div>
+  <div id="caps"></div>
+  <img id="logo" src="brand/realsnap-logo.png" alt="RealSnap" />
+</div>
+<script>
+(() => {
+  const V = RS.vars({
+    captions: '[[0.35,2.25,"옷 사진 한 장으로",false],[2.75,4.75,"뉴욕 거리 화보까지",false],[5.25,7.25,"룩마다 다른 장면\\n촬영은 없이",false],[7.7,9.75,"RealSnap 으로 지금",true]]',
+    box_color: "#CCFF4D", text_color: "#111111", emph_box: "#111111", emph_text: "#CCFF4D",
+    font_size: 62, cap_y: 1500, zoom: 1.06, logo: true, logo_white: true });
+  const $ = (id) => document.getElementById(id);
+  const DUR = 10;
+  const on = (x) => x !== false && x !== "false";
+
+  // 컷: HTML 의 <video> 시간표를 그대로 읽는다(컷 수·길이는 HTML 의 data-start/data-duration 만 고치면 된다)
+  const shots = [...document.querySelectorAll(".shot")].map((el) => {
+    const v = el.querySelector("video");
+    return { el, v, a: Number(v.dataset.start), b: Number(v.dataset.start) + Number(v.dataset.duration) };
+  });
+  const last = shots[shots.length - 1];
+
+  // 자막 목록
+  let list = [];
+  try { list = typeof V.captions === "string" ? JSON.parse(V.captions) : V.captions; } catch (e) { list = []; }
+  if (!Array.isArray(list)) list = [];
+  const fs = Number(V.font_size) || 62;
+  const caps = list.map(([a, b, text, emph]) => {
+    a = Number(a); b = Number(b);
+    const el = document.createElement("div");
+    el.className = "cap";
+    const lines = String(text || "").split("\\n").join("\n").split("\n");
+    const rows = lines.map((line) => {
+      const ln = document.createElement("span"); ln.className = "ln";
+      const box = document.createElement("i"); box.className = "box";
+      box.style.background = emph ? V.emph_box : V.box_color;
+      const txt = document.createElement("span"); txt.className = "txt";
+      txt.style.fontSize = fs + "px"; txt.style.color = emph ? V.emph_text : V.text_color;
+      const words = line.split(/\s+/).filter(Boolean).map((w, k) => {
+        const s = document.createElement("span"); s.className = "w";
+        const g = document.createElement("i"); g.textContent = w; s.appendChild(g);
+        txt.appendChild(s);
+        if (k < line.split(/\s+/).filter(Boolean).length - 1) txt.appendChild(document.createTextNode(" "));
+        return g;
+      });
+      ln.appendChild(box); ln.appendChild(txt); el.appendChild(ln);
+      return { ln, box, words };
+    });
+    $("caps").appendChild(el);
+    return { el, rows, a, b: Math.max(b, a + 0.7) };
+  });
+  const place = () => caps.forEach((c) => { c.el.style.top = (Number(V.cap_y) - c.el.offsetHeight) + "px"; });
+
+  const IN = 0.24, OUT = 0.24;      // 박스 쓸기 / 빠지기
+  const renderCap = (c, t) => {
+    const vis = t >= c.a && t < c.b;
+    c.el.style.display = vis ? "flex" : "none";
+    if (!vis) return;
+    // 퇴장: 박스·글자가 함께 왼쪽부터 잘려 오른쪽으로 빠진다
+    const po = RS.seg(t, c.b - OUT, c.b, "power3.in");
+    c.el.style.clipPath = po > 0 ? `inset(-20px -20px -20px ${(po * 100).toFixed(2)}%)` : "none";
+    c.el.style.transform = `translateX(${(po * 40).toFixed(1)}px)`;
+    c.rows.forEach((r, i) => {
+      const a = c.a + i * 0.07;
+      // 등장: 박스가 왼→오로 그려진다(살짝 넘쳤다 맞는 느낌은 scaleY 로)
+      const pb = RS.seg(t, a, a + IN, "power3.out");
+      r.box.style.clipPath = `inset(0 ${((1 - pb) * 100).toFixed(2)}% 0 0 round 12px)`;
+      r.box.style.transform = `scaleY(${RS.lerp(0.72, 1, RS.seg(t, a, a + IN * 1.3, "back.out(2.2)")).toFixed(4)})`;
+      // 낱말: 박스가 반쯤 그려질 때부터 아래에서 위로 하나씩
+      r.words.forEach((g, k) => {
+        const s = a + IN * 0.45 + k * 0.07;
+        const p = RS.seg(t, s, s + 0.32, "power3.out");
+        g.style.transform = `translateY(${((1 - p) * 0.9).toFixed(4)}em)`;
+        g.style.opacity = RS.seg(t, s, s + 0.16).toFixed(3);
+      });
+    });
+  };
+
+  const logoOn = on(V.logo);
+  if (!on(V.logo_white)) $("logo").style.filter = "none";
+  else $("logo").style.filter = "brightness(0) invert(1)";
+
+  const render = (t) => {
+    const z = Number(V.zoom) || 1;
+    shots.forEach((s) => {
+      const vis = t >= s.a && t < s.b + (s === last ? 1 : 0);
+      s.el.style.opacity = vis ? 1 : 0;
+      if (vis) s.v.style.transform = `scale(${RS.lerp(z, 1, RS.seg(t, s.a, s.b, "power1.out")).toFixed(4)})`;
+    });
+    caps.forEach((c) => renderCap(c, t));
+    const pl = logoOn ? RS.seg(t, last.a + 0.25, last.a + 0.75, "power3.out") : 0;
+    $("logo").style.opacity = pl.toFixed(3);
+    $("logo").style.transform = `translate(-50%, ${((1 - pl) * 18).toFixed(1)}px)`;
+    $("top-shade").style.opacity = (pl * (on(V.logo_white) ? 1 : 0)).toFixed(3);
+  };
+
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["rs-highlight-caption"] = tl;
+  RS.sample(tl, 0, DUR, (p) => render(p * DUR));
+  place();
+  render(0);
+  RS.ready([$("logo")]).then(() => { place(); render(tl.time()); });
+})();
+</script>
+</body>
+</html>

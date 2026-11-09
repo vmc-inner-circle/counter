@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="brand/gsap.min.js"></script>
+<script src="brand/rs-motion.js"></script>
+<style>
+@font-face { font-family: "Pretendard"; src: url("brand/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #eeece8; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; color: #111;
+  background: radial-gradient(90% 55% at 50% 47%, #fbfaf8 0%, #eeece8 70%, #e6e3de 100%);
+  font-family: "Pretendard", sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+.abs { position: absolute; }
+
+/* 위 제목 */
+#head { left: 64px; right: 64px; top: 212px; }
+#label { display: inline-block; font-size: 28px; font-weight: 700; letter-spacing: .01em; color: #fff; background: #111; border-radius: 999px; padding: 10px 22px 11px; }
+.ttl { position: absolute; left: 0; top: 74px; font-size: 80px; font-weight: 850; letter-spacing: -.04em; line-height: 1.12; white-space: nowrap; }
+
+/* 가운데 화면(가상 카메라) */
+#vp { left: 0; top: 500px; width: 1080px; height: 880px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 34px, #000 846px, transparent 880px); }
+#win { position: absolute; left: 0; top: 0; transform-origin: 0 0; border-radius: 16px; overflow: hidden; background: #fff;
+  box-shadow: 0 2px 0 rgba(0,0,0,.04), 0 30px 70px rgba(30,25,20,.20); }
+#bar { position: absolute; left: 0; right: 0; top: 0; background: #f4f3f1; border-bottom: 1px solid #e3e1dd; }
+#bar i { position: absolute; top: 50%; width: 13px; height: 13px; margin-top: -6.5px; border-radius: 50%; }
+#url { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 28px; min-width: 380px; padding: 0 22px 0 40px;
+  border-radius: 999px; background: #fff; border: 1px solid #e3e1dd; font-size: 15px; font-weight: 500; color: #555; line-height: 26px; text-align: center; white-space: nowrap; }
+#url svg { position: absolute; left: 16px; top: 7px; width: 12px; height: 13px; }
+#scr { position: absolute; left: 0; overflow: hidden; background: #ececec; }
+#scr video, #scr img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#ov { position: absolute; left: 0; top: 0; overflow: visible; }
+
+/* 단계 칩 · 자막 */
+#chip { left: 56px; top: 1402px; display: flex; align-items: center; gap: 16px; padding: 12px 30px 12px 12px; border-radius: 999px;
+  background: #1b1b1b; color: #fff; font-size: 34px; font-weight: 700; white-space: nowrap; box-shadow: 0 10px 26px rgba(0,0,0,.18); }
+#chip b { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; color: #fff; }
+#cap { left: 0; right: 0; top: 1504px; display: flex; justify-content: center; }
+#cap span { font-size: 40px; font-weight: 700; color: #fff; background: #0d0d0d; border-radius: 18px; padding: 18px 34px 20px; white-space: nowrap; }
+
+/* 끝: 결과 카드 */
+.card { position: absolute; border-radius: 30px; overflow: hidden; background: #ddd; box-shadow: 0 24px 60px rgba(30,25,20,.22); opacity: 0; }
+.card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.card span { position: absolute; left: 20px; top: 20px; font-size: 26px; font-weight: 700; color: #fff; background: rgba(0,0,0,.5); border-radius: 999px; padding: 8px 18px; backdrop-filter: blur(6px); }
+#c-before { left: 92px; top: 700px; width: 400px; height: 600px; transform-origin: 50% 100%; }
+#c-after { left: 450px; top: 600px; width: 520px; height: 780px; transform-origin: 50% 100%; }
+#c-after span { color: #fff; }
+#end-cta { left: 0; right: 0; top: 1440px; display: flex; justify-content: center; opacity: 0; }
+#end-cta span { font-size: 38px; font-weight: 700; color: #fff; border-radius: 999px; padding: 18px 36px 20px; white-space: nowrap; }
+#logo { left: 0; right: 0; margin: 0 auto; top: 1556px; height: 46px; width: auto; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="rs-screen-demo" data-start="0" data-duration="18" data-width="1080" data-height="1920"
+  data-composition-variables='[{"id":"label","type":"string","label":"맨 위 작은 알약(기능 이름)","default":"RealSnap · 의상 색상 변경"},{"id":"title","type":"string","label":"맨 위 제목(\\n 줄바꿈)","default":"마음에 드는 모델컷,\\n옷 색만 바꾸기"},{"id":"url","type":"string","label":"브라우저 주소창 글자","default":"realsnap.ai/studio/color-match"},{"id":"steps","type":"string","label":"단계 목록 JSON — [{at:시작초, zoom:[x,y,w,h], chip, cap, marks:[{from,to,box:[x,y,w,h],tap:[x,y],tap_at}]}], 좌표는 녹화 영상 비율","default":"[{\"at\":0.6,\"zoom\":[0.45,0.04,0.53,0.72],\"chip\":\"컬러 사진 올리기\",\"cap\":\"원하는 색이 담긴 사진을 추가하고\",\"marks\":[{\"from\":0.75,\"to\":1.5,\"box\":[0.828,0.152,0.06,0.055],\"tap\":[0.857,0.18],\"tap_at\":1.3}]},{\"at\":2.3,\"zoom\":[0.14,0.08,0.72,0.86],\"marks\":[{\"from\":3.0,\"to\":4.15,\"box\":[0.343,0.245,0.066,0.16]},{\"from\":4.2,\"to\":5.0,\"box\":[0.733,0.688,0.063,0.05],\"tap\":[0.764,0.713],\"tap_at\":4.75}]},{\"at\":5.2,\"zoom\":[0.38,0.0,0.6,0.95],\"chip\":\"만들기 누르기\",\"cap\":\"만들기 버튼 한 번이면\",\"marks\":[{\"from\":6.25,\"to\":7.7,\"box\":[0.418,0.705,0.186,0.13],\"tap\":[0.445,0.8],\"tap_at\":6.75}]},{\"at\":8.3,\"zoom\":[0.2,0.13,0.52,0.8],\"chip\":\"AI가 색만 바꾸기\",\"cap\":\"포즈·조명은 그대로, 옷 색만 바뀌어요\",\"marks\":[{\"from\":9.3,\"to\":10.95,\"box\":[0.462,0.186,0.242,0.718]}]},{\"at\":11.0,\"zoom\":[0.44,0.15,0.29,0.78],\"chip\":\"컬러 화보 완성\",\"cap\":\"재촬영 없이 컬러별 화보 완성\",\"marks\":[{\"from\":11.6,\"to\":12.75,\"box\":[0.462,0.186,0.242,0.718]}]}]"},{"id":"end_at","type":"number","label":"결과 카드 장면 시작(초) — 녹화가 끝나는 때","default":12.9},{"id":"end_title","type":"string","label":"끝 장면 제목(\\n 줄바꿈)","default":"모델컷은 그대로,\\n컬러만 새로"},{"id":"tag_before","type":"string","label":"끝 카드 — 원본 표시","default":"원본"},{"id":"tag_after","type":"string","label":"끝 카드 — 결과 표시","default":"RealSnap 결과"},{"id":"cta","type":"string","label":"끝 장면 알약(비우면 숨김)","default":"옷 사진 한 장이면, 컬러별 화보까지"},{"id":"accent","type":"color","label":"강조색(강조 박스·탭 링·단계 번호)","default":"#F2362F"},{"id":"logo","type":"boolean","label":"RealSnap 로고 표시","default":true}]'>
+
+  <div id="head" class="abs"><span id="label"></span><div class="ttl" id="ttl-a"></div><div class="ttl" id="ttl-b"></div></div>
+
+  <div id="vp" class="abs">
+    <div id="win">
+      <div id="bar"><i style="left:20px;background:#ff5f57"></i><i style="left:42px;background:#febc2e"></i><i style="left:64px;background:#28c840"></i>
+        <div id="url"><svg viewBox="0 0 12 13"><rect x="1" y="5.5" width="10" height="7" rx="1.6" fill="#888"/><path d="M3.3 5.6V4a2.7 2.7 0 0 1 5.4 0v1.6" fill="none" stroke="#888" stroke-width="1.5"/></svg><span id="url-t"></span></div></div>
+      <div id="scr">
+        <video id="v-screen" class="clip" data-start="0.6" data-duration="12.28" data-media-start="0" data-track-index="0" src="assets/slots/screen.mp4" muted playsinline></video>
+        <img id="scr-first" src="assets/slots/screen-first.jpg" alt="" />
+        <img id="scr-last" src="assets/slots/screen-last.jpg" alt="" />
+      </div>
+    </div>
+    <svg id="ov" width="1080" height="880" viewBox="0 0 1080 880"></svg>
+  </div>
+
+  <div id="chip" class="abs"><b id="chip-n">1</b><span id="chip-t"></span></div>
+  <div id="cap" class="abs"><span id="cap-t"></span></div>
+
+  <div class="card" id="c-before"><img src="assets/slots/before.jpg" alt="" /><span id="tag-b"></span></div>
+  <div class="card" id="c-after"><img src="assets/slots/after.jpg" alt="" /><span id="tag-a"></span></div>
+  <div id="end-cta" class="abs"><span id="end-cta-t"></span></div>
+  <img id="logo" class="abs" src="brand/realsnap-logo.png" alt="RealSnap" />
+
+  <audio id="a-w0" class="clip" data-start="0.05" data-duration="0.8" data-track-index="10" src="assets/sfx/whoosh.mp3" data-volume="0.45"></audio>
+  <audio id="a-w1" class="clip" data-start="5.15" data-duration="0.8" data-track-index="11" src="assets/sfx/whoosh.mp3" data-volume="0.35"></audio>
+  <audio id="a-w2" class="clip" data-start="8.25" data-duration="0.8" data-track-index="12" src="assets/sfx/whoosh.mp3" data-volume="0.35"></audio>
+  <audio id="a-s1" class="clip" data-start="11.0" data-duration="0.38" data-track-index="13" src="assets/sfx/shutter.mp3" data-volume="0.45"></audio>
+  <audio id="a-w3" class="clip" data-start="12.9" data-duration="0.8" data-track-index="14" src="assets/sfx/whoosh.mp3" data-volume="0.45"></audio>
+  <audio id="a-s2" class="clip" data-start="13.45" data-duration="0.38" data-track-index="15" src="assets/sfx/shutter.mp3" data-volume="0.45"></audio>
+</div>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  // 기본값은 data-composition-variables 한 곳에만 둔다(단계 JSON 이 길어서)
+  const DEF = {};
+  JSON.parse($("stage").dataset.compositionVariables).forEach((v) => { DEF[v.id] = v.default; });
+  const V = RS.vars(DEF);
+  const DUR = 18, A = V.accent, NS = "http://www.w3.org/2000/svg";
+  const lines = (s) => String(s).split("\\n").join("\n").split("\n").map((l) => l.replace(/&/g, "&amp;").replace(/</g, "&lt;")).join("<br>");
+  let STEPS;
+  try { STEPS = typeof V.steps === "string" ? JSON.parse(V.steps) : V.steps; } catch (e) { STEPS = JSON.parse(DEF.steps); }
+  STEPS = (STEPS || []).filter((s) => s && isFinite(s.at)).sort((a, b) => a.at - b.at);
+  const END = Number(V.end_at) || 12.9;
+  const logoOn = V.logo !== false && V.logo !== "false";
+
+  // ── 글·색
+  $("label").textContent = V.label; if (!V.label) $("label").style.display = "none";
+  $("ttl-a").innerHTML = lines(V.title); $("ttl-b").innerHTML = lines(V.end_title);
+  $("url-t").textContent = V.url;
+  $("chip-n").style.background = A;
+  $("tag-b").textContent = V.tag_before; $("tag-a").textContent = V.tag_after;
+  $("tag-a").style.background = A;
+  $("end-cta-t").textContent = V.cta; $("end-cta-t").style.background = "#111";
+  if (!V.cta) $("end-cta").style.display = "none";
+
+  // ── 창 크기: 녹화 화면 폭 BW, 높이는 녹화 비율, 위에 주소창 CH
+  const BW = 1000, CH = 46;
+  let BH = BW * 836 / 1716;
+  const layout = () => {
+    const im = $("scr-first");
+    if (im.naturalWidth) BH = BW * im.naturalHeight / im.naturalWidth;
+    $("win").style.width = `${BW}px`; $("win").style.height = `${CH + BH}px`;
+    $("bar").style.height = `${CH}px`;
+    $("scr").style.top = `${CH}px`; $("scr").style.width = `${BW}px`; $("scr").style.height = `${BH}px`;
+  };
+  layout();
+
+  // ── 강조 박스·탭 링(화면 좌표로 그려 테두리 두께가 줌과 상관없이 같다)
+  const MARKS = [];
+  STEPS.forEach((s) => (s.marks || []).forEach((m) => {
+    if (!m || !m.box) return;
+    const r = document.createElementNS(NS, "rect"), c = document.createElementNS(NS, "circle"), d = document.createElementNS(NS, "circle");
+    r.setAttribute("fill", A); r.setAttribute("fill-opacity", "0.08"); r.setAttribute("stroke", A); r.setAttribute("stroke-width", "5");
+    r.setAttribute("stroke-linecap", "round");
+    c.setAttribute("fill", "none"); c.setAttribute("stroke", A);
+    d.setAttribute("fill", A);
+    $("ov").append(r, c, d);
+    const tap = m.tap || (m.tap_at != null ? [m.box[0] + m.box[2] / 2, m.box[1] + m.box[3] / 2] : null);
+    MARKS.push({ ...m, tap, tap_at: m.tap_at != null ? m.tap_at : m.from + 0.5, r, c, d });
+  }));
+
+  // ── 가상 카메라: 단계마다 zoom 영역으로 1초 동안 부드럽게 이동 + 머무는 동안 아주 천천히 밀기
+  const FULL = [0, 0, 1, 1], VW = 1010, VH = 820, VCX = 540, VCY = 440;
+  const idxAt = (t) => { let k = -1; for (let i = 0; i < STEPS.length; i++) if (t >= STEPS[i].at) k = i; return k; };
+  const nextAt = (k) => (k + 1 < STEPS.length ? STEPS[k + 1].at : END);
+  const cam = (t) => {
+    const k = idxAt(t);
+    let z = FULL, drift = 0;
+    if (k >= 0) {
+      const from = k ? STEPS[k - 1].zoom || FULL : FULL, to = STEPS[k].zoom || FULL;
+      const p = RS.seg(t, STEPS[k].at, STEPS[k].at + 1.0, "power3.inOut");
+      z = from.map((a, i) => RS.lerp(a, to[i], p));
+      drift = RS.seg(t, STEPS[k].at, nextAt(k), "sine.inOut");
+    }
+    const s = Math.min(VW / (z[2] * BW), VH / (z[3] * BH)) * (1 + 0.025 * drift);
+    const cx = (z[0] + z[2] / 2) * BW, cy = CH + (z[1] + z[3] / 2) * BH;
+    return { s, tx: VCX - cx * s, ty: VCY - cy * s };
+  };
+
+  const render = (t) => {
+    const C = cam(t);
+    const rise = 1 - RS.seg(t, 0, 0.8, "power3.out");
+    const out = RS.seg(t, END, END + 0.45, "power3.in");
+    const ty = C.ty + rise * 180;
+    $("win").style.transform = `translate(${C.tx.toFixed(2)}px, ${ty.toFixed(2)}px) scale(${C.s.toFixed(4)})`;
+    $("vp").style.opacity = (RS.seg(t, 0, 0.35) * (1 - out)).toFixed(3);
+    $("vp").style.transform = `translateY(${(out * 60).toFixed(1)}px) scale(${(1 - 0.06 * out).toFixed(4)})`;
+    $("vp").style.filter = out > 0.01 ? `blur(${(out * 10).toFixed(1)}px)` : "none";
+    $("scr-first").style.opacity = t < 0.65 ? 1 : 0;
+    $("scr-last").style.opacity = t >= 12.84 ? 1 : 0;
+
+    // 박스: 테두리가 한 바퀴 그려지며 등장 → 탭 링 → 사라짐
+    const P = (u, v) => [C.tx + C.s * u * BW, ty + C.s * (CH + v * BH)];
+    for (const m of MARKS) {
+      const on = t >= m.from && t < m.to + 0.05;
+      m.r.style.display = on ? "" : "none";
+      if (on) {
+        const [x0, y0] = P(m.box[0], m.box[1]), [x1, y1] = P(m.box[0] + m.box[2], m.box[1] + m.box[3]);
+        const pad = 6, x = x0 - pad, y = y0 - pad, w = x1 - x0 + pad * 2, h = y1 - y0 + pad * 2, rr = Math.min(14, w / 2, h / 2);
+        const per = 2 * (w + h) - (8 - 2 * Math.PI) * rr, dp = RS.seg(t, m.from, m.from + 0.5, "power2.inOut");
+        m.r.setAttribute("x", x.toFixed(1)); m.r.setAttribute("y", y.toFixed(1)); m.r.setAttribute("width", w.toFixed(1)); m.r.setAttribute("height", h.toFixed(1));
+        m.r.setAttribute("rx", rr.toFixed(1));
+        m.r.setAttribute("stroke-dasharray", `${per.toFixed(1)} ${per.toFixed(1)}`);
+        m.r.setAttribute("stroke-dashoffset", ((1 - dp) * per).toFixed(1));
+        m.r.setAttribute("fill-opacity", (0.09 * RS.seg(t, m.from + 0.3, m.from + 0.6)).toFixed(3));
+        m.r.style.opacity = (1 - RS.seg(t, m.to - 0.2, m.to)).toFixed(3);
+      }
+      const tOn = m.tap && t >= m.tap_at && t < m.tap_at + 0.7;
+      m.c.style.display = m.d.style.display = tOn ? "" : "none";
+      if (tOn) {
+        const [px, py] = P(m.tap[0], m.tap[1]), q = RS.seg(t, m.tap_at, m.tap_at + 0.65, "power2.out");
+        m.c.setAttribute("cx", px.toFixed(1)); m.c.setAttribute("cy", py.toFixed(1)); m.c.setAttribute("r", (18 + 58 * q).toFixed(1));
+        m.c.setAttribute("stroke-width", (6 * (1 - q) + 1).toFixed(2)); m.c.style.opacity = (1 - q).toFixed(3);
+        const pr = RS.seg(t, m.tap_at, m.tap_at + 0.12) * (1 - RS.seg(t, m.tap_at + 0.2, m.tap_at + 0.5));
+        m.d.setAttribute("cx", px.toFixed(1)); m.d.setAttribute("cy", py.toFixed(1)); m.d.setAttribute("r", (16 * pr).toFixed(1));
+        m.d.style.opacity = (0.55 * pr).toFixed(3);
+      }
+    }
+
+    // 단계 칩 · 자막: 단계가 바뀔 때 아래에서 올라오고, 다음 단계 직전에 위로 빠진다(chip·cap 이 없는 단계는 카메라만 옮긴다)
+    let k = -1, n = 0;
+    for (let i = 0; i < STEPS.length && t >= STEPS[i].at; i++) if (STEPS[i].chip || STEPS[i].cap) { k = i; n++; }
+    if (k >= 0 && t < END) {
+      const s = STEPS[k], nxs = STEPS.find((x, i) => i > k && (x.chip || x.cap)), nx = nxs ? nxs.at : END;
+      $("chip-n").textContent = String(n); $("chip-t").textContent = s.chip || "";
+      $("cap-t").textContent = s.cap || "";
+      const ci = RS.seg(t, s.at, s.at + 0.45, "back.out(1.7)"), co = RS.seg(t, nx - 0.22, nx, "power2.in");
+      $("chip").style.opacity = (RS.seg(t, s.at, s.at + 0.2) * (1 - co)).toFixed(3);
+      $("chip").style.transform = `translateY(${((1 - ci) * 36 - co * 24).toFixed(1)}px) scale(${(0.9 + 0.1 * ci).toFixed(4)})`;
+      const pi = RS.seg(t, s.at + 0.12, s.at + 0.5, "power3.out");
+      $("cap").style.opacity = (RS.seg(t, s.at + 0.12, s.at + 0.3) * (1 - co)).toFixed(3);
+      $("cap").style.transform = `translateY(${((1 - pi) * 28 - co * 20).toFixed(1)}px)`;
+      $("chip").style.display = s.chip ? "flex" : "none";
+      $("cap").style.display = s.cap ? "flex" : "none";
+    } else { $("chip").style.opacity = 0; $("cap").style.opacity = 0; }
+
+    // 제목: 처음엔 위에서 내려오고, 끝 장면에서 끝 제목으로 바뀐다
+    const hin = RS.seg(t, 0.15, 0.7, "power3.out"), sw = RS.seg(t, END, END + 0.3, "power2.in");
+    $("label").style.opacity = hin.toFixed(3);
+    $("label").style.transform = `translateY(${((1 - hin) * -20).toFixed(1)}px)`;
+    $("ttl-a").style.opacity = (RS.seg(t, 0.25, 0.75) * (1 - sw)).toFixed(3);
+    $("ttl-a").style.transform = `translateY(${((1 - RS.seg(t, 0.25, 0.85, "power3.out")) * 30 - sw * 30).toFixed(1)}px)`;
+    const sb = RS.seg(t, END + 0.4, END + 0.9, "power3.out");
+    $("ttl-b").style.opacity = sb.toFixed(3);
+    $("ttl-b").style.transform = `translateY(${((1 - sb) * 30).toFixed(1)}px)`;
+
+    // 끝 장면: 원본·결과 카드가 튀어 오르고 → 알약 → 로고
+    [["c-before", END + 0.35, -5], ["c-after", END + 0.55, 3]].forEach(([id, at, rot]) => {
+      const p = RS.seg(t, at, at + 0.6, "back.out(1.4)");
+      $(id).style.opacity = RS.seg(t, at, at + 0.15).toFixed(3);
+      $(id).style.transform = `translateY(${((1 - p) * 420).toFixed(1)}px) rotate(${(rot * p + (1 - p) * rot * 3).toFixed(2)}deg) scale(${(1 + 0.012 * RS.seg(t, at + 0.6, DUR, "sine.inOut")).toFixed(4)})`;
+    });
+    const cp = RS.seg(t, END + 1.4, END + 1.85, "back.out(1.5)");
+    $("end-cta").style.opacity = RS.seg(t, END + 1.4, END + 1.6).toFixed(3);
+    $("end-cta").style.transform = `translateY(${((1 - cp) * 30).toFixed(1)}px) scale(${(0.9 + 0.1 * cp).toFixed(4)})`;
+    $("logo").style.opacity = logoOn ? RS.seg(t, END + 1.9, END + 2.4, "power2.out").toFixed(3) : 0;
+    $("logo").style.transform = `translateY(${((1 - RS.seg(t, END + 1.9, END + 2.4, "power3.out")) * 16).toFixed(1)}px)`;
+  };
+
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["rs-screen-demo"] = tl;
+  RS.sample(tl, 0, DUR, (p) => render(p * DUR));
+  render(0);
+  RS.ready([...document.querySelectorAll("img")]).then(() => { layout(); render(tl.time()); });
+})();
+</script>
+</body>
+</html>

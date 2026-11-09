@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="brand/gsap.min.js"></script>
+<script src="brand/rs-motion.js"></script>
+<style>
+@font-face { font-family: "Pretendard"; src: url("brand/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; color: #fff;
+  font-family: "Pretendard", sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+#tube { position: absolute; inset: 0; transform-origin: 50% 50%; }
+#screen { position: absolute; inset: 0; overflow: hidden; background: #0d0d0e; }
+#vig { position: absolute; inset: 0; background: radial-gradient(75% 60% at 50% 50%, rgba(40,42,48,.55) 0%, rgba(14,14,16,0) 55%, rgba(0,0,0,.85) 100%); }
+.txt { position: absolute; left: 0; right: 0; top: 0; text-align: center; font-weight: 800; letter-spacing: -.035em; line-height: 1.04;
+  color: #f3f5ff; --rgb: 3px;
+  text-shadow: calc(var(--rgb) * -1) 0 0 rgba(255,40,70,.6), var(--rgb) 0 0 rgba(40,140,255,.6),
+    0 0 5px rgba(255,255,255,.85), 0 0 22px rgba(200,215,255,.55), 0 0 64px rgba(150,175,255,.32); }
+.txt .ln { display: block; white-space: nowrap; }
+.slice { background: transparent; }
+#scan { position: absolute; inset: 0; }
+#lines { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.42) 0 2px, rgba(0,0,0,0) 2px 5px); mix-blend-mode: multiply; }
+#roll { position: absolute; left: 0; right: 0; height: 360px; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(220,230,255,.06) 50%, rgba(255,255,255,0)); }
+#noise { position: absolute; inset: 0; opacity: .08; mix-blend-mode: screen; }
+#flash { position: absolute; inset: 0; background: #e9efff; opacity: 0; }
+#beam { position: absolute; left: 50%; top: 50%; width: 960px; height: 6px; margin: -3px 0 0 -480px; border-radius: 3px; background: #fff;
+  box-shadow: 0 0 30px 8px rgba(190,210,255,.8); opacity: 0; }
+#endbox { position: absolute; left: 0; right: 0; top: 830px; text-align: center; opacity: 0; }
+#logo { height: 92px; filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,.8)) drop-shadow(0 0 26px rgba(170,195,255,.6)); }
+#endline { margin-top: 44px; font-size: 40px; font-weight: 600; letter-spacing: -.01em; color: #dfe5ff;
+  text-shadow: 0 0 6px rgba(255,255,255,.6), 0 0 24px rgba(170,195,255,.45); }
+#glass { position: absolute; inset: 0; background: radial-gradient(60% 30% at 30% 18%, rgba(255,255,255,.05), rgba(255,255,255,0) 70%); }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="rs-crt-type" data-start="0" data-duration="13.5" data-width="1080" data-height="1920"
+  data-composition-variables='[{"id":"cards","type":"string","label":"차례로 뜨는 문장(| 로 장면, / 로 다음 박자에 붙는 줄)","default":"촬영은|한 번이면/충분해요|컬러 8가지|0번 재촬영|옷 사진 한 장/화보 끝"},{"id":"count_card","type":"number","label":"숫자를 세며 올릴 장면 번호(1부터, 0=끔). 그 장면의 첫 숫자를 0부터 센다","default":3},{"id":"scan_after","type":"number","label":"스캐너 막대가 지나갈 장면 번호(그 장면 뒤, 0=끔)","default":3},{"id":"end_line","type":"string","label":"끝 로고 아래 한 줄(비우면 숨김)","default":"AI 패션 화보 · realsnap.ai"},{"id":"glow","type":"number","label":"글자 번짐 세기(1=기본)","default":1},{"id":"tint","type":"color","label":"화면 바탕색","default":"#0D0D0E"},{"id":"power_off","type":"boolean","label":"끝에 브라운관 꺼짐","default":true},{"id":"logo","type":"boolean","label":"끝에 RealSnap 로고","default":true}]'>
+  <div id="tube">
+    <div id="screen">
+      <div id="vig"></div>
+      <div id="content">
+        <div class="txt" id="t0"></div>
+        <div class="txt slice" id="t1"></div>
+        <div class="txt slice" id="t2"></div>
+        <div class="txt slice" id="t3"></div>
+        <div id="endbox"><img id="logo" src="brand/realsnap-logo.png" alt="RealSnap" /><div id="endline"></div></div>
+      </div>
+      <svg id="scan" width="1080" height="1920" viewBox="0 0 1080 1920">
+        <defs>
+          <!-- 스캐너 막대: 잡음으로 가장자리를 찢고, 파란 번짐을 밑에 깐다 -->
+          <filter id="rag" filterUnits="userSpaceOnUse" x="-100" y="-800" width="1280" height="3600" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.018 0.09" numOctaves="3" seed="5" result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="54" xChannelSelector="R" yChannelSelector="G" result="d" />
+            <feGaussianBlur in="d" stdDeviation="16" result="b" />
+            <feColorMatrix in="b" type="matrix" values="0 0 0 0 0.35  0 0 0 0 0.55  0 0 0 0 1  0 0 0 1.4 0" result="blue" />
+            <feMerge><feMergeNode in="blue" /><feMergeNode in="d" /></feMerge>
+          </filter>
+          <filter id="nz" x="0" y="0" width="100%" height="100%"><feTurbulence id="nzt" type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="1" /><feColorMatrix type="saturate" values="0" /></filter>
+        </defs>
+        <g filter="url(#rag)"><rect id="bar" x="-60" y="-900" width="1200" height="360" fill="#eef2ff" /></g>
+      </svg>
+      <div id="roll"></div>
+      <svg id="noise" width="1080" height="1920"><rect width="1080" height="1920" filter="url(#nz)" /></svg>
+      <div id="lines"></div>
+      <div id="glass"></div>
+      <div id="flash"></div>
+    </div>
+    <div id="beam"></div>
+  </div>
+</div>
+<script>
+(() => {
+  const V = RS.vars({ cards: "촬영은|한 번이면/충분해요|컬러 8가지|0번 재촬영|옷 사진 한 장/화보 끝", count_card: 3, scan_after: 3,
+    end_line: "AI 패션 화보 · realsnap.ai", glow: 1, tint: "#0D0D0E", power_off: true, logo: true });
+  const $ = (id) => document.getElementById(id);
+  const W = 1080, H = 1920, DUR = 13.5, FPS = 30;
+  const on = (v) => v !== false && v !== "false";
+  const rnd = (n) => { let x = Math.imul((n | 0) ^ 0x9e3779b9, 0x85ebca6b); x ^= x >>> 13; x = Math.imul(x, 0xc2b2ae35); x ^= x >>> 16; return (x >>> 0) / 4294967296; };
+  $("screen").style.background = V.tint;
+  $("endline").textContent = V.end_line || "";
+  if (!on(V.logo)) $("logo").style.display = "none";
+
+  // 브라운관 화면 모양: 네 변이 바깥으로 살짝 부푼 둥근 사각형(베젤 안쪽)
+  const M = 58, R = 130, BX = 26, BY = 30, x0 = M, y0 = M + 40, x1 = W - M, y1 = H - M - 40;
+  const tubePath = `path('M ${x0 + R} ${y0} Q ${W / 2} ${y0 - BY} ${x1 - R} ${y0} Q ${x1} ${y0} ${x1} ${y0 + R}` +
+    ` Q ${x1 + BX} ${H / 2} ${x1} ${y1 - R} Q ${x1} ${y1} ${x1 - R} ${y1} Q ${W / 2} ${y1 + BY} ${x0 + R} ${y1}` +
+    ` Q ${x0} ${y1} ${x0} ${y1 - R} Q ${x0 - BX} ${H / 2} ${x0} ${y0 + R} Q ${x0} ${y0} ${x0 + R} ${y0} Z')`;
+  $("screen").style.clipPath = tubePath;
+
+  // ── 장면 일정 ──
+  const cards = String(V.cards).split("|").map((c) => c.split("/").map((s) => s.trim()).filter(Boolean)).filter((c) => c.length);
+  const countIdx = (Number(V.count_card) || 0) - 1, scanIdx = (Number(V.scan_after) || 0) - 1;
+  const ON = 0.7, GAP = 0.34, SCAN = 1.0, LINE = 0.55;  // 켜짐, 장면 사이 빈 화면, 스캐너, 줄이 붙는 간격
+  let dur = cards.map((c, i) => 1.05 + (c.length - 1) * LINE + (i === countIdx ? 0.7 : 0) + Math.min(0.5, c.join("").length * 0.03));
+  const ENDLEN = 2.3, budget = DUR - ON - ENDLEN - GAP * cards.length - (scanIdx >= 0 && scanIdx < cards.length ? SCAN : 0);
+  const sum = dur.reduce((a, b) => a + b, 0);
+  if (sum > budget) dur = dur.map((d) => d * budget / sum);
+  const sched = []; let at = ON;
+  cards.forEach((c, i) => {
+    sched.push({ i, lines: c, at, end: at + dur[i] });
+    at += dur[i] + GAP;
+    if (i === scanIdx) { sched.scan = at - GAP * 0.5; at += SCAN; }
+  });
+  const endAt = Math.max(at, DUR - ENDLEN);
+  const offAt = on(V.power_off) ? DUR - 0.45 : DUR + 1;
+
+  // 숫자 장면: 첫 숫자를 0 → 값으로 센다(앞부분은 작은 줄, 숫자 줄은 크게)
+  const numRe = /(\d+(?:\.\d+)?)/;
+  const lineHTML = (s, big) => `<span class="ln"${big ? ' data-big="1"' : ""}>${s.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</span>`;
+  const cardHTML = (sc, t) => {
+    const shown = sc.lines.filter((_, k) => t >= sc.at + k * LINE);
+    if (sc.i === countIdx) {
+      const src = shown.join(" "), m = src.match(numRe);
+      if (m) {
+        const target = parseFloat(m[1]), dec = (m[1].split(".")[1] || "").length;
+        const p = RS.seg(t, sc.at + 0.12, sc.at + 0.12 + 0.9, "power2.out");
+        const val = (target * p).toFixed(dec);
+        const pre = src.slice(0, m.index).trim(), post = src.slice(m.index + m[1].length).trim();
+        return (pre ? lineHTML(pre) : "") + lineHTML(val + post, true);
+      }
+    }
+    return shown.map((s) => lineHTML(s)).join("");
+  };
+
+  // 글자 크기: 가장 긴 줄이 폭 820 안에 들게(상한 132px, 숫자 줄은 2.3배)
+  const probe = document.createElement("span"); probe.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap;font-weight:800;letter-spacing:-.035em;font-size:100px";
+  $("stage").appendChild(probe);
+  const widthAt100 = (s) => { probe.textContent = s; return probe.offsetWidth || s.length * 60; };
+  const sizeFor = (sc) => {
+    let s = 140;
+    sc.lines.forEach((ln) => { s = Math.min(s, 820 / widthAt100(ln) * 100); });
+    return s;
+  };
+
+  const T = [$("t0"), $("t1"), $("t2"), $("t3")];
+  let lastKey = "";
+  const setText = (html, size) => {
+    const key = html + size.toFixed(1);
+    if (key === lastKey) return;
+    lastKey = key;
+    T.forEach((el) => {
+      el.innerHTML = html; el.style.fontSize = size + "px";
+      el.querySelectorAll('[data-big="1"]').forEach((b) => { b.style.fontSize = "2.3em"; b.style.lineHeight = "1"; });
+    });
+  };
+
+  const render = (t) => {
+    const f = Math.floor(t * FPS);
+    const glow = Number(V.glow) || 1;
+    // 지금 장면
+    const sc = sched.find((s) => t >= s.at && t < s.end);
+    const ghost = !sc ? sched.find((s) => t >= s.end && t < s.end + GAP * 0.8) : null;  // 꺼진 뒤 잔상
+    let op = 0, rgb = 3, gl = 0;
+    if (sc) {
+      setText(cardHTML(sc, t), sizeFor(sc));
+      const k = (t - sc.at) * FPS;
+      // 켜질 때 2~3프레임 깜빡 + 글리치, 줄이 붙는 순간에도 한 프레임
+      const lineHit = sc.lines.some((_, j) => j > 0 && t >= sc.at + j * LINE && t < sc.at + j * LINE + 2 / FPS);
+      op = k < 1 ? 0.35 : k < 2 ? 1 : k < 3 ? 0.6 : 1;
+      if (k < 3 || lineHit) { gl = 1; rgb = 12; }
+      if (sc.end - t < 2 / FPS) { gl = 1; rgb = 16; }
+      // 장면 중간에 한 번 무작위 글리치(시드)
+      const gAt = sc.at + (0.35 + 0.4 * rnd(sc.i * 13 + 1)) * (sc.end - sc.at);
+      if (t >= gAt && t < gAt + 2 / FPS) { gl = 1; rgb = 10; }
+    } else if (ghost) {
+      setText(cardHTML(ghost, ghost.end - 0.001), sizeFor(ghost));
+      op = 0.28 * (1 - RS.seg(t, ghost.end, ghost.end + GAP * 0.8));
+    }
+    // 바탕 글자 + 세로 위치(가운데)
+    const base = T[0];
+    base.style.opacity = op;
+    base.style.setProperty("--rgb", (rgb * glow).toFixed(1) + "px");
+    base.style.filter = op > 0 && op < 0.5 && !sc ? "blur(2px)" : "blur(0.5px)";
+    const hgt = base.offsetHeight || 140, top = (H - hgt) / 2 - 10;
+    base.style.transform = `translate(${gl ? ((rnd(f) - 0.5) * 18).toFixed(1) : 0}px, ${top.toFixed(1)}px)`;
+    // 글리치 조각: 가로 띠 3개를 잘라 좌우로 밀고 RGB 를 크게 벌린다
+    T.slice(1).forEach((el, j) => {
+      if (!gl || op <= 0) { el.style.opacity = 0; return; }
+      const y = rnd(f * 7 + j) * hgt, h = 10 + rnd(f * 7 + j + 3) * 46;
+      el.style.opacity = op;
+      el.style.clipPath = `inset(${y.toFixed(0)}px 0 ${Math.max(0, hgt - y - h).toFixed(0)}px 0)`;
+      el.style.transform = `translate(${((rnd(f * 11 + j) - 0.5) * 120).toFixed(1)}px, ${top.toFixed(1)}px)`;
+      el.style.setProperty("--rgb", (18 * glow).toFixed(1) + "px");
+    });
+    // 끝 로고
+    const ep = RS.seg(t, endAt, endAt + 0.08), ek = (t - endAt) * FPS;
+    $("endbox").style.opacity = t < endAt ? 0 : ek < 1 ? 0.4 : ek < 2 ? 1 : ek < 3 ? 0.55 : ep;
+    $("endbox").style.transform = `translateX(${ek >= 0 && ek < 3 ? ((rnd(f + 5) - 0.5) * 22).toFixed(1) : 0}px)`;
+    $("endline").style.opacity = RS.seg(t, endAt + 0.45, endAt + 0.6);
+    // 스캐너 막대: 위에서 아래로 한 번 쓸고, 지나는 동안 화면이 밝아진다
+    const sp = sched.scan != null ? RS.seg(t, sched.scan, sched.scan + SCAN, "power1.inOut") : 0;
+    const scanning = sched.scan != null && t >= sched.scan && t < sched.scan + SCAN;
+    $("bar").setAttribute("y", scanning ? RS.lerp(-520, H + 140, sp).toFixed(1) : "-900");
+    $("bar").setAttribute("height", (300 + 160 * Math.sin(Math.PI * sp)).toFixed(0));
+    // 켜짐: 가운데 빛줄기가 위아래로 열린다 / 꺼짐: 가로줄로 접혔다 점으로
+    // 0~0.2초 빛줄기만, 0.2~0.5초 위아래로 열림(살짝 밝았다가 가라앉음)
+    const pOn = RS.seg(t, 0.2, 0.5, "expo.out");
+    let sy = RS.lerp(0.004, 1, pOn), sx = 1, fl = t < 0.75 ? RS.seg(t, 0.2, 0.3) * (1 - RS.seg(t, 0.3, 0.75)) * 0.12 : 0;
+    let beam = t < 0.45 ? RS.seg(t, 0.02, 0.08) * (1 - RS.seg(t, 0.25, 0.45)) : 0;
+    if (t >= offAt) {
+      const a = RS.seg(t, offAt, offAt + 0.2, "power3.in"), b = RS.seg(t, offAt + 0.2, offAt + 0.38, "power2.in");
+      sy = RS.lerp(1, 0.004, a); sx = RS.lerp(1, 0.002, b); fl = a * 0.2; beam = a < 1 || b < 1 ? 1 - b : 0;
+    }
+    $("screen").style.transform = `scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`;
+    $("flash").style.opacity = (fl + (scanning ? 0.06 * Math.sin(Math.PI * sp) : 0)).toFixed(3);
+    $("beam").style.opacity = beam;
+    $("beam").style.transform = `scaleX(${t >= offAt ? sx.toFixed(4) : RS.lerp(0.3, 1, RS.seg(t, 0, 0.1)).toFixed(3)})`;
+    // 브라운관 잡음: 밝기 깜빡임, 흐르는 밝은 띠, 입자
+    $("tube").style.filter = `brightness(${(0.94 + 0.06 * rnd(f * 3)).toFixed(3)}) contrast(1.05)`;
+    $("roll").style.top = ((((t * 520) % 2600) - 400)).toFixed(0) + "px";
+    $("nzt").setAttribute("seed", String(1 + (f % 89)));
+  };
+
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["rs-crt-type"] = tl;
+  RS.sample(tl, 0, DUR, (p) => render(p * DUR));
+  render(0);
+  RS.ready([$("logo")]).then(() => { lastKey = ""; render(tl.time()); });
+})();
+</script>
+</body>
+</html>

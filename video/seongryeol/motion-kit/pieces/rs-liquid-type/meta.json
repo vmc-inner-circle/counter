@@ -1,0 +1,84 @@
+{
+  "slug": "rs-liquid-type",
+  "title_ko": "액체 타이포 — 단어가 녹아내리며 다른 서체의 다음 단어로",
+  "category": "transition",
+  "roles": [
+    "copy",
+    "transition",
+    "hook",
+    "endcard"
+  ],
+  "use": "검은 배경에서 원단 단어(SOFT→SILK→LINEN→WOOL→DENIM→REALSNAP)가 녹아 흐르며 서체째 바뀌는 9.5초 타이포 훅·인트로",
+  "size": [
+    1080,
+    1920
+  ],
+  "duration": 9.5,
+  "key_at": [
+    0,
+    0.5,
+    1.63,
+    3.07,
+    4.51,
+    5.95,
+    7.39,
+    7.89
+  ],
+  "uses": [
+    "shorts",
+    "ad"
+  ],
+  "reference": "https://www.threads.com/@gasket_love/post/DeVUL9XH5EM (원작 antonin work 액체 글자 모프, gasket_love 재현) — 연출만 참고해 새로 짬, 원본 코드·문구·로고 안 씀.",
+  "what": "0~0.5초 흐물한 덩어리에서 첫 단어가 맺힘. 단어마다 약 1.44초 머물며 잡음이 위로 흐르듯 가장자리가 은근히 일렁이고, 1.63·3.07·4.51·5.95·7.39초에 0.6초 동안 녹음(변위 10→105, 블러 0.6→11.6) — 나가는 단어는 아래로 흘러내리며 세로로 늘고 들어오는 단어는 위에서 내려앉아, 흐린 상태에서 두 단어가 임계값으로 한 덩어리처럼 이어졌다 다른 서체로 굳는다. 글자는 입자(15fps 로 끓음)로 채운 오프화이트 + 밝은 테두리 + 번짐. 위에 01/06 번호, 단어 아래 한글 작은 줄(녹을 때 흐려짐), 아래 고정 문구, 마지막 단어 0.5초 뒤 로고.",
+  "how_to_use": "질감·소재·무드처럼 단어로 바뀌어 가는 이야기(원단, 컬러 이름, 스타일 키워드)를 짧게 보여 줄 때. 광고 첫 3초 훅이나 영상 사이 전환 타이틀. words 와 fonts 는 같은 순서(| 구분). 단어는 4~6개가 알맞다(늘면 머무는 시간이 줄어든다). 한글 단어도 Pretendard 로 된다. melt 로 녹는 세기 조절(0.6 은은, 1.4 과감).",
+  "slots": {},
+  "vars": [
+    "words",
+    "fonts",
+    "captions",
+    "tagline",
+    "counter",
+    "ink",
+    "bg",
+    "melt",
+    "logo"
+  ],
+  "sfx_cues": [
+    {
+      "at": 0.1,
+      "type": "fabric-swish"
+    },
+    {
+      "at": 1.5,
+      "type": "fabric-swish"
+    },
+    {
+      "at": 2.95,
+      "type": "fabric-swish"
+    },
+    {
+      "at": 4.4,
+      "type": "fabric-swish"
+    },
+    {
+      "at": 5.85,
+      "type": "fabric-swish"
+    },
+    {
+      "at": 7.3,
+      "type": "whoosh"
+    }
+  ],
+  "techniques": [
+    "svg-feTurbulence-displacement",
+    "blur-alpha-threshold-goo",
+    "crossfade-under-threshold-morph",
+    "nested-translate-noise-drift",
+    "grain-fill-rim-glow",
+    "auto-fit-svg-text",
+    "seek-safe-sample"
+  ],
+  "preview_url": "https://d1v8ttuvmbmgis.cloudfront.net/history/motion-kit/realsnap/rs-liquid-type.mp4",
+  "thumb_url": "https://d1v8ttuvmbmgis.cloudfront.net/history/motion-kit/realsnap/rs-liquid-type.jpg",
+  "superseded_by": "rd-liquid-type"
+}

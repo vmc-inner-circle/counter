@@ -6,6 +6,10 @@
 |---|---|---|---|
 | v6 (English) | 11/09 11:21 | [Counter_v6_English.mp4](Counter_v6_English.mp4) | 영어판 |
 
+## 모션 그래픽 키트
+
+[`motion-kit/`](motion-kit/) — 9:16 HyperFrames 템플릿 13개(비포/애프터·앱 화면 데모·키네틱 타이포·엔드카드 등). 누구나 복사해서 써도 된다.
+
 ## 대본
 
 (여기에 붙여 넣거나 `script.md`로 따로 올린다)

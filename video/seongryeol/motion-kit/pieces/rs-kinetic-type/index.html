@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="brand/gsap.min.js"></script>
+<script src="brand/rs-motion.js"></script>
+<style>
+@font-face { font-family: "Pretendard"; src: url("brand/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+@font-face { font-family: "Anton"; src: url("brand/fonts/Anton.woff2") format("woff2"); font-weight: 400; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0b0b0b; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #0b0b0b;
+  font-family: "Pretendard", sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+#world { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.scene { position: absolute; inset: 0; overflow: hidden; display: none; }
+.rough { position: absolute; inset: 0; filter: url(#rough); }
+.big { position: absolute; left: 0; top: 0; font-family: "Anton", sans-serif; font-weight: 400; text-transform: uppercase;
+  white-space: nowrap; line-height: 1; letter-spacing: -.01em; transform-origin: 50% 50%; will-change: transform; }
+.sub { position: absolute; left: 50%; font-weight: 800; font-size: 46px; letter-spacing: -.02em; white-space: nowrap;
+  padding: 10px 22px 12px; transform: translateX(-50%); }
+.tiny { position: absolute; font-weight: 700; font-size: 22px; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+#sil { position: absolute; inset: 0; width: 1080px; height: 1920px; transform-origin: 50% 70%; }
+#photo { display: none; }
+#dots { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply;
+  background-image: radial-gradient(circle, rgba(0,0,0,.55) 1.4px, transparent 1.9px); background-size: 8px 8px; }
+#grain { position: absolute; left: -160px; top: -160px; width: 1400px; height: 2240px; pointer-events: none; mix-blend-mode: overlay; opacity: .22; }
+#logo { position: absolute; left: 50%; top: 1470px; height: 52px; transform: translateX(-50%); filter: brightness(0) invert(1); }
+#url { position: absolute; left: 0; right: 0; top: 1548px; text-align: center; font-weight: 700; font-size: 30px; letter-spacing: .1em; }
+#bar { position: absolute; height: 18px; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="rs-kinetic-type" data-start="0" data-duration="11" data-width="1080" data-height="1920"
+  data-composition-variables='[{"id":"lines","type":"string","label":"큰 단어 장면들(| 로 장면, / 로 두 줄). 마지막 장면은 끝 타이틀","default":"EVERY/LOOK|NO/RESHOOT|ONE PHOTO|ALL/COLORS|REALSNAP"},{"id":"subs","type":"string","label":"장면별 한글 보조줄(| 구분, 비우면 숨김)","default":"옷 한 벌의 모든 룩|재촬영 없이|사진 한 장이면 충분해요|컬러별 화보까지|옷 사진 한 장 → AI 패션 화보"},{"id":"wall","type":"string","label":"벽 장면에 반복할 단어(비우면 3번째 장면 문구)","default":""},{"id":"bpm","type":"number","label":"BPM(비트마다 슬램, 장면=4비트)","default":120},{"id":"red","type":"color","label":"빨강","default":"#E3241B"},{"id":"ink","type":"color","label":"검정","default":"#0B0B0B"},{"id":"paper","type":"color","label":"오프화이트","default":"#EEEAE1"},{"id":"photo","type":"string","label":"실루엣으로 바꿀 모델 사진(밝은 배경)","default":"assets/slots/photo.jpg"},{"id":"end_url","type":"string","label":"끝 장면 주소(비우면 숨김)","default":"realsnap.ai"},{"id":"logo","type":"boolean","label":"RealSnap 로고 표시","default":true}]'>
+  <div id="world">
+    <div class="scene" id="sc-stack"><div class="rough" id="stack-r"></div></div>
+    <div class="scene" id="sc-alt"><div class="rough" id="alt-r"></div></div>
+    <div class="scene" id="sc-wall"><div class="rough" id="wall-r"></div></div>
+    <div class="scene" id="sc-sil"><canvas id="sil" width="1080" height="1920"></canvas><div class="rough" id="sil-r"></div></div>
+    <div class="scene" id="sc-end"><div class="rough" id="end-r"></div>
+      <img id="logo" src="brand/realsnap-logo.png" alt="RealSnap" /><div id="url"></div></div>
+  </div>
+  <img id="photo" src="assets/slots/photo.jpg" alt="" />
+  <div id="dots"></div>
+  <svg id="grain" viewBox="0 0 1400 2240"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" /><feColorMatrix type="saturate" values="0" /></filter><rect width="1400" height="2240" filter="url(#gr)" /></svg>
+  <svg width="0" height="0" style="position:absolute">
+    <defs id="fx">
+      <!-- 인쇄 번짐: 고주파 잡음의 밝은 점만 남겨 글자·면에서 파낸다 -->
+      <filter id="rough" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.62" numOctaves="2" seed="11" result="n" />
+        <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  14 0 0 0 -9.6" result="holes" />
+        <feComposite in="SourceGraphic" in2="holes" operator="out" />
+      </filter>
+    </defs>
+  </svg>
+</div>
+<script>
+(() => {
+  const V = RS.vars({ lines: "EVERY/LOOK|NO/RESHOOT|ONE PHOTO|ALL/COLORS|REALSNAP",
+    subs: "옷 한 벌의 모든 룩|재촬영 없이|사진 한 장이면 충분해요|컬러별 화보까지|옷 사진 한 장 → AI 패션 화보",
+    wall: "", bpm: 120, red: "#E3241B", ink: "#0B0B0B", paper: "#EEEAE1", photo: "assets/slots/photo.jpg", end_url: "realsnap.ai", logo: true });
+  const $ = (id) => document.getElementById(id);
+  const W = 1080, H = 1920, DUR = 11;
+  const C = { r: V.red, k: V.ink, p: V.paper };
+
+  // 장면 목록: 마지막은 끝 타이틀, 나머지는 stack → alt → wall → sil 순서로 돈다(장면마다 4비트)
+  const phrases = String(V.lines).split("|").map((s) => s.trim()).filter(Boolean);
+  const subs = String(V.subs || "").split("|").map((s) => s.trim());
+  const STYLES = ["stack", "alt", "wall", "sil"];
+  const body = phrases.slice(0, -1), endPh = phrases[phrases.length - 1] || "REALSNAP";
+  const END_MIN = 2.6;  // 끝 장면 최소 길이(초) — 장면이 많거나 BPM 이 느리면 비트를 줄여 맞춘다
+  const B = Math.min(60 / (Number(V.bpm) || 120), (DUR - END_MIN) / Math.max(1, 4 * body.length));
+  const scenes = body.map((ph, i) => ({ style: STYLES[i % 4], lines: ph.split("/").map((s) => s.trim()), sub: subs[i] || "", at: i * 4 * B }));
+  const endAt = body.length * 4 * B;
+
+  // 시드 난수(같은 n 이면 같은 값)
+  const rnd = (n) => { let x = Math.imul((n | 0) ^ 0x9e3779b9, 0x85ebca6b); x ^= x >>> 13; x = Math.imul(x, 0xc2b2ae35); x ^= x >>> 16; return (x >>> 0) / 4294967296; };
+
+  // 방향 블러(모션블러 스트릭) — 글자마다 자기 필터를 하나씩 쓴다
+  const fx = $("fx"); let nf = 0;
+  const mkBlur = () => {
+    const id = "mb" + nf++, ns = "http://www.w3.org/2000/svg";
+    const f = document.createElementNS(ns, "filter"); f.setAttribute("id", id);
+    f.setAttribute("x", "-30%"); f.setAttribute("y", "-30%"); f.setAttribute("width", "160%"); f.setAttribute("height", "160%");
+    const g = document.createElementNS(ns, "feGaussianBlur"); g.setAttribute("stdDeviation", "0 0"); f.appendChild(g); fx.appendChild(f);
+    return { id, g };
+  };
+  const big = (parent, text, color) => {
+    const el = document.createElement("div"); el.className = "big"; el.textContent = text; el.style.color = color;
+    parent.appendChild(el); el._mb = mkBlur(); return el;
+  };
+  const sub = (parent, text, fg, bg) => {
+    const el = document.createElement("div"); el.className = "sub"; el.textContent = text;
+    el.style.color = fg; el.style.background = bg; parent.appendChild(el); if (!text) el.style.display = "none"; return el;
+  };
+  const tiny = (parent, text, x, y, color, right) => {
+    const el = document.createElement("div"); el.className = "tiny"; el.textContent = text; el.style.color = color;
+    el.style.top = y + "px"; if (right) el.style.right = x + "px"; else el.style.left = x + "px"; parent.appendChild(el); return el;
+  };
+  // 글자 놓기: 가운데(cx, cy), 크기 size, 배율·블러
+  const place = (el, cx, cy, size, sx, sy, bx, by, op) => {
+    el.style.fontSize = size + "px";
+    const w = el._w * size / 100, h = size;
+    el.style.transform = `translate(${(cx - w / 2).toFixed(1)}px, ${(cy - h / 2).toFixed(1)}px) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`;
+    el.style.opacity = op == null ? 1 : op;
+    const b = Math.abs(bx) + Math.abs(by);
+    el._mb.g.setAttribute("stdDeviation", `${Math.abs(bx).toFixed(1)} ${Math.abs(by).toFixed(1)}`);
+    el.style.filter = b > 0.4 ? `url(#${el._mb.id})` : "none";
+  };
+  // 폭 맞춤 크기(글자 폭이 width 가 되게, 높이 상한 maxH)
+  const fit = (el, width, maxH) => Math.min(width / el._w * 100, maxH || 9999);
+  // 슬램: at 에 커다랗게 들어와 0.15초 만에 자리 — 배율과 블러를 함께 돌려준다
+  const slam = (t, at, from) => {
+    const p = RS.seg(t, at, at + 0.15, "power4.out");
+    return { on: t >= at, s: RS.lerp(from || 1.6, 1, p), blur: (1 - p) * 46 };
+  };
+  const pulse = (t) => { const k = ((t % B) + B) % B; return Math.exp(-k * 9); };  // 비트마다 1 → 0
+
+  // ── 장면 만들기 ──
+  const S = {};
+  scenes.forEach((sc) => {
+    // 같은 판(host)을 두 장면이 쓸 수 있어 장면마다 안쪽 상자를 따로 둔다
+    const root = document.createElement("div"), host = $("sc-" + sc.style);
+    root.style.cssText = "position:absolute;inset:0"; $(sc.style + "-r").appendChild(root);
+    sc.host = host; sc.root = root; sc.els = {};
+    if (sc.style === "stack") {
+      sc.els.l = sc.lines.map((ln) => big(root, ln, C.p));
+      sc.els.sub = sub(root, sc.sub, C.p, C.k);
+      sc.els.t1 = tiny(root, "RS—01 / LOOKBOOK", 60, 236, C.k); sc.els.t2 = tiny(root, "ONE PHOTO ⟶ ALL", 60, 236, C.k, true);
+    } else if (sc.style === "alt") {
+      sc.els.ghost = big(root, sc.lines[sc.lines.length - 1], C.r);
+      sc.els.l = sc.lines.map((ln) => big(root, ln, C.r));
+      sc.els.sub = sub(root, sc.sub, C.k, C.p);
+      sc.els.t1 = tiny(root, "NO.02 — STUDIO", 60, 236, C.p);
+    } else if (sc.style === "wall") {
+      const word = (V.wall || sc.lines.join(" ")).toUpperCase();
+      sc.els.rows = Array.from({ length: 8 }, (_, i) => big(root, Array(6).fill(word).join(" "), C.p));
+      sc.els.sub = sub(root, sc.sub, C.p, C.r);
+    } else {
+      sc.els.l = sc.lines.map((ln) => big(root, ln, C.p));
+      sc.els.sub = sub(root, sc.sub, C.p, C.k);
+      sc.els.t1 = tiny(root, "SILHOUETTE / 04", 60, 236, C.k);
+    }
+    S[sc.style] = S[sc.style] || []; S[sc.style].push(sc);
+  });
+  const E = { root: $("end-r") };
+  E.giant = big(E.root, endPh, C.r);
+  E.word = big(E.root, endPh, C.p);
+  E.bar = document.createElement("div"); E.bar.id = "bar"; E.bar.style.background = C.r; E.root.appendChild(E.bar);
+  E.sub = sub(E.root, subs[phrases.length - 1] || "", C.k, C.p);
+  $("url").textContent = V.end_url || ""; $("url").style.color = C.p;
+  const logoOn = V.logo !== false && V.logo !== "false";
+  if (!logoOn) $("logo").style.display = "none";
+  $("photo").src = V.photo;
+
+  // 글자 폭 재기 — 숨은 장면은 폭이 0 이라 잠깐 모두 펼쳐서 잰다
+  const measure = () => {
+    const boxes = [...document.querySelectorAll(".scene")].concat(scenes.map((sc) => sc.root));
+    const prev = boxes.map((b) => b.style.display);
+    boxes.forEach((b) => (b.style.display = "block"));
+    document.querySelectorAll(".big").forEach((el) => { el.style.fontSize = "100px"; el.style.transform = "none"; el._w = el.offsetWidth || 1; });
+    boxes.forEach((b, i) => (b.style.display = prev[i]));
+  };
+  measure();
+
+  // 실루엣: 사진을 칸마다 어둡기만큼 큰 점(망점)으로 — 밝은 배경은 비고, 어두운 곳은 꽉 찬다
+  const drawSil = () => {
+    const img = $("photo"), cv = $("sil"), g = cv.getContext("2d");
+    if (!img.naturalWidth) return;
+    const s = Math.max(W / img.naturalWidth, H / img.naturalHeight), sw = W / s, sh = H / s;
+    const tmp = document.createElement("canvas"); tmp.width = W; tmp.height = H;
+    const tg = tmp.getContext("2d"); tg.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) / 2, sw, sh, 0, 0, W, H);
+    let d; try { d = tg.getImageData(0, 0, W, H).data; } catch (e) { return; }
+    g.clearRect(0, 0, W, H); g.fillStyle = "#000";
+    const cell = 10;
+    for (let y = 0; y < H; y += cell) for (let x = 0; x < W; x += cell) {
+      let L = 0, n = 0;
+      for (let yy = y; yy < y + cell && yy < H; yy += 3) for (let xx = x; xx < x + cell && xx < W; xx += 3) {
+        const i = (yy * W + xx) * 4; L += (0.3 * d[i] + 0.59 * d[i + 1] + 0.11 * d[i + 2]) / 255; n++;
+      }
+      L /= n;
+      const k = RS.clamp((0.83 - L) / 0.38);
+      if (k <= 0.03) continue;
+      g.beginPath(); g.arc(x + cell / 2, y + cell / 2, cell * 0.74 * Math.sqrt(k), 0, Math.PI * 2); g.fill();
+    }
+  };
+
+  // ── 그리기 ──
+  let curBg = C.k;
+  const show = (host, on, bg) => { host.style.display = on ? "block" : "none"; if (on && bg) { host.style.background = bg; curBg = bg; } };
+
+  const renderStack = (sc, t) => {
+    const b = (t - sc.at) / B, L = sc.els.l, n = L.length;
+    const inv = b >= 2 && b < 2.5;  // 2비트째 반 비트 반전
+    show(sc.host, true, inv ? C.p : C.r);
+    const sizes = L.map((el) => fit(el, 990, 1200 / n));
+    const tot = sizes.reduce((a, s) => a + s * 0.9, 0);
+    let y = 930 - tot / 2;
+    L.forEach((el, i) => {
+      const m = slam(t, sc.at + i * B);
+      const jit = b >= 3 ? (rnd(Math.floor(t / (B / 2)) * 7 + i) - 0.5) * 60 : 0;  // 마지막 비트 좌우 스타카토
+      el.style.color = inv ? C.r : C.p;
+      place(el, 540 + jit, y + sizes[i] * 0.45, sizes[i], m.s, m.s, m.blur * 0.3, m.blur, m.on ? 1 : 0);
+      y += sizes[i] * 0.9;
+    });
+    const sp = RS.seg(t, sc.at + 1.5 * B, sc.at + 1.5 * B + 0.12, "power3.out");
+    sc.els.sub.style.top = (y + 40) + "px"; sc.els.sub.style.opacity = sp;
+    sc.els.sub.style.transform = `translateX(-50%) translateY(${(1 - sp) * 30}px)`;
+    [sc.els.t1, sc.els.t2].forEach((el) => { el.style.color = inv ? C.r : C.k; el.style.opacity = b >= 0.5 ? 1 : 0; });
+  };
+
+  const renderAlt = (sc, t) => {
+    const b = (t - sc.at) / B, L = sc.els.l;
+    show(sc.host, true, C.k);
+    // 뒤: 마지막 줄을 세로로 길게 늘려 어둡게 깔고 천천히 흘린다
+    const gh = sc.els.ghost, gs = fit(gh, 1500);
+    place(gh, 540 - (t - sc.at) * 220, 960, gs, 1, 2000 / gs, 0, 0, 0.28);
+    // 앞: 두 줄이 좌우에서 쓸려 들어오고, 3·4비트에 위아래 자리를 바꾼다
+    const swap = b >= 2 && b < 3;
+    const ys = [690, 1180];
+    L.forEach((el, i) => {
+      const at = sc.at + i * B, p = RS.seg(t, at, at + 0.16, "expo.out");
+      const dir = i % 2 ? 1 : -1, size = fit(el, 940, 430);
+      const sw = RS.seg(t, sc.at + (swap ? 2 : 3) * B, sc.at + (swap ? 2 : 3) * B + 0.12, "power3.inOut");
+      const fromY = ys[swap ? i % 2 : 1 - (i % 2)], toY = ys[swap ? 1 - (i % 2) : i % 2];
+      const yy = b >= 2 ? RS.lerp(fromY, toY, sw) : ys[i % 2];
+      const bx = (1 - p) * 70, by = b >= 2 && sw > 0 && sw < 1 ? 40 * Math.sin(Math.PI * sw) : 0;
+      place(el, 540 + dir * (1 - p) * 1300, yy, size, 1, 1, bx, by, t >= at ? 1 : 0);
+    });
+    const sp = RS.seg(t, sc.at + 0.6 * B, sc.at + 0.6 * B + 0.1);
+    sc.els.sub.style.top = "1460px"; sc.els.sub.style.opacity = sp;
+    sc.els.t1.style.opacity = sp;
+  };
+
+  const renderWall = (sc, t) => {
+    const b = (t - sc.at) / B, beat = Math.floor(b), inv = beat === 2;
+    show(sc.host, true, inv ? C.p : C.k);
+    const rows = sc.els.rows, rh = 252;
+    rows.forEach((el, i) => {
+      const dir = i % 2 ? 1 : -1;
+      // 비트마다 한 칸 '툭' 밀고(블러), 그 사이엔 천천히 흐른다
+      const k = RS.seg(b - beat, 0, 0.3, "power4.out");
+      const shift = (beat + k) * 260 + (t - sc.at) * 90;
+      const hot = i === 3 || i === 4;
+      el.style.color = hot ? C.r : inv ? C.k : C.p;
+      const cx = 540 + dir * (shift % 1600) - dir * 800;
+      const enter = RS.seg(t, sc.at + i * 0.03, sc.at + i * 0.03 + 0.14, "power3.out");
+      place(el, cx, 108 + i * rh - (1 - enter) * 120, rh * 1.18, 1, 1, (1 - k) * 34, 0, enter);
+    });
+    const sp = RS.seg(t, sc.at + B, sc.at + B + 0.1);
+    sc.els.sub.style.top = "1490px"; sc.els.sub.style.opacity = sp; sc.els.sub.style.color = C.p;
+  };
+
+  const renderSil = (sc, t) => {
+    const b = (t - sc.at) / B, half = Math.floor(b * 2);
+    const flip = b >= 2 && half % 2 === 1;  // 3·4비트에 반 비트마다 판 색 뒤집기
+    show(sc.host, true, flip ? C.p : C.r);
+    const pu = pulse(t - sc.at);
+    $("sil").style.transform = `scale(${(RS.lerp(1.1, 1.0, RS.seg(t, sc.at, sc.at + 4 * B, "power2.out")) + pu * 0.025).toFixed(4)})`;
+    const L = sc.els.l, ys = L.length > 1 ? [470, 1290] : [880];
+    L.forEach((el, i) => {
+      const m = slam(t, sc.at + i * B, 2.2), size = fit(el, i === 0 ? 700 : 1000, 470);
+      el.style.color = flip ? C.r : C.p;
+      place(el, 540, ys[i], size, m.s, m.s, m.blur, m.blur * 0.4, m.on ? 1 : 0);
+    });
+    const sp = RS.seg(t, sc.at + 1.5 * B, sc.at + 1.5 * B + 0.1);
+    sc.els.sub.style.top = "1520px"; sc.els.sub.style.opacity = sp;
+    sc.els.t1.style.opacity = sp; sc.els.t1.style.color = flip ? C.r : C.k;
+  };
+
+  const renderEnd = (t) => {
+    const host = $("sc-end"), b = (t - endAt) / B;
+    show(host, true, C.k);
+    // 0~2비트: 화면 높이만큼 늘린 거대 단어가 오른쪽→왼쪽으로 쓸고 지나간다
+    const gp = RS.seg(t, endAt, endAt + 2 * B, "power1.inOut");
+    const gs = fit(E.giant, 2400);
+    place(E.giant, RS.lerp(1500, -420, gp), 960, gs, 1, 2050 / gs, b < 2 ? 6 + 22 * Math.sin(Math.PI * gp) : 0, 0, b < 2 ? 1 : 0);
+    // 2비트: 제자리 슬램 → 빨간 막대 → 보조줄·로고
+    const at = endAt + 2 * B, m = slam(t, at, 1.8), ws = fit(E.word, 960, 420);
+    const jit = b >= 2 ? pulse(t - endAt) * 10 : 0;
+    place(E.word, 540, 900, ws, m.s * (1 + jit * 0.004), m.s * (1 + jit * 0.004), m.blur, m.blur * 0.3, m.on ? 1 : 0);
+    const bp = RS.seg(t, at + 0.5 * B, at + 0.5 * B + 0.2, "expo.out"), bw = E.word._w * ws / 100;
+    Object.assign(E.bar.style, { left: (540 - bw / 2) + "px", top: (900 + ws * 0.5 + 10) + "px", width: (bw * bp) + "px" });
+    const sp = RS.seg(t, at + B, at + B + 0.14, "power3.out");
+    E.sub.style.top = (900 + ws * 0.5 + 70) + "px"; E.sub.style.opacity = sp;
+    E.sub.style.transform = `translateX(-50%) translateY(${(1 - sp) * 24}px)`;
+    const lp = RS.seg(t, at + 1.6 * B, at + 1.6 * B + 0.3, "power2.out");
+    $("logo").style.opacity = lp; $("url").style.opacity = lp;
+  };
+
+  const render = (t) => {
+    scenes.forEach((sc) => { sc.host.style.display = "none"; sc.root.style.display = "none"; });
+    $("sc-end").style.display = "none";
+    let cur = null;
+    for (const sc of scenes) if (t >= sc.at && t < sc.at + 4 * B) cur = sc;
+    if (cur) cur.root.style.display = "block";
+    if (cur) ({ stack: renderStack, alt: renderAlt, wall: renderWall, sil: renderSil })[cur.style](cur, t);
+    else renderEnd(t);
+    // 비트마다 화면 전체가 살짝 튄다
+    const pu = pulse(t);
+    $("world").style.transform = `scale(${(1 + pu * 0.018).toFixed(4)}) translate(${((rnd(Math.floor(t / B)) - 0.5) * pu * 14).toFixed(1)}px, 0)`;
+    // 망점은 빨강·종이 판에서만 진하게, 필름 입자는 12fps 로 흔든다
+    $("dots").style.opacity = curBg === C.k ? 0.06 : 0.22;
+    const gf = Math.floor(t * 12);
+    $("grain").style.transform = `translate(${(rnd(gf * 2) * 160).toFixed(0)}px, ${(rnd(gf * 2 + 1) * 160).toFixed(0)}px)`;
+  };
+
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["rs-kinetic-type"] = tl;
+  RS.sample(tl, 0, DUR, (p) => render(p * DUR));
+  render(0);
+  RS.ready([$("photo")]).then(() => { measure(); drawSil(); render(tl.time()); });
+})();
+</script>
+</body>
+</html>

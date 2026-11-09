@@ -1,0 +1,66 @@
+{
+  "slug": "rs-flow-insert",
+  "title_ko": "인서트 도식 — 격자 위 노드 카드가 위→아래로 이어지며 흐름 설명",
+  "category": "explain",
+  "roles": [
+    "explain",
+    "transition",
+    "copy"
+  ],
+  "use": "본 영상 사이에 끼우는 7초 설명 도식 — 연한 격자 위에 노드 카드(아이콘·제목·설명)가 차례로 나오고 화살표가 그려지며 꼬리표·점이 흘러 마지막 노드에 체크(예: 옷 사진 → AI 모델 → 화보 → 컬러별 → 상세페이지·SNS)",
+  "size": [
+    1080,
+    1920
+  ],
+  "duration": 7,
+  "key_at": [
+    0.2,
+    0.35,
+    0.6,
+    1.73,
+    3.6,
+    4.0
+  ],
+  "uses": [
+    "shorts",
+    "ad"
+  ],
+  "reference": "https://www.threads.com/@gasket_love/post/DerqtiFjKfA (gasket_love 「클로드 x 모션 그래픽 — 인서트 그래픽」) — 연출만 참고해 새로 짬, 원본 코드·문구·로고 안 씀. 원본의 가로 흐름을 세로(위→아래)로 바꿨다.",
+  "what": "0~0.35초 연한 격자가 깔리고 왼쪽 위에 고정폭 글씨 'FIG. 01' 옆 도식 제목이 커서와 함께 한 자씩 찍힌다. 0.35초부터 노드 카드가 0.22초 간격으로 아래로 차례로 나타난다(살짝 튀며). 0.6초 아래 남색 자막 알약. 노드가 다 나오면(5개 기준 1.73초) 화살표가 하나씩 위에서 아래로 그려지고, 남색 꼬리표(사진 1장·모델 1명…)가 선 끝을 타고 내려가 다음 노드에 닿으면 그 노드 테두리가 강조색으로 번쩍이며 체크가 돌며 튀어 나온다. 마지막 노드(약 3.6초)는 강조색 테두리·큰 체크가 남아 숨쉬고, 다 그려진 화살표마다 강조색 점 두 개가 계속 흘러내린다. 전체가 7초 동안 2.5% 천천히 다가온다. 노드 3~6개에 맞춰 높이·간격·글자 크기가 자동 조정된다.",
+  "how_to_use": "화면 녹화·화보 영상 사이에 1~3컷, 컷당 4~8초로 끼워 '눈에 안 보이는 흐름'(작업 단계·자동화 순서·전후 차이)을 짚을 때. nodes 는 JSON 문자열 [{icon, title, sub}] 3~6개 — icon 은 shirt·photo·user·sparkle·palette·layout·share·camera·video·check. packets 는 화살표마다 내려가는 꼬리표(| 구분, 노드 수 - 1개, 비우면 점만). 길게 쓰고 싶으면 data-duration 만 늘리면 끝 상태(점 흐름)가 이어진다. 소리는 넣지 않았다 — 본 영상 내레이션 밑에 깔린다.",
+  "slots": {},
+  "vars": [
+    "fig",
+    "fig_title",
+    "nodes",
+    "packets",
+    "caption",
+    "accent",
+    "ink"
+  ],
+  "sfx_cues": [
+    {
+      "at": 0.35,
+      "type": "tick"
+    },
+    {
+      "at": 1.73,
+      "type": "tick"
+    },
+    {
+      "at": 3.6,
+      "type": "pop"
+    }
+  ],
+  "techniques": [
+    "auto-vertical-layout",
+    "line-draw-with-packet",
+    "flowing-dots",
+    "check-pop",
+    "typewriter-caret",
+    "seek-safe-sample"
+  ],
+  "preview_url": "https://d1v8ttuvmbmgis.cloudfront.net/history/motion-kit/realsnap/rs-flow-insert.mp4",
+  "thumb_url": "https://d1v8ttuvmbmgis.cloudfront.net/history/motion-kit/realsnap/rs-flow-insert.jpg",
+  "superseded_by": "rd-flow-insert"
+}

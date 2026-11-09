@@ -1,0 +1,71 @@
+{
+  "slug": "rs-spring-wordmark",
+  "title_ko": "스프링 워드마크 — 글자가 튀어 올라 자리 잡고 느낌표 점이 출렁이며 내려앉는 엔드카드",
+  "category": "endcard",
+  "roles": [
+    "endcard",
+    "copy"
+  ],
+  "use": "RealSnap! 워드마크가 아래에서 스프링으로 튀어 오르고, ! 의 점이 따로 튀어 올랐다 찌그러지며 내려앉은 뒤 부제가 글자별로 나오는 5초 엔드카드",
+  "size": [
+    1080,
+    1920
+  ],
+  "duration": 5,
+  "key_at": [
+    0.18,
+    0.84,
+    1.35,
+    2.95,
+    4.05
+  ],
+  "uses": [
+    "ad",
+    "shorts"
+  ],
+  "reference": "https://www.threads.com/@gasket_love/post/DeimfasCUH3 (@gasket_love 의 i 점 스프링 타이포 그래피) — 연출만 참고해 새로 짬, 원본 코드·문구·로고·서체 안 씀(우리는 Pretendard·우리 워드마크).",
+  "what": "0.18초부터 글자가 0.07초 간격으로 아래(0.62em)에서 감쇠 스프링(2.1Hz, ζ0.36)으로 튀어 올라 자리 잡음 — 빠를수록 세로로 늘고 흐려짐. ! 와 소문자 i 는 줄기·점을 따로 그린 도형(글리프를 캔버스로 훑어 크기·자리를 맞춤): 줄기는 기준선에서 자라나 넘쳤다 줄고, 점은 포물선으로 2.1em 솟았다 떨어져 찌그러지며 내려앉음(줄기도 눌렸다 펴짐). 1.35초 부제가 글자별로 아래·흐림에서 선명하게. 2.95초 점이 한 번 더 작게 뜀. 4.05초 퇴장(옵션): 점이 높이 튀며 사라지고 줄기가 줄어들고, 글자는 시드 고정 순서로 흐려지며 흩어짐, 부제도 흐려짐 → 4.85초 빈 화면.",
+  "how_to_use": "광고 끝 엔드카드나 브랜드 소개 첫 장면. word 에 ! 나 소문자 i 가 있어야 점이 튄다(\"RealSnap!\" 기본, \"리얼스냅!\" 도 됨). 영상 뒤에 붙일 땐 exit=false 로 두고 다음 장면으로 컷. 검은 바탕은 theme=dark, 점만 강조색으로 하려면 dot_color(예: #F2362F).",
+  "slots": {},
+  "vars": [
+    "word",
+    "sub",
+    "theme",
+    "bg",
+    "ink",
+    "dot_color",
+    "weight",
+    "max_width",
+    "center_y",
+    "exit"
+  ],
+  "sfx_cues": [
+    {
+      "at": 0.84,
+      "type": "pop"
+    },
+    {
+      "at": 1.58,
+      "type": "tick"
+    },
+    {
+      "at": 2.95,
+      "type": "pop"
+    },
+    {
+      "at": 4.05,
+      "type": "whoosh"
+    }
+  ],
+  "techniques": [
+    "closed-form-damped-spring",
+    "glyph-scan-stem-dot",
+    "parabola-squash-land",
+    "velocity-stretch-blur",
+    "seeded-exit-order",
+    "seek-safe-sample"
+  ],
+  "preview_url": "https://d1v8ttuvmbmgis.cloudfront.net/history/motion-kit/realsnap/rs-spring-wordmark.mp4",
+  "thumb_url": "https://d1v8ttuvmbmgis.cloudfront.net/history/motion-kit/realsnap/rs-spring-wordmark.jpg",
+  "superseded_by": "rd-spring-wordmark"
+}

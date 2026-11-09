@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="brand/gsap.min.js"></script>
+<script src="brand/rs-motion.js"></script>
+<style>
+@font-face { font-family: "Pretendard"; src: url("brand/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+@font-face { font-family: "Oswald"; src: url("brand/fonts/Oswald-SemiBold.woff2") format("woff2"); font-weight: 600; }
+@font-face { font-family: "IBM Plex Mono"; src: url("brand/fonts/IBMPlexMono-Medium.woff2") format("woff2"); font-weight: 500; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #ECE9E3; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; color: #161616;
+  background: radial-gradient(120% 70% at 50% 34%, #F6F4EF 0%, #ECE9E3 55%, #DEDAD2 100%);
+  font-family: "Pretendard", sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+.mono { font-family: "IBM Plex Mono", "Pretendard", monospace; font-weight: 500; letter-spacing: .06em; }
+#world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+#wire { position: absolute; left: 0; top: 0; overflow: visible; }
+
+.tag { position: absolute; left: 0; top: 0; width: 0; height: 0; filter: drop-shadow(8px 20px 16px rgba(40,30,20,.2)); }
+.hook { position: absolute; left: -7px; top: -9px; width: 14px; height: 22px; border-radius: 7px;
+  border: 3px solid #9a9a9a; border-bottom-color: #6f6f6f; background: transparent; }
+.string { position: absolute; left: -1px; top: 8px; width: 2px; background: linear-gradient(90deg, #7d756a, #b3aa9c, #7d756a); z-index: 3; }
+.card { position: absolute; left: -122px; width: 244px; height: 420px; transform-origin: 50% 0; transform-style: preserve-3d; }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden;
+  clip-path: polygon(30px 0, 214px 0, 244px 30px, 244px 420px, 0 420px, 0 30px); }
+.back { transform: rotateY(180deg); background: #fff; }
+.eyelet { position: absolute; left: 110px; top: 18px; width: 24px; height: 24px; border-radius: 50%;
+  background: radial-gradient(circle, #ECE9E3 0 6.5px, #6d6d6d 7px, #e4e4e4 9px, #9a9a9a 11px, #777 12px); z-index: 2; }
+
+.front { background: var(--paper); }
+.front .grain { position: absolute; inset: 0; opacity: .5;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,.018) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(0,0,0,.012) 0 1px, transparent 1px 4px); }
+.front .logo { position: absolute; left: 0; right: 0; top: 58px; margin: 0 auto; height: 19px; }
+.front .rule { position: absolute; left: 20px; right: 20px; height: 1.5px; background: #1a1a1a; }
+.front .prod { position: absolute; left: 0; right: 0; top: 98px; text-align: center; font-family: "Oswald", "Pretendard", sans-serif;
+  font-weight: 600; font-size: 38px; letter-spacing: .03em; line-height: 1.1; }
+.front .ed { position: absolute; left: 0; right: 0; top: 148px; text-align: center; font-size: 11px; color: #555; }
+.front .row { position: absolute; left: 20px; right: 20px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; }
+.front .sz { display: flex; gap: 4px; }
+.front .sz b { width: 28px; height: 22px; display: flex; align-items: center; justify-content: center; border: 1.3px solid #1a1a1a;
+  font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 11px; letter-spacing: 0; }
+.front .sz b.on { background: #1a1a1a; color: var(--paper); }
+.front .col { display: flex; align-items: center; gap: 7px; font-family: "Pretendard", sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.dot { width: 18px; height: 18px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px rgba(0,0,0,.18); }
+.front .bar { position: absolute; left: 32px; top: 292px; width: 180px; height: 48px; }
+.front .num { position: absolute; left: 0; right: 0; top: 344px; text-align: center; font-size: 10px; letter-spacing: .14em; }
+.front .strip { position: absolute; left: 0; right: 0; bottom: 0; height: 22px; display: flex; align-items: center; justify-content: center;
+  font-size: 9.5px; letter-spacing: .2em; color: rgba(0,0,0,.6); }
+
+.back img { position: absolute; left: 0; top: 0; width: 244px; height: 334px; object-fit: cover; object-position: 50% 28%; }
+.back .info { position: absolute; left: 0; right: 0; top: 334px; bottom: 0; padding: 14px 18px 0; background: #fff; }
+.back .k { font-size: 11px; color: #666; }
+.back .nm { margin-top: 6px; font-size: 27px; font-weight: 800; letter-spacing: -.03em; display: flex; align-items: center; justify-content: space-between; }
+.back .nm .dot { width: 22px; height: 22px; }
+
+#kicker { position: absolute; left: 72px; right: 72px; top: 222px; display: flex; justify-content: space-between; font-size: 22px; color: #3a3a3a; }
+#end { position: absolute; left: 72px; right: 72px; top: 1262px; }
+#headline { font-size: 116px; font-weight: 880; letter-spacing: -.045em; line-height: 1.05; }
+#headline .ln { display: block; overflow: hidden; padding-bottom: 8px; }
+#headline .ln i { display: block; font-style: normal; white-space: nowrap; }
+#sub { margin-top: 18px; font-size: 40px; font-weight: 600; letter-spacing: -.02em; color: #3c3c3c; }
+#logo { position: absolute; left: 72px; top: 1566px; height: 42px; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="rs-hanging-tags" data-start="0" data-duration="11.5" data-width="1080" data-height="1920"
+  data-composition-variables='[{"id":"photo1","type":"string","label":"1번 카드 뒷면 화보","default":"assets/slots/photo-1.jpg"},{"id":"photo2","type":"string","label":"2번 카드 뒷면 화보","default":"assets/slots/photo-2.jpg"},{"id":"photo3","type":"string","label":"3번 카드 뒷면 화보","default":"assets/slots/photo-3.jpg"},{"id":"photo4","type":"string","label":"4번 카드 뒷면 화보","default":"assets/slots/photo-4.jpg"},{"id":"photo5","type":"string","label":"5번 카드 뒷면 화보(카드 4장이면 안 씀)","default":"assets/slots/photo-5.jpg"},{"id":"names","type":"string","label":"카드별 컬러 이름(| 구분, 3~5개 = 카드 수)","default":"스카이블루|레몬 옐로|레드|민트|라벤더"},{"id":"swatches","type":"string","label":"카드별 색 칩(| 구분)","default":"#9CC9EA|#F1D54A|#D9443B|#9FDCCB|#C6B5E4"},{"id":"label","type":"string","label":"카드 번호 앞 글자(COLOR 01 …)","default":"COLOR"},{"id":"product","type":"string","label":"행택 상품 이름","default":"RAIN PARKA"},{"id":"edition","type":"string","label":"행택 상품 아래 작은 줄","default":"AI LOOKBOOK EDITION"},{"id":"sizes","type":"string","label":"사이즈 칸(| 구분, * 표시가 선택)","default":"S|*M|L|XL"},{"id":"paper","type":"color","label":"행택 종이 색","default":"#F3EFE6"},{"id":"kicker_l","type":"string","label":"위 왼쪽 작은 글","default":"RAIN PARKA"},{"id":"kicker_r","type":"string","label":"위 오른쪽 작은 글","default":"5 COLORS"},{"id":"headline","type":"string","label":"마지막 큰 카피(\\n 줄바꿈)","default":"한 벌로 다섯 룩"},{"id":"sub","type":"string","label":"마지막 작은 카피(비우면 숨김)","default":"옷 사진 한 장 → 컬러별 화보"},{"id":"logo","type":"boolean","label":"RealSnap 로고 표시","default":true}]'>
+  <div id="world">
+    <svg id="wire" width="1080" height="1920" viewBox="0 0 1080 1920"><path id="wire-sh" d="" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="4" /><path id="wire-p" d="" fill="none" stroke="#8b867e" stroke-width="2.6" /></svg>
+    <div class="tag" id="tag0"><i class="hook"></i><i class="string"></i><div class="card"><div class="face front"></div><div class="face back"><img id="ph0" src="assets/slots/photo-1.jpg" alt="" /></div></div></div>
+    <div class="tag" id="tag1"><i class="hook"></i><i class="string"></i><div class="card"><div class="face front"></div><div class="face back"><img id="ph1" src="assets/slots/photo-2.jpg" alt="" /></div></div></div>
+    <div class="tag" id="tag2"><i class="hook"></i><i class="string"></i><div class="card"><div class="face front"></div><div class="face back"><img id="ph2" src="assets/slots/photo-3.jpg" alt="" /></div></div></div>
+    <div class="tag" id="tag3"><i class="hook"></i><i class="string"></i><div class="card"><div class="face front"></div><div class="face back"><img id="ph3" src="assets/slots/photo-4.jpg" alt="" /></div></div></div>
+    <div class="tag" id="tag4"><i class="hook"></i><i class="string"></i><div class="card"><div class="face front"></div><div class="face back"><img id="ph4" src="assets/slots/photo-5.jpg" alt="" /></div></div></div>
+  </div>
+  <div id="kicker" class="mono"><span id="kl"></span><span id="kr"></span></div>
+  <div id="end"><div id="headline"></div><div id="sub"></div></div>
+  <img id="logo" src="brand/realsnap-logo.png" alt="RealSnap" />
+</div>
+<script>
+(() => {
+  const V = RS.vars({ photo1: "assets/slots/photo-1.jpg", photo2: "assets/slots/photo-2.jpg", photo3: "assets/slots/photo-3.jpg",
+    photo4: "assets/slots/photo-4.jpg", photo5: "assets/slots/photo-5.jpg", names: "스카이블루|레몬 옐로|레드|민트|라벤더",
+    swatches: "#9CC9EA|#F1D54A|#D9443B|#9FDCCB|#C6B5E4", label: "COLOR", product: "RAIN PARKA", edition: "AI LOOKBOOK EDITION",
+    sizes: "S|*M|L|XL", paper: "#F3EFE6", kicker_l: "RAIN PARKA", kicker_r: "5 COLORS", headline: "한 벌로 다섯 룩",
+    sub: "옷 사진 한 장 → 컬러별 화보", logo: true });
+  const $ = (id) => document.getElementById(id);
+  const W = 1080, H = 1920, DUR = 11.5;
+  const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const prng = (seed) => () => { seed = (seed + 0x6d2b79f5) | 0; let x = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x; return ((x ^ (x >>> 14)) >>> 0) / 4294967296; };
+
+  const names = String(V.names).split("|").map((s) => s.trim()).filter(Boolean).slice(0, 5);
+  const N = Math.max(3, Math.min(5, names.length));
+  const sw = String(V.swatches).split("|").map((s) => s.trim());
+  const photos = [V.photo1, V.photo2, V.photo3, V.photo4, V.photo5];
+  const sizes = String(V.sizes).split("|").map((s) => s.trim()).filter(Boolean);
+  const logoOn = V.logo !== false && V.logo !== "false";
+
+  // ── 배치: 처진 가로줄 하나, 카드는 끈 길이를 엇갈려 위아래로 ──
+  const K = N === 5 ? 1.08 : N === 4 ? 1.2 : 1.36;          // 카드 크기 배율(기본 244×420)
+  const SPC = N === 5 ? 190 : N === 4 ? 236 : 300;
+  const CH = 420 * K;
+  const wireY = (x) => 372 + 44 * (1 - ((x - 540) / 600) ** 2);
+  const XS = [...Array(N)].map((_, i) => 540 + (i - (N - 1) / 2) * SPC);
+  const LS = [...Array(N)].map((_, i) => (i % 2 ? 300 : i % 4 === 2 ? 124 : 86));
+  let d = "M -60 " + wireY(-60).toFixed(1); for (let x = -40; x <= 1140; x += 20) d += ` L ${x} ${wireY(x).toFixed(1)}`;
+  $("wire-p").setAttribute("d", d); $("wire-sh").setAttribute("d", d); $("wire-sh").setAttribute("transform", "translate(6 16)");
+
+  // ── 카드 앞면(행택) 만들기 ──
+  const barcode = (seed) => { const R = prng(seed); let x = 0, s = "";
+    while (x < 176) { const w = 1 + Math.floor(R() * 3.2), gap = 1 + Math.floor(R() * 2.6); s += `<rect x="${x}" y="0" width="${w}" height="48" />`; x += w + gap; }
+    return `<svg class="bar" viewBox="0 0 180 48" preserveAspectRatio="none" fill="#141414">${s}</svg>`; };
+  const pad = (n) => String(n).padStart(2, "0");
+  for (let i = 0; i < 5; i++) {
+    const tag = $(`tag${i}`);
+    if (i >= N) { tag.style.display = "none"; continue; }
+    const col = sw[i] || "#cccccc", code = `${esc(V.label)} ${pad(i + 1)}`;
+    const front = tag.querySelector(".front");
+    front.style.setProperty("--paper", V.paper);
+    const R = prng(40 + i), digits = `8 ${[...Array(6)].map(() => Math.floor(R() * 10)).join("")} ${[...Array(6)].map(() => Math.floor(R() * 10)).join("")}`;
+    front.innerHTML = `<i class="grain"></i><img class="logo" src="brand/realsnap-logo.png" alt="" />
+      <i class="rule" style="top:90px"></i><div class="prod">${esc(V.product)}</div><div class="ed mono">${esc(V.edition)}</div>
+      <i class="rule" style="top:176px;height:1px;opacity:.5"></i>
+      <div class="row" style="top:192px"><span class="mono">SIZE</span><span class="sz">${sizes.map((s) => `<b class="${s[0] === "*" ? "on" : ""}">${esc(s.replace(/^\*/, ""))}</b>`).join("")}</span></div>
+      <div class="row" style="top:232px"><span class="mono">${code}</span><span class="col"><i class="dot" style="background:${col}"></i>${esc(names[i])}</span></div>
+      ${barcode(9 + i * 13)}<div class="num mono">${digits}</div>
+      <div class="strip mono" style="background:${col}">MADE WITH REALSNAP</div><i class="eyelet"></i>`;
+    const back = tag.querySelector(".back");
+    back.insertAdjacentHTML("beforeend", `<div class="info"><div class="k mono">${code}</div><div class="nm"><span>${esc(names[i])}</span><i class="dot" style="background:${col}"></i></div></div><i class="eyelet"></i>`);
+    $(`ph${i}`).src = photos[i] || photos[0];
+    tag.querySelector(".string").style.height = `${LS[i] + 12 * K}px`;
+    const card = tag.querySelector(".card"); card.style.top = `${LS[i]}px`;
+  }
+  $("kl").textContent = V.kicker_l; $("kr").textContent = V.kicker_r;
+  $("headline").innerHTML = String(V.headline).split("\\n").join("\n").split("\n").map((l) => `<span class="ln"><i>${esc(l)}</i></span>`).join("");
+  $("sub").textContent = V.sub; if (!V.sub) $("sub").style.display = "none";
+
+  // ── 시간표 ──
+  const ENTER = (i) => 0.15 + i * 0.17;                  // 오른쪽에서 줄을 타고 미끄러져 들어온다(1.15초)
+  const FLIP = (i) => 2.3 + i * (N === 5 ? 1.22 : 1.45);  // 한 장씩 앞으로 뒤집기
+  const F_END = FLIP(N - 1) + 0.95;                      // 카메라 전체로 돌아가기 시작
+  const GUST = F_END + 0.5;                              // 다 같이 흔들기
+  const T_END = GUST + 0.45;                             // 카피
+  const pivotX = (i, t) => XS[i] + 1250 * (1 - RS.seg(t, ENTER(i), ENTER(i) + 1.15, "power2.out"));
+
+  // ── 진자: 줄 끝(고정점)의 가속도 + 뒤집기·바람 충격을 받는 감쇠 진자를 t=0 부터 고정 간격으로 미리 적분 ──
+  const DT = 1 / 600, STEPS = Math.ceil((DUR + 0.2) / DT);
+  const TH = [...Array(N)].map(() => new Float32Array(STEPS + 1));
+  for (let i = 0; i < N; i++) {
+    const Le = LS[i] + CH * 0.55, G = 7000;
+    const kicks = [[FLIP(i) + 0.05, 0.75], [GUST + i * 0.08, -1.35]];
+    let th = 0, om = 0, ki = 0;
+    for (let k = 1; k <= STEPS; k++) {
+      const t = k * DT;
+      const ax = (pivotX(i, t + DT) - 2 * pivotX(i, t) + pivotX(i, t - DT)) / (DT * DT);
+      const c = t > GUST + 1.4 ? 4.2 : 1.25;
+      while (ki < kicks.length && t >= kicks[ki][0]) { om += kicks[ki][1]; ki++; }
+      const al = -(G / Le) * Math.sin(th) - c * om - 0.14 * (ax / Le) * Math.cos(th);
+      om += al * DT; th += om * DT; TH[i][k] = th;
+    }
+  }
+  const thAt = (i, t) => { const f = RS.clamp(t / DT, 0, STEPS), k = Math.floor(f), a = TH[i][k], b = TH[i][Math.min(STEPS, k + 1)]; return a + (b - a) * (f - k); };
+
+  // ── 카메라: 전체 → 카드마다 다가가기 → 전체 ──
+  const ZS = 1.9 / K;
+  const focus = (i) => ({ x: XS[i], y: wireY(XS[i]) + LS[i] + CH / 2, s: ZS, ay: 930 });
+  const OVER = { x: 540, y: 960, s: 1, ay: 960 };
+  const camAt = (t) => {
+    const keys = [[0, OVER]];
+    for (let i = 0; i < N; i++) keys.push([FLIP(i) - 0.5, focus(i)]);
+    keys.push([F_END, OVER]);
+    let c = keys[0][1];
+    for (let k = 1; k < keys.length; k++) {
+      const [a, to] = keys[k], dur = k === keys.length - 1 ? 0.7 : 0.5;
+      if (t < a) break;
+      const p = RS.seg(t, a, a + dur, "power3.inOut"), from = c;
+      c = { x: RS.lerp(from.x, to.x, p), y: RS.lerp(from.y, to.y, p), s: RS.lerp(from.s, to.s, p), ay: RS.lerp(from.ay, to.ay, p) };
+      if (p < 1) break;
+    }
+    return c;
+  };
+
+  const render = (t) => {
+    const c = camAt(t);
+    $("world").style.transform = `translate(${(540 - c.x * c.s).toFixed(2)}px, ${(c.ay - c.y * c.s).toFixed(2)}px) scale(${c.s.toFixed(4)})`;
+    for (let i = 0; i < N; i++) {
+      const x = pivotX(i, t), y = wireY(x), th = thAt(i, t);
+      const tag = $(`tag${i}`);
+      tag.style.transform = `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px) rotate(${(th * 180 / Math.PI).toFixed(3)}deg)`;
+      const fp = RS.seg(t, FLIP(i), FLIP(i) + 0.85, "back.out(1.5)");
+      const lift = Math.sin(RS.seg(t, FLIP(i), FLIP(i) + 0.7) * Math.PI);
+      const ry = fp * 180 - th * 42;                     // 흔들림에 따라 살짝 비틀린다
+      tag.querySelector(".card").style.transform = `scale(${(K * (1 + 0.06 * lift)).toFixed(4)}) perspective(1300px) rotateY(${ry.toFixed(2)}deg)`;
+      tag.style.zIndex = t >= FLIP(i) - 0.5 && t < F_END ? (t < (i + 1 < N ? FLIP(i + 1) - 0.5 : F_END) ? 9 : 1) : 1;
+    }
+    // 위 작은 글: 전체 화면일 때만
+    const zoomed = RS.clamp((c.s - 1) / (ZS - 1));
+    $("kicker").style.opacity = (1 - zoomed) * RS.seg(t, 0.2, 0.7);
+    // 끝 카피
+    document.querySelectorAll("#headline .ln i").forEach((ln, i) => {
+      const p = RS.seg(t, T_END + i * 0.1, T_END + 0.7 + i * 0.1, "expo.out");
+      ln.style.transform = `translateY(${((1 - p) * 110).toFixed(1)}%)`;
+    });
+    const sp = RS.seg(t, T_END + 0.35, T_END + 0.85, "power3.out");
+    $("sub").style.opacity = sp; $("sub").style.transform = `translateY(${((1 - sp) * 20).toFixed(1)}px)`;
+    const lp = logoOn ? RS.seg(t, T_END + 0.6, T_END + 1.0, "power2.out") : 0;
+    $("logo").style.opacity = lp; $("logo").style.transform = `translateY(${((1 - lp) * 14).toFixed(1)}px)`;
+  };
+
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["rs-hanging-tags"] = tl;
+  RS.sample(tl, 0, DUR, (p) => render(p * DUR));
+  render(0);
+  RS.ready([...document.querySelectorAll("img")]).then(() => render(tl.time()));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="brand/gsap.min.js"></script>
+<script src="brand/rs-motion.js"></script>
+<style>
+@font-face { font-family: "Pretendard"; src: url("brand/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #f7f6f3; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #f7f6f3; color: #111;
+  font-family: "Pretendard", sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+/* 재기용 줄: 글자 위치·기준선만 읽고 화면엔 안 보인다 */
+#measure { position: absolute; left: 0; top: 0; white-space: nowrap; visibility: hidden; line-height: 1; }
+#measure .bl { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
+.ch { position: absolute; left: 0; top: 0; white-space: pre; line-height: 1; will-change: transform, filter; }
+.part { position: absolute; left: 0; top: 0; will-change: transform; }
+#sub { position: absolute; left: 60px; right: 60px; display: flex; justify-content: center; white-space: pre; }
+#sub i { display: inline-block; font-style: normal; will-change: transform, filter; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="rs-spring-wordmark" data-start="0" data-duration="5" data-width="1080" data-height="1920"
+  data-composition-variables='[{"id":"word","type":"string","label":"워드마크 글자(! 와 소문자 i 는 줄기·점으로 갈라 튄다)","default":"RealSnap!"},{"id":"sub","type":"string","label":"부제(비우면 숨김)","default":"옷 사진 한 장으로 화보까지"},{"id":"theme","type":"string","label":"바탕 light(흰 바탕·검은 글자) / dark(검은 바탕·흰 글자)","default":"light"},{"id":"bg","type":"color","label":"바탕색 직접 지정(비우면 theme)","default":""},{"id":"ink","type":"color","label":"글자색 직접 지정(비우면 theme)","default":""},{"id":"dot_color","type":"color","label":"튀는 점 색(비우면 글자색)","default":""},{"id":"weight","type":"number","label":"워드마크 굵기(100~900)","default":800},{"id":"max_width","type":"number","label":"워드마크 최대 폭(px)","default":880},{"id":"center_y","type":"number","label":"워드마크 가운데 높이(px)","default":880},{"id":"exit","type":"boolean","label":"끝에 흩어지며 퇴장","default":true}]'>
+  <div id="measure"></div>
+  <div id="word"></div>
+  <div id="sub"></div>
+</div>
+<script>
+(() => {
+  const V = RS.vars({ word: "RealSnap!", sub: "옷 사진 한 장으로 화보까지", theme: "light", bg: "", ink: "", dot_color: "",
+    weight: 800, max_width: 880, center_y: 880, exit: true });
+  const $ = (id) => document.getElementById(id);
+  const W = 1080, DUR = 5;
+  const dark = String(V.theme).toLowerCase() === "dark";
+  const BG = V.bg || (dark ? "#0b0b0c" : "#f7f6f3");
+  const INK = V.ink || (dark ? "#f5f5f3" : "#111111");
+  const DOT = V.dot_color || INK;
+  const WT = Number(V.weight) || 800;
+  const exitOn = V.exit !== false && V.exit !== "false";
+  document.body.style.background = BG;
+  $("stage").style.background = BG;
+  $("stage").style.color = INK;
+
+  // ── 결정적 도우미(같은 t → 같은 화면) ──
+  const TAU = Math.PI * 2;
+  // 감쇠 스프링 x(τ): 1 → 0 (출렁이며), v = dx/dτ
+  const spring = (tau, f, z) => {
+    if (tau <= 0) return { x: 1, v: 0 };
+    const w = TAU * f, wd = w * Math.sqrt(1 - z * z), e = Math.exp(-z * w * tau);
+    return { x: e * (Math.cos(wd * tau) + ((z * w) / wd) * Math.sin(wd * tau)), v: -((w * w) / wd) * e * Math.sin(wd * tau) };
+  };
+  const damp = (tau, f, k) => (tau <= 0 ? 0 : Math.exp(-k * tau) * Math.sin(TAU * f * tau));
+  const dampc = (tau, f, k) => (tau <= 0 ? 0 : Math.exp(-k * tau) * Math.cos(TAU * f * tau));
+  let seed = 20261023;
+  const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+
+  const chars = [...String(V.word)];
+  const SPLIT = (c) => c === "!" || c === "i";
+  const G = []; // 글자 하나 = { el | stem,dot, x, … }
+
+  // 글리프를 캔버스에 그려 잉크 줄을 훑고 줄기·점 상자를 찾는다(! 는 위가 줄기, i 는 위가 점)
+  const scanGlyph = (c, fs) => {
+    const cv = document.createElement("canvas"), pad = Math.ceil(fs * 0.3);
+    cv.width = Math.ceil(fs * 1.2) + pad * 2; cv.height = Math.ceil(fs * 1.6);
+    const g = cv.getContext("2d"), base = Math.round(fs * 1.2);
+    g.font = `${WT} ${fs}px Pretendard`; g.fillStyle = "#000"; g.textBaseline = "alphabetic";
+    g.fillText(c, pad, base);
+    const d = g.getImageData(0, 0, cv.width, cv.height).data;
+    const segs = []; let cur = null;
+    for (let y = 0; y < cv.height; y++) {
+      let x0 = -1, x1 = -1;
+      for (let x = 0; x < cv.width; x++) if (d[(y * cv.width + x) * 4 + 3] > 110) { if (x0 < 0) x0 = x; x1 = x; }
+      if (x0 >= 0) { if (!cur) segs.push((cur = { y0: y, y1: y, x0, x1 })); cur.y1 = y; cur.x0 = Math.min(cur.x0, x0); cur.x1 = Math.max(cur.x1, x1); }
+      else cur = null;
+    }
+    if (segs.length < 2) return null;
+    const box = (s) => ({ x: s.x0 - pad, w: s.x1 - s.x0 + 1, y: s.y0 - base, h: s.y1 - s.y0 + 1 }); // 펜 위치·기준선 기준
+    const [a, b] = [segs[0], segs[segs.length - 1]];
+    return c === "!" ? { stem: box(a), dot: box(b) } : { dot: box(a), stem: box(b) };
+  };
+
+  let FS = 160, BASE = 0, SUBC = [];
+  const layout = () => {
+    const m = $("measure");
+    // 폭에 맞춰 글자 크기
+    FS = 200;
+    const build = () => {
+      m.innerHTML = "";
+      m.style.font = `${WT} ${FS}px Pretendard`; m.style.letterSpacing = "-0.03em";
+      const spans = chars.map((c) => { const s = document.createElement("span"); s.textContent = c; m.appendChild(s); return s; });
+      const bl = document.createElement("span"); bl.className = "bl"; m.appendChild(bl);
+      return { spans, bl };
+    };
+    let r = build();
+    const maxW = Number(V.max_width) || 880;
+    if (m.offsetWidth > maxW) { FS = Math.floor((FS * maxW) / m.offsetWidth); r = build(); }
+    const left = (W - m.offsetWidth) / 2;
+    const blY = r.bl.offsetTop;               // 측정 줄 안 기준선
+    const capH = FS * 0.72;                   // 대문자 높이 근사 → 글자 덩어리 가운데를 center_y 에
+    BASE = (Number(V.center_y) || 880) + capH / 2;
+    $("word").innerHTML = ""; G.length = 0;
+    chars.forEach((c, i) => {
+      const x = left + r.spans[i].offsetLeft;
+      const item = { c, x, i };
+      const sc = SPLIT(c) ? scanGlyph(c, FS) : null;
+      if (sc) {
+        const mk = (bx, col, rad) => {
+          const e = document.createElement("div"); e.className = "part";
+          e.style.width = bx.w + "px"; e.style.height = bx.h + "px"; e.style.background = col; e.style.borderRadius = rad;
+          e.style.left = (x + bx.x) + "px"; e.style.top = (BASE + bx.y) + "px";
+          $("word").appendChild(e); return e;
+        };
+        item.stem = mk(sc.stem, INK, `${(sc.stem.w * 0.12).toFixed(1)}px`);
+        item.stem.style.transformOrigin = "50% 100%";
+        item.dot = mk(sc.dot, DOT, `${(sc.dot.w * 0.22).toFixed(1)}px`);
+        item.dot.style.transformOrigin = "50% 100%";
+        item.gap = Math.max(6, c === "!" ? sc.dot.y - (sc.stem.y + sc.stem.h) : sc.stem.y - (sc.dot.y + sc.dot.h));
+      } else if (c.trim()) {
+        const e = document.createElement("span"); e.className = "ch"; e.textContent = c;
+        e.style.font = `${WT} ${FS}px Pretendard`; e.style.color = INK;
+        e.style.left = x + "px"; e.style.top = (BASE - blY) + "px";
+        e.style.transformOrigin = `50% ${blY}px`;
+        $("word").appendChild(e); item.el = e;
+      }
+      G.push(item);
+    });
+    // 퇴장 순서: 시드 고정으로 섞기
+    seed = 20261023;
+    const order = G.map((_, k) => k).sort(() => rnd() - 0.5);
+    order.forEach((k, n) => { G[k].out = n; });
+    // 부제: 글자마다
+    const sub = $("sub"); sub.innerHTML = "";
+    sub.style.font = `500 ${Math.round(FS * 0.32)}px Pretendard`; sub.style.letterSpacing = "-0.01em";
+    sub.style.color = INK; sub.style.opacity = "0.62";
+    sub.style.top = (BASE + FS * 0.36) + "px";
+    SUBC = [...String(V.sub || "")].map((c) => { const e = document.createElement("i"); e.textContent = c; sub.appendChild(e); return e; });
+  };
+
+  const T_IN = 0.18, STEP = 0.07, T_SUB = 1.35, T_HOP = 2.95, T_EXIT = 4.05;
+
+  const render = (t) => {
+    const nG = G.length;
+    G.forEach((g) => {
+      const t0 = T_IN + g.i * STEP;
+      const te = T_EXIT + g.out * 0.055;
+      const pe = exitOn ? RS.seg(t, te, te + 0.34, "power2.in") : 0;
+      if (g.el) {
+        // 아래에서 스프링으로 튀어 올라 자리 잡기(빠를수록 세로로 늘고 흐려진다)
+        const s = spring(t - t0, 2.1, 0.36);
+        const sp = Math.abs(s.v);
+        const y = s.x * FS * 0.62 - pe * FS * 0.12;
+        const sy = (1 + Math.min(0.5, sp * 0.045)) * (1 - pe * 0.15);
+        const blur = Math.min(9, sp * 0.55) + pe * 12;
+        g.el.style.opacity = (RS.seg(t, t0, t0 + 0.08) * (1 - pe)).toFixed(3);
+        g.el.style.transform = `translateY(${y.toFixed(2)}px) scale(${(1 - pe * 0.08).toFixed(4)}, ${sy.toFixed(4)})`;
+        g.el.style.filter = blur > 0.15 ? `blur(${blur.toFixed(2)}px)` : "none";
+      } else if (g.stem) {
+        // 줄기: 기준선에서 자라나 넘쳤다 줄고, 점이 뛰어오르고 내려앉을 때마다 출렁
+        const s = spring(t - t0, 2.4, 0.3);
+        const launch = t0 + 0.1, T1 = 0.74, H1 = FS * 2.1;
+        const hop = T_HOP + g.i * 0.04, T2 = 0.46, H2 = FS * 0.95;
+        let sy = 1 - s.x;
+        sy *= 1 - 0.14 * damp(t - (launch + T1), 2.6, 5.5) - 0.1 * damp(t - (hop + T2), 3, 6) + 0.06 * damp(t - hop, 3, 8);
+        const shrink = exitOn ? RS.seg(t, T_EXIT + 0.08, T_EXIT + 0.4, "power3.in") : 0;
+        sy *= 1 - shrink;
+        g.stem.style.opacity = t < t0 ? 0 : 1;
+        g.stem.style.transform = `scaleY(${Math.max(0, sy).toFixed(4)})`;
+        // 점: 포물선으로 솟았다가 떨어져 찌그러지며 내려앉음(등장 · 중간 한 번 · 퇴장)
+        const jump = (ts, T, H) => {
+          const tau = t - ts;
+          if (tau < 0) return { y: 0, sx: 1, sy: 1 };
+          if (tau < T) {
+            const v = Math.abs((4 * H / (T * T)) * (T - 2 * tau)) / ((4 * H) / T); // 0~1 속도
+            const st = 1 + 0.32 * v;
+            return { y: -(4 * H / (T * T)) * tau * (T - tau), sx: 1 / Math.sqrt(st), sy: st };
+          }
+          const tl = tau - T, q = 0.34 * dampc(tl, 3.1, 7.5);
+          return { y: -g.gap * 0.85 * Math.max(0, damp(tl, 2.6, 6.5)), sx: 1 + q, sy: 1 / (1 + q) };
+        };
+        const a = jump(launch, T1, H1), b = jump(hop, T2, H2);
+        const ex = exitOn ? jump(T_EXIT, 0.7, FS * 2.6) : { y: 0, sx: 1, sy: 1 };
+        const y = a.y + b.y + (t >= T_EXIT && exitOn ? ex.y : 0);
+        g.dot.style.opacity = (t < launch ? 0 : 1) * (exitOn ? 1 - RS.seg(t, T_EXIT + 0.12, T_EXIT + 0.36) : 1);
+        g.dot.style.transform = `translateY(${y.toFixed(2)}px) scale(${(a.sx * b.sx).toFixed(4)}, ${(a.sy * b.sy * (t >= T_EXIT && exitOn ? ex.sy : 1)).toFixed(4)})`;
+      }
+    });
+    // 부제: 글자마다 살짝 아래에서 흐림 → 선명
+    SUBC.forEach((e, k) => {
+      const s = T_SUB + k * 0.032;
+      const p = RS.seg(t, s, s + 0.42, "power3.out");
+      const pe = exitOn ? RS.seg(t, T_EXIT - 0.1 + k * 0.012, T_EXIT + 0.25 + k * 0.012, "power2.in") : 0;
+      e.style.opacity = (RS.seg(t, s, s + 0.2) * (1 - pe)).toFixed(3);
+      e.style.transform = `translateY(${((1 - p) * 0.55 - pe * 0.2).toFixed(3)}em)`;
+      const bl = (1 - p) * 6 + pe * 6;
+      e.style.filter = bl > 0.1 ? `blur(${bl.toFixed(2)}px)` : "none";
+    });
+  };
+
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["rs-spring-wordmark"] = tl;
+  RS.sample(tl, 0, DUR, (p) => render(p * DUR));
+  layout();
+  render(0);
+  Promise.all([document.fonts.load(`${WT} 100px Pretendard`), document.fonts.load(`500 100px Pretendard`)])
+    .then(() => RS.ready([])).then(() => { layout(); render(tl.time()); });
+})();
+</script>
+</body>
+</html>

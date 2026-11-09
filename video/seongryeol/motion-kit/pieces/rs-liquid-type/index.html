@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="brand/gsap.min.js"></script>
+<script src="brand/rs-motion.js"></script>
+<style>
+/* 단일 굵기 글꼴도 굵기 범위를 넓게 적어 가짜 굵게(합성)를 막는다 */
+@font-face { font-family: "Pretendard"; src: url("brand/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+@font-face { font-family: "DM Serif Display"; src: url("brand/fonts/DMSerifDisplay.woff2") format("woff2"); font-weight: 100 900; }
+@font-face { font-family: "Archivo Black"; src: url("brand/fonts/ArchivoBlack.woff2") format("woff2"); font-weight: 100 900; }
+@font-face { font-family: "Playfair Display"; src: url("brand/fonts/PlayfairDisplayItalic.woff2") format("woff2"); font-weight: 100 900; }
+@font-face { font-family: "Fraunces"; src: url("brand/fonts/Fraunces.woff2") format("woff2"); font-weight: 100 900; }
+@font-face { font-family: "Anton"; src: url("brand/fonts/Anton.woff2") format("woff2"); font-weight: 100 900; }
+@font-face { font-family: "Bebas Neue"; src: url("brand/fonts/BebasNeue.woff2") format("woff2"); font-weight: 100 900; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #050505; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #050505; color: #fff;
+  font-family: "Pretendard", sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+#sv { position: absolute; inset: 0; }
+#sv text { font-weight: 800; }
+.label { position: absolute; left: 0; right: 0; text-align: center; white-space: nowrap; }
+#count { top: 300px; font-size: 26px; font-weight: 600; letter-spacing: .32em; color: rgba(255,255,255,.55); }
+#cap { top: 1210px; font-size: 40px; font-weight: 600; letter-spacing: -.01em; color: rgba(255,255,255,.82); }
+#tag { top: 1520px; font-size: 34px; font-weight: 500; letter-spacing: -.01em; color: rgba(255,255,255,.6); }
+#logo { position: absolute; left: 50%; top: 1440px; height: 48px; transform: translateX(-50%); filter: brightness(0) invert(1); opacity: 0; }
+#vig { position: absolute; inset: 0; background: radial-gradient(120% 80% at 50% 50%, transparent 55%, rgba(0,0,0,.7) 100%); }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="rs-liquid-type" data-start="0" data-duration="9.5" data-width="1080" data-height="1920"
+  data-composition-variables='[{"id":"words","type":"string","label":"차례로 녹아 바뀔 단어(| 구분, 마지막이 끝 단어)","default":"SOFT|SILK|LINEN|WOOL|DENIM|REALSNAP"},{"id":"fonts","type":"string","label":"단어별 서체(| 구분: DM Serif Display·Archivo Black·Playfair Display·Fraunces·Anton·Bebas Neue·Pretendard)","default":"DM Serif Display|Playfair Display|Archivo Black|Fraunces|Anton|Pretendard"},{"id":"captions","type":"string","label":"단어 아래 한글 작은 줄(| 구분, 비우면 숨김)","default":"니트의 부드러움|실크의 윤기|린넨의 결|울의 온기|데님의 질감|옷 사진 한 장 → AI 패션 화보"},{"id":"tagline","type":"string","label":"아래 고정 문구(비우면 숨김)","default":"어떤 원단이든, 사진 한 장이면"},{"id":"counter","type":"boolean","label":"위쪽 번호(01 / 06) 표시","default":true},{"id":"ink","type":"color","label":"글자색","default":"#F4F1EA"},{"id":"bg","type":"color","label":"배경색","default":"#050505"},{"id":"melt","type":"number","label":"녹는 세기(1=기본)","default":1},{"id":"logo","type":"boolean","label":"끝에 RealSnap 로고","default":true}]'>
+  <svg id="sv" width="1080" height="1920" viewBox="0 0 1080 1920">
+    <defs>
+      <!-- 액체 글자: 잡음으로 휘고 → 흐리고 → 알파 임계값으로 다시 단단한 가장자리 → 입자 채움 + 밝은 테두리 + 번짐 -->
+      <filter id="liq" filterUnits="userSpaceOnUse" x="0" y="0" width="1080" height="3000" color-interpolation-filters="sRGB">
+        <feTurbulence id="tb" type="fractalNoise" baseFrequency="0.0065 0.017" numOctaves="2" seed="4" result="noise" />
+        <feDisplacementMap id="dm" in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" result="disp" />
+        <feGaussianBlur id="bl" in="disp" stdDeviation="0.6" result="soft" />
+        <feColorMatrix in="soft" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 20 -8" result="goo" />
+        <feMorphology in="goo" operator="erode" radius="3.5" result="core0" />
+        <feGaussianBlur in="core0" stdDeviation="2.2" result="core" />
+        <feTurbulence id="gr" type="fractalNoise" baseFrequency="0.85" numOctaves="1" seed="1" result="g0" />
+        <feColorMatrix in="g0" type="matrix" values="0.8 0.8 0 0 0.06  0.8 0.8 0 0 0.06  0.8 0.8 0 0 0.06  0 0 0 0 1" result="grain" />
+        <feComposite in="grain" in2="core" operator="in" result="fill" />
+        <feComposite in="goo" in2="core" operator="out" result="rim" />
+        <feGaussianBlur in="goo" stdDeviation="9" result="g1" />
+        <feColorMatrix in="g1" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.38 0" result="glow" />
+        <feMerge><feMergeNode in="glow" /><feMergeNode in="rim" /><feMergeNode in="fill" /></feMerge>
+      </filter>
+    </defs>
+    <!-- 바깥 g 를 위로, 안쪽 g 를 아래로 같은 만큼 옮기면 글자는 제자리, 잡음만 흐른다 -->
+    <g id="drift" filter="url(#liq)"><g id="hold"><g id="words"></g></g></g>
+  </svg>
+  <div id="vig"></div>
+  <div class="label" id="count"></div>
+  <div class="label" id="cap"></div>
+  <div class="label" id="tag"></div>
+  <img id="logo" src="brand/realsnap-logo.png" alt="RealSnap" />
+</div>
+<script>
+(() => {
+  const V = RS.vars({ words: "SOFT|SILK|LINEN|WOOL|DENIM|REALSNAP", fonts: "DM Serif Display|Playfair Display|Archivo Black|Fraunces|Anton|Pretendard",
+    captions: "니트의 부드러움|실크의 윤기|린넨의 결|울의 온기|데님의 질감|옷 사진 한 장 → AI 패션 화보", tagline: "어떤 원단이든, 사진 한 장이면",
+    counter: true, ink: "#F4F1EA", bg: "#050505", melt: 1, logo: true });
+  const $ = (id) => document.getElementById(id);
+  const DUR = 9.5, CY = 900, M = 0.62;  // M = 한 번 녹아 바뀌는 길이(초)
+  const on = (v) => v !== false && v !== "false";
+  const words = String(V.words).split("|").map((s) => s.trim()).filter(Boolean);
+  const fonts = String(V.fonts).split("|").map((s) => s.trim());
+  const caps = String(V.captions || "").split("|").map((s) => s.trim());
+  const N = words.length, melt = Number(V.melt) || 1;
+  // 바뀌는 시각: 첫 단어는 0.5초에 맺히고, 마지막 단어가 1.7초 이상 남도록 고르게
+  const slot = N > 1 ? (DUR - 2.3) / (N - 1) : 1;
+  const T = Array.from({ length: N - 1 }, (_, i) => 0.55 + (i + 1) * slot - slot * 0.25);
+  document.getElementById("stage").style.background = V.bg; document.body.style.background = V.bg;
+  $("tag").textContent = V.tagline || "";
+
+  const ns = "http://www.w3.org/2000/svg", host = $("words");
+  const els = words.map((w, i) => {
+    const t = document.createElementNS(ns, "text");
+    t.textContent = w; t.setAttribute("x", "540"); t.setAttribute("text-anchor", "middle");
+    t.style.fontFamily = `"${fonts[i % Math.max(1, fonts.length)] || "Pretendard"}", "Pretendard"`;
+    t.setAttribute("fill", V.ink); host.appendChild(t); return t;
+  });
+  // 글자 크기: 폭 860 에 맞추고 높이 상한 340
+  const sizes = [];
+  const layout = () => els.forEach((el, i) => {
+    el.style.display = "inline"; el.setAttribute("font-size", "100"); el.removeAttribute("transform");  // 숨은 글자는 길이가 0 으로 잡힌다
+    const w = el.getComputedTextLength() || 300;
+    sizes[i] = Math.min(340, 860 / w * 100);
+    el.setAttribute("font-size", sizes[i].toFixed(1));
+    el.setAttribute("y", (CY + sizes[i] * 0.34).toFixed(1));
+  });
+  layout();
+
+  const bell = (x) => (Math.abs(x) >= 1 ? 0 : 0.5 + 0.5 * Math.cos(Math.PI * x));   // -1..1 → 0..1..0
+  const sstep = (a, b, x) => { const p = RS.clamp((x - a) / (b - a)); return p * p * (3 - 2 * p); };
+
+  const render = (t) => {
+    // 녹는 정도 m: 바뀌는 시각마다 종 모양으로 솟고, 처음 0.5초는 흐물한 덩어리에서 맺힌다
+    let m = bell(t / 0.6) * 0.9;
+    T.forEach((tt) => { m = Math.max(m, bell((t - tt) / (M / 2 + 0.08))); });
+    m *= melt;
+    // 단어별 불투명도(교차 — 흐린 상태에서 섞여 임계값이 덩어리를 이어 준다)와 녹아내림
+    let cur = 0;
+    els.forEach((el, i) => {
+      const a = i === 0 ? sstep(0, 0.35, t) : sstep(T[i - 1] - M * 0.22, T[i - 1] + M * 0.22, t);
+      const b = i === N - 1 ? 1 : 1 - sstep(T[i] - M * 0.22, T[i] + M * 0.22, t);
+      const op = Math.min(a, b);
+      el.setAttribute("opacity", op.toFixed(3));
+      el.style.display = op < 0.004 ? "none" : "inline";
+      if (op > 0.5) cur = i;
+      // 나가는 단어는 아래로 흘러내리며 세로로 늘고, 들어오는 단어는 위에서 내려앉는다
+      const out = i < N - 1 ? sstep(T[i] - M * 0.5, T[i] + M * 0.5, t) : 0;
+      const inn = i > 0 ? 1 - sstep(T[i - 1] - M * 0.5, T[i - 1] + M * 0.5, t) : 0;
+      const dy = out * 70 - inn * 40, sy = 1 + out * 0.22 - inn * 0.1;
+      el.setAttribute("transform", `translate(540 ${(CY + dy).toFixed(1)}) scale(${(1 - out * 0.04).toFixed(4)} ${sy.toFixed(4)}) translate(-540 ${-CY})`);
+    });
+    $("dm").setAttribute("scale", (10 + 95 * m).toFixed(1));
+    $("bl").setAttribute("stdDeviation", (0.6 + 11 * m).toFixed(2));
+    // 잡음 흐름(위로 천천히) + 주파수 미세 요동
+    const k = t * 46;
+    $("drift").setAttribute("transform", `translate(${(Math.sin(t * 0.7) * 30).toFixed(1)} ${(-k).toFixed(1)})`);
+    $("hold").setAttribute("transform", `translate(${(-Math.sin(t * 0.7) * 30).toFixed(1)} ${k.toFixed(1)})`);
+    $("tb").setAttribute("baseFrequency", `${(0.0065 + 0.0012 * Math.sin(t * 1.1)).toFixed(5)} ${(0.017 + 0.003 * Math.sin(t * 0.8 + 1)).toFixed(5)}`);
+    $("gr").setAttribute("seed", String(1 + Math.floor(t * 15) % 97));  // 입자는 15fps 로 끓는다
+    // 글 줄
+    const last = cur === N - 1;
+    $("count").textContent = on(V.counter) ? `${String(cur + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}` : "";
+    $("count").style.opacity = (1 - m * 0.8) * sstep(0.2, 0.6, t);
+    $("cap").textContent = caps[cur] || "";
+    $("cap").style.opacity = (1 - RS.clamp(m * 1.6)) * sstep(0.3, 0.7, t);
+    $("cap").style.filter = `blur(${(m * 8).toFixed(1)}px)`;
+    $("cap").style.transform = `translateY(${(sizes[cur] || 200) * 0.5 - 80}px)`;
+    const lt = N > 1 ? T[N - 2] + 0.5 : 0.5, lp = on(V.logo) ? sstep(lt, lt + 0.5, t) : 0;
+    $("logo").style.opacity = lp;
+    $("logo").style.transform = `translateX(-50%) translateY(${(1 - lp) * 18}px)`;
+    $("tag").style.opacity = (1 - sstep(lt - 0.6, lt - 0.1, t)) * sstep(0.4, 0.9, t) * 0.9;
+  };
+
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["rs-liquid-type"] = tl;
+  RS.sample(tl, 0, DUR, (p) => render(p * DUR));
+  render(0);
+  RS.ready([]).then(() => { layout(); render(tl.time()); });
+})();
+</script>
+</body>
+</html>

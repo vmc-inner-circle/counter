@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="brand/gsap.min.js"></script>
+<script src="brand/rs-motion.js"></script>
+<style>
+@font-face { font-family: "Pretendard"; src: url("brand/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #f3f1f5; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #f3f1f5; color: #111;
+  font-family: "Pretendard", sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+.abs { position: absolute; }
+
+#panel { left: 56px; top: 220px; width: 968px; border-radius: 52px; background: #fdfcfe; border: 1.5px solid #ebe7f0;
+  box-shadow: 0 30px 80px rgba(60,40,90,.08), 0 2px 0 rgba(255,255,255,.8) inset; }
+#word { left: 104px; top: 246px; height: 200px; font-size: 190px; font-weight: 800; letter-spacing: -.03em; line-height: 200px; white-space: nowrap; display: flex; }
+.sl { position: relative; display: block; height: 200px; clip-path: inset(0 -60px); }
+.sl span { position: absolute; left: 0; top: 0; white-space: pre; }
+#msr { position: absolute; left: -9999px; top: 0; font-size: 190px; font-weight: 800; letter-spacing: -.03em; white-space: pre; visibility: hidden; }
+#look { left: 108px; top: 468px; height: 54px; width: 860px; overflow: hidden; }
+#look svg { position: absolute; left: 0; top: 9px; width: 36px; height: 36px; }
+.lk { position: absolute; left: 54px; top: 0; font-size: 38px; font-weight: 600; line-height: 54px; color: #2a2730; white-space: nowrap; }
+
+#row { left: 96px; top: 556px; width: 888px; height: 150px; }
+#hl { position: absolute; top: 0; height: 150px; border-radius: 24px; background: #fff; border: 1.5px solid #e9e5ee; box-shadow: 0 8px 22px rgba(60,40,90,.08); }
+.col { position: absolute; top: 0; width: 126.86px; height: 150px; text-align: center; }
+.col .m { position: absolute; left: 0; right: 0; top: 20px; font-size: 22px; font-weight: 600; letter-spacing: .06em; }
+.col .d { position: absolute; left: 0; right: 0; top: 48px; font-size: 50px; font-weight: 700; line-height: 56px; font-variant-numeric: tabular-nums; }
+.col .w { position: absolute; left: 0; right: 0; top: 110px; font-size: 22px; font-weight: 700; letter-spacing: .06em; }
+
+#card { left: 96px; top: 736px; width: 888px; height: 0; border-radius: 30px; overflow: hidden; background: #e7e3ea; }
+#card-in { position: absolute; left: 0; top: 0; width: 888px; height: 880px; }
+#card-in video, #card-in img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 76%; }
+#no { right: 24px; top: 24px; font-size: 24px; font-weight: 700; letter-spacing: .06em; color: #fff; background: rgba(20,16,26,.42);
+  border-radius: 999px; padding: 8px 16px; backdrop-filter: blur(8px); font-variant-numeric: tabular-nums; z-index: 2; }
+
+#cur { left: 0; top: 0; width: 76px; height: 76px; transform-origin: 30px 6px; z-index: 20; filter: drop-shadow(0 6px 10px rgba(0,0,0,.22)); }
+#rip { left: 0; top: 0; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; border: 4px solid; opacity: 0; z-index: 19; }
+
+/* 끝 */
+#strip { left: 79px; top: 820px; width: 922px; height: 220px; }
+.tile { position: absolute; top: 0; width: 124px; height: 220px; border-radius: 18px; overflow: hidden; opacity: 0; box-shadow: 0 10px 24px rgba(60,40,90,.14); }
+.tile img { width: 100%; height: 100%; object-fit: cover; }
+.tile b { position: absolute; left: 0; right: 0; bottom: 10px; text-align: center; font-size: 19px; font-weight: 800; letter-spacing: .06em; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.5); }
+#copy { left: 64px; right: 64px; top: 1110px; text-align: center; font-size: 80px; font-weight: 850; letter-spacing: -.04em; line-height: 1.14; opacity: 0; }
+#sub { left: 64px; right: 64px; top: 1320px; text-align: center; font-size: 34px; font-weight: 500; color: #6d6875; opacity: 0; }
+#logo { left: 0; right: 0; margin: 0 auto; top: 1440px; height: 48px; width: auto; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="rs-weekday-lookbook" data-start="0" data-duration="14" data-width="1080" data-height="1920"
+  data-composition-variables='[{"id":"days","type":"string","label":"요일 7개(| 구분) — 큰 글자로 한 자씩 굴러 바뀐다","default":"MON|TUE|WED|THU|FRI|SAT|SUN"},{"id":"dates","type":"string","label":"날짜 7개(| 구분)","default":"19|20|21|22|23|24|25"},{"id":"month","type":"string","label":"날짜 위 작은 달 표시","default":"OCT"},{"id":"looks","type":"string","label":"요일별 룩 이름 7개(| 구분)","default":"블랙 수트 · 서류철|올리브 니트 · 테이크아웃 커피|크림 더블 재킷 셋업|레드 셔츠 · 쇼핑백|화이트 셋업 · 꽃다발|블랙 롱코트 · 필름 카메라|핑크 셔츠 · 바게트"},{"id":"end_word","type":"string","label":"끝에 요일 자리로 굴러 들어올 글자(비우면 마지막 요일 그대로)","default":"WEEK"},{"id":"end_look","type":"string","label":"끝에 룩 이름 자리로 올라올 한 줄(비우면 비움)","default":"7가지 데일리룩 · 모델 한 명"},{"id":"copy","type":"string","label":"끝 카피(\\n 줄바꿈)","default":"월요일부터 일요일까지,\\n한 모델로"},{"id":"sub","type":"string","label":"끝 카피 아래 작은 글씨(비우면 숨김)","default":"옷 사진만 올리면, 매일의 룩북"},{"id":"accent","type":"color","label":"강조색(선택 요일·달력 아이콘·탭 물결)","default":"#F2362F"},{"id":"logo","type":"boolean","label":"RealSnap 로고 표시","default":true}]'>
+  <div id="panel" class="abs"></div>
+  <div id="word" class="abs"></div>
+  <span id="msr"></span>
+  <div id="look" class="abs"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" id="cal"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span class="lk" id="lk-a"></span><span class="lk" id="lk-b"></span></div>
+  <div id="row" class="abs"><div id="hl"></div><div id="cols"></div></div>
+
+  <div id="card" class="abs"><div id="card-in">
+    <img id="k0" src="assets/slots/key-mon.jpg" alt="" /><video id="v0" class="clip" data-start="1.1" data-duration="1.69" data-media-start="0" data-track-index="1" src="assets/slots/look-mon.mp4" muted playsinline></video>
+    <img id="k1" src="assets/slots/key-tue.jpg" alt="" /><video id="v1" class="clip" data-start="2.75" data-duration="1.49" data-media-start="0" data-track-index="2" src="assets/slots/look-tue.mp4" muted playsinline></video>
+    <img id="k2" src="assets/slots/key-wed.jpg" alt="" /><video id="v2" class="clip" data-start="4.2" data-duration="1.49" data-media-start="0" data-track-index="1" src="assets/slots/look-wed.mp4" muted playsinline></video>
+    <img id="k3" src="assets/slots/key-thu.jpg" alt="" /><video id="v3" class="clip" data-start="5.65" data-duration="1.49" data-media-start="0" data-track-index="2" src="assets/slots/look-thu.mp4" muted playsinline></video>
+    <img id="k4" src="assets/slots/key-fri.jpg" alt="" /><video id="v4" class="clip" data-start="7.1" data-duration="1.49" data-media-start="0" data-track-index="1" src="assets/slots/look-fri.mp4" muted playsinline></video>
+    <img id="k5" src="assets/slots/key-sat.jpg" alt="" /><video id="v5" class="clip" data-start="8.55" data-duration="1.49" data-media-start="0" data-track-index="2" src="assets/slots/look-sat.mp4" muted playsinline></video>
+    <img id="k6" src="assets/slots/key-sun.jpg" alt="" /><video id="v6" class="clip" data-start="10.0" data-duration="1.6" data-media-start="0" data-track-index="1" src="assets/slots/look-sun.mp4" muted playsinline></video>
+    <span id="no" class="abs"></span>
+  </div></div>
+
+  <div id="strip" class="abs">
+    <div class="tile" id="t0"><img src="assets/slots/tile-mon.jpg" alt="" /><b></b></div>
+    <div class="tile" id="t1"><img src="assets/slots/tile-tue.jpg" alt="" /><b></b></div>
+    <div class="tile" id="t2"><img src="assets/slots/tile-wed.jpg" alt="" /><b></b></div>
+    <div class="tile" id="t3"><img src="assets/slots/tile-thu.jpg" alt="" /><b></b></div>
+    <div class="tile" id="t4"><img src="assets/slots/tile-fri.jpg" alt="" /><b></b></div>
+    <div class="tile" id="t5"><img src="assets/slots/tile-sat.jpg" alt="" /><b></b></div>
+    <div class="tile" id="t6"><img src="assets/slots/tile-sun.jpg" alt="" /><b></b></div>
+  </div>
+  <div id="copy" class="abs"></div>
+  <div id="sub" class="abs"></div>
+  <img id="logo" class="abs" src="brand/realsnap-logo.png" alt="RealSnap" />
+
+  <svg id="cur" class="abs" viewBox="0 0 24 24"><path d="M9 11.2V4.6a1.55 1.55 0 0 1 3.1 0v5.6-1.4a1.55 1.55 0 0 1 3.1 0v1.9a1.55 1.55 0 0 1 3.1 0v1.2a1.5 1.5 0 0 1 3 0V15c0 3.9-2.6 6.5-6.4 6.5h-1.2c-2.2 0-3.7-.9-5.1-2.8l-3-4a1.6 1.6 0 0 1 2.4-2.1L9 14.4z" fill="#fff" stroke="#111" stroke-width="1.35" stroke-linejoin="round"/><path d="M12.1 10.4v3.4M15.2 11v2.8M18.3 12v2" stroke="#111" stroke-width="1.1" stroke-linecap="round"/></svg>
+  <div id="rip" class="abs"></div>
+
+  <audio id="a-w0" class="clip" data-start="0.2" data-duration="0.8" data-track-index="10" src="assets/sfx/whoosh.mp3" data-volume="0.35"></audio>
+  <audio id="a-s0" class="clip" data-start="11.85" data-duration="0.38" data-track-index="11" src="assets/sfx/shutter.mp3" data-volume="0.4"></audio>
+</div>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const DEF = {};
+  JSON.parse($("stage").dataset.compositionVariables).forEach((v) => { DEF[v.id] = v.default; });
+  const V = RS.vars(DEF);
+  const DUR = 14, A = V.accent, N = 7;
+  const esc = (s) => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const list = (s, n, fb) => { const a = String(s || "").split("|").map((x) => x.trim()); return Array.from({ length: n }, (_, i) => a[i] || (fb ? fb[i] : "")); };
+  const DAYS = list(V.days, N, "MON TUE WED THU FRI SAT SUN".split(" "));
+  const DATES = list(V.dates, N, ["19", "20", "21", "22", "23", "24", "25"]);
+  const LOOKS = list(V.looks, N);
+  const WORDS = [...DAYS, V.end_word || DAYS[N - 1]];
+
+  // ── 시간표: T(i) 에 i번째 날짜를 누른다. E 에 카드를 접고 끝 장면
+  const T0 = 1.1, STEP = 1.45, T = (i) => T0 + i * STEP, E = T(N - 1) + 1.5, H = 880;
+  const COLW = 888 / 7, colX = (i) => i * COLW;
+
+  $("cal").setAttribute("stroke", A);
+  $("rip").style.borderColor = A;
+  $("cols").innerHTML = DAYS.map((d, i) => `<div class="col" id="c${i}" style="left:${colX(i).toFixed(2)}px"><div class="m">${esc(V.month)}</div><div class="d">${esc(DATES[i])}</div><div class="w">${esc(d)}</div></div>`).join("");
+  DAYS.forEach((d, i) => { $(`t${i}`).querySelector("b").textContent = d; });
+  $("copy").innerHTML = String(V.copy).split("\\n").join("\n").split("\n").map(esc).join("<br>");
+  $("sub").textContent = V.sub;
+  const logoOn = V.logo !== false && V.logo !== "false";
+
+  // 글자 폭(롤링 칸 폭) — 글꼴이 준비되면 다시 잰다
+  let WC = {};
+  const wOf = (ch) => { if (!ch) return 0; if (WC[ch] == null) { $("msr").textContent = ch; WC[ch] = $("msr").getBoundingClientRect().width; } return WC[ch]; };
+  const MAXL = Math.max(...WORDS.map((w) => [...w].length));
+  $("word").innerHTML = Array.from({ length: MAXL }, (_, j) => `<span class="sl" id="sl${j}"><span class="o"></span><span class="n"></span></span>`).join("");
+
+  // 지금 보이는 단어 쌍(from → to)과 바뀌기 시작한 시각
+  const wordAt = (t) => {
+    let k = 0, at = -9;
+    for (let i = 1; i < N; i++) if (t >= T(i)) { k = i; at = T(i); }
+    if (t >= E + 0.1) { k = N; at = E + 0.1; }
+    return { from: WORDS[Math.max(0, k - 1)], to: WORDS[k], at: k ? at : -9 };
+  };
+  const dayAt = (t) => { let k = 0; for (let i = 1; i < N; i++) if (t >= T(i)) k = i; return k; };
+
+  const cardH = (t) => {
+    if (t >= E) return H * (1 - RS.seg(t, E, E + 0.4, "power2.in"));
+    if (t < T(1)) return H * RS.seg(t, T0 + 0.05, T0 + 0.6, "power3.out");
+    const k = dayAt(t), a = T(k);
+    if (t < a + 0.22) return H * (1 - 0.92 * RS.seg(t, a, a + 0.22, "power2.in"));
+    return H * (0.08 + 0.92 * RS.seg(t, a + 0.22, a + 0.7, "power3.out"));
+  };
+  // 카드 안 영상: i번째 날을 누르고 접힌 뒤(+0.22)부터 다음 날이 접힐 때까지
+  const showAt = (t) => { let k = 0; for (let i = 1; i < N; i++) if (t >= T(i) + 0.22) k = i; return k; };
+
+  const colCx = (i) => 96 + colX(i) + COLW / 2;
+  const curPos = (t) => {
+    const tip = (i) => [colCx(i) + 4, 556 + 86];
+    if (t < T0 - 0.08) { const p = RS.seg(t, 0.25, T0 - 0.08, "power3.out"); const [x, y] = tip(0); return [RS.lerp(980, x, p), RS.lerp(1560, y, p)]; }
+    if (t >= E - 0.1) { const p = RS.seg(t, E - 0.1, E + 0.5, "power3.in"); const [x, y] = tip(N - 1); return [RS.lerp(x, 1180, p), RS.lerp(y, 1500, p)]; }
+    for (let i = 1; i < N; i++) {
+      if (t < T(i) - 0.08) {
+        const p = RS.seg(t, T(i) - 0.6, T(i) - 0.08, "power2.inOut"), [x0, y0] = tip(i - 1), [x1, y1] = tip(i);
+        return [RS.lerp(x0, x1, p), RS.lerp(y0, y1, p) - Math.sin(p * Math.PI) * 26];
+      }
+    }
+    return tip(N - 1);
+  };
+
+  const render = (t) => {
+    // 판이 살짝 떠오르며 등장
+    const pin = RS.seg(t, 0, 0.6, "power3.out");
+    const h = cardH(t);
+    $("panel").style.height = `${(536 + h).toFixed(1)}px`;
+    $("panel").style.opacity = RS.seg(t, 0, 0.3).toFixed(3);
+    for (const id of ["panel", "word", "look", "row", "card"]) $(id).style.transform = `translateY(${((1 - pin) * 50).toFixed(1)}px)`;
+    $("word").style.opacity = $("look").style.opacity = $("row").style.opacity = RS.seg(t, 0.1, 0.45).toFixed(3);
+    $("card").style.height = `${h.toFixed(1)}px`;
+
+    // 요일 글자: 한 자씩 위로 굴러 나가고 아래에서 굴러 들어온다
+    const w = wordAt(t), A1 = [...w.from], B1 = [...w.to];
+    for (let j = 0; j < MAXL; j++) {
+      const sl = $(`sl${j}`), o = sl.firstElementChild, n = sl.lastElementChild;
+      const p = RS.seg(t, w.at + j * 0.065, w.at + j * 0.065 + 0.42, "power3.inOut");
+      o.textContent = A1[j] || ""; n.textContent = B1[j] || "";
+      sl.style.width = `${RS.lerp(wOf(A1[j]), wOf(B1[j]), p).toFixed(2)}px`;
+      o.style.transform = `translateY(${(-p * 200).toFixed(1)}px)`; o.style.opacity = (1 - p).toFixed(3);
+      n.style.transform = `translateY(${((1 - p) * 200).toFixed(1)}px)`; n.style.opacity = p.toFixed(3);
+      const bl = Math.sin(p * Math.PI) * 5;
+      o.style.filter = n.style.filter = bl > 0.2 ? `blur(${bl.toFixed(1)}px)` : "none";
+    }
+
+    // 룩 이름: 날짜를 누르면 위로 바뀐다
+    const k = dayAt(t), la = k ? T(k) + 0.08 : -9, lp = RS.seg(t, la, la + 0.4, "power3.out");
+    $("lk-a").textContent = LOOKS[Math.max(0, k - 1)]; $("lk-b").textContent = LOOKS[k];
+    $("lk-a").style.transform = `translateY(${(-lp * 54).toFixed(1)}px)`; $("lk-a").style.opacity = (1 - lp).toFixed(3);
+    $("lk-b").style.transform = `translateY(${((1 - lp) * 54).toFixed(1)}px)`; $("lk-b").style.opacity = lp.toFixed(3);
+    if (!k) $("lk-a").style.opacity = 0;
+    // 끝: 룩 이름 자리에 end_look 이 올라온다(비우면 사라진다)
+    if (t >= E + 0.1) {
+      const ep = RS.seg(t, E + 0.1, E + 0.5, "power3.out");
+      $("lk-a").textContent = LOOKS[N - 1]; $("lk-b").textContent = V.end_look || "";
+      $("lk-a").style.transform = `translateY(${(-ep * 54).toFixed(1)}px)`; $("lk-a").style.opacity = (1 - ep).toFixed(3);
+      $("lk-b").style.transform = `translateY(${((1 - ep) * 54).toFixed(1)}px)`; $("lk-b").style.opacity = ep.toFixed(3);
+    }
+    $("look").style.opacity = RS.seg(t, 0.1, 0.45).toFixed(3);
+
+    // 선택 칸: 누른 날짜로 미끄러지고, 끝에서는 한 주 전체로 늘어난다
+    const hp = k ? RS.seg(t, T(k), T(k) + 0.32, "power3.inOut") : 1;
+    let hx = RS.lerp(colX(Math.max(0, k - 1)), colX(k), hp), hw = COLW;
+    const all = RS.seg(t, E + 0.2, E + 0.7, "power3.inOut");
+    hx = RS.lerp(hx, 0, all); hw = RS.lerp(COLW, 888, all);
+    $("hl").style.left = `${hx.toFixed(1)}px`; $("hl").style.width = `${hw.toFixed(1)}px`;
+    for (let i = 0; i < N; i++) {
+      const on = Math.max(i === k ? hp : i === k - 1 ? 1 - hp : 0, all);
+      const c = $(`c${i}`);
+      c.querySelector(".m").style.color = on > 0.5 ? "#111" : "#a6a1ad";
+      c.querySelector(".d").style.color = on > 0.5 ? "#111" : "#9a95a1";
+      c.querySelector(".d").style.fontWeight = on > 0.5 ? 800 : 600;
+      c.querySelector(".w").style.color = on > 0.5 ? A : "#a6a1ad";
+    }
+
+    // 카드 영상
+    const s = showAt(t);
+    for (let i = 0; i < N; i++) $(`v${i}`).style.opacity = $(`k${i}`).style.opacity = i === s ? 1 : 0;
+    $("no").textContent = `${String(s + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
+    $("card-in").style.transform = `scale(${(1.04 - 0.04 * RS.seg(t, T(s), T(s) + STEP, "sine.out")).toFixed(4)})`;
+
+    // 커서·누름·물결
+    const [cx, cy] = curPos(t);
+    let press = 1;
+    for (let i = 0; i < N; i++) {
+      const a = T(i);
+      if (t >= a - 0.07 && t < a + 0.22) press = 1 - 0.14 * RS.seg(t, a - 0.07, a + 0.02) * (1 - RS.seg(t, a + 0.04, a + 0.22));
+    }
+    $("cur").style.transform = `translate(${(cx - 30).toFixed(1)}px, ${(cy - 6).toFixed(1)}px) scale(${press.toFixed(3)})`;
+    $("cur").style.opacity = (RS.seg(t, 0.25, 0.5) * (1 - RS.seg(t, E + 0.2, E + 0.5))).toFixed(3);
+    let rp = -1, ri = 0;
+    for (let i = 0; i < N; i++) if (t >= T(i) && t < T(i) + 0.55) { rp = RS.seg(t, T(i), T(i) + 0.55, "power2.out"); ri = i; }
+    $("rip").style.opacity = rp >= 0 ? (0.8 * (1 - rp)).toFixed(3) : 0;
+    $("rip").style.transform = `translate(${colCx(ri).toFixed(1)}px, ${(556 + 74).toFixed(1)}px) scale(${(0.35 + 0.65 * Math.max(0, rp)).toFixed(3)})`;
+
+    // 끝: 일곱 룩 타일 → 카피 → 로고
+    for (let i = 0; i < N; i++) {
+      const a = E + 0.45 + i * 0.07, p = RS.seg(t, a, a + 0.5, "back.out(1.6)");
+      const el = $(`t${i}`);
+      el.style.left = `${(i * 133).toFixed(1)}px`;
+      el.style.opacity = RS.seg(t, a, a + 0.12).toFixed(3);
+      el.style.transform = `translateY(${((1 - p) * 70).toFixed(1)}px) scale(${(0.85 + 0.15 * p).toFixed(4)})`;
+    }
+    const cp = RS.seg(t, E + 1.05, E + 1.55, "power3.out");
+    $("copy").style.opacity = RS.seg(t, E + 1.05, E + 1.3).toFixed(3);
+    $("copy").style.transform = `translateY(${((1 - cp) * 34).toFixed(1)}px)`;
+    $("sub").style.opacity = RS.seg(t, E + 1.35, E + 1.7).toFixed(3);
+    $("logo").style.opacity = logoOn ? RS.seg(t, E + 1.6, E + 2.0, "power2.out").toFixed(3) : 0;
+    $("logo").style.transform = `translateY(${((1 - RS.seg(t, E + 1.6, E + 2.0, "power3.out")) * 16).toFixed(1)}px)`;
+  };
+
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["rs-weekday-lookbook"] = tl;
+  RS.sample(tl, 0, DUR, (p) => render(p * DUR));
+  render(0);
+  RS.ready([...document.querySelectorAll("img")]).then(() => { WC = {}; render(tl.time()); });
+})();
+</script>
+</body>
+</html>

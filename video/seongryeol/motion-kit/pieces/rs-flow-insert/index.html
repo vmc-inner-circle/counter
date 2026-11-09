@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="brand/gsap.min.js"></script>
+<script src="brand/rs-motion.js"></script>
+<style>
+@font-face { font-family: "Pretendard"; src: url("brand/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+@font-face { font-family: "IBM Plex Mono"; src: url("brand/fonts/IBMPlexMono-Medium.woff2") format("woff2"); font-weight: 500; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #f2f4f7; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #f2f4f7; color: #101828;
+  font-family: "Pretendard", sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+.abs { position: absolute; }
+.mono { font-family: "IBM Plex Mono", "Pretendard", monospace; font-weight: 500; }
+
+/* 연한 격자 */
+#grid { inset: 0; opacity: 0;
+  background-image:
+    linear-gradient(to right, rgba(152,162,179,.26) 1.5px, transparent 1.5px),
+    linear-gradient(to bottom, rgba(152,162,179,.26) 1.5px, transparent 1.5px),
+    linear-gradient(to right, rgba(152,162,179,.11) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(152,162,179,.11) 1px, transparent 1px);
+  background-size: 180px 180px, 180px 180px, 45px 45px, 45px 45px; background-position: 0 0; }
+
+#board { inset: 0; transform-origin: 540px 920px; }
+#fig { left: 72px; top: 214px; font-size: 27px; letter-spacing: .06em; white-space: nowrap; }
+#fig b { font-weight: 500; margin-right: 22px; }
+#fig i { font-style: normal; display: inline-block; width: 14px; height: 28px; margin-left: 4px; vertical-align: -5px; }
+
+.node { position: absolute; left: 110px; width: 860px; border: 2.5px solid; border-radius: 6px; background: #fbfcfd; opacity: 0;
+  transform-origin: 50% 50%; display: flex; align-items: center; gap: 30px; padding: 0 34px; }
+.node .ic { flex: 0 0 auto; width: 88px; height: 88px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 2px solid; }
+.node .ic svg { width: 50px; height: 50px; }
+.node .tx { flex: 1 1 auto; min-width: 0; }
+.node .t { font-size: 50px; font-weight: 800; letter-spacing: -.03em; line-height: 1.15; white-space: nowrap; }
+.node .s { margin-top: 8px; font-size: 29px; font-weight: 500; color: #667085; white-space: nowrap; }
+.node .no { position: absolute; right: 30px; bottom: 20px; font-size: 22px; letter-spacing: .08em; color: #98a2b3; }
+.node .ck { position: absolute; right: -20px; top: -20px; width: 60px; height: 60px; border-radius: 6px; display: flex; align-items: center; justify-content: center; opacity: 0; }
+.node .ck svg { width: 36px; height: 36px; }
+.node .glow { position: absolute; inset: -2.5px; border-radius: 6px; border: 3px solid; opacity: 0; }
+
+#wires { left: 0; top: 0; overflow: visible; }
+.pk { position: absolute; left: 540px; top: 0; transform: translate(-50%, -50%); font-size: 25px; letter-spacing: .02em; color: #fff;
+  border-radius: 6px; padding: 9px 18px 10px; white-space: nowrap; opacity: 0; box-shadow: 0 6px 16px rgba(16,24,40,.18); }
+
+#cap { left: 0; right: 0; top: 1532px; display: flex; justify-content: center; opacity: 0; }
+#cap span { font-size: 40px; font-weight: 700; color: #fff; border-radius: 8px; padding: 18px 34px 20px; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="rs-flow-insert" data-start="0" data-duration="7" data-width="1080" data-height="1920"
+  data-composition-variables='[{"id":"fig","type":"string","label":"왼쪽 위 도식 번호(작은 고정폭 글씨)","default":"FIG. 01"},{"id":"fig_title","type":"string","label":"도식 제목(번호 옆)","default":"옷 사진 → 상세페이지"},{"id":"nodes","type":"string","label":"노드 목록 JSON 3~6개 — [{icon, title, sub}], icon: shirt·photo·user·sparkle·palette·layout·share·camera·video·check","default":"[{\"icon\":\"shirt\",\"title\":\"옷 사진\",\"sub\":\"상품컷 한 장 · 바닥컷도 OK\"},{\"icon\":\"user\",\"title\":\"AI 모델 선택\",\"sub\":\"얼굴 · 체형 · 포즈\"},{\"icon\":\"sparkle\",\"title\":\"화보 생성\",\"sub\":\"스튜디오 · 야외 배경\"},{\"icon\":\"palette\",\"title\":\"컬러별 변형\",\"sub\":\"같은 컷, 색만 바꿔서\"},{\"icon\":\"layout\",\"title\":\"상세페이지 · SNS\",\"sub\":\"바로 올리는 이미지\"}]"},{"id":"packets","type":"string","label":"화살표를 타고 내려가는 꼬리표(| 구분, 노드 수 - 1개, 비우면 점만)","default":"사진 1장|모델 1명|화보 1컷|컬러 8색"},{"id":"caption","type":"string","label":"아래 자막 알약","default":"옷 사진 한 장이면, 상세페이지까지"},{"id":"accent","type":"color","label":"강조색(체크·흐르는 점·마지막 노드)","default":"#F2362F"},{"id":"ink","type":"color","label":"선·글자색(도식 잉크)","default":"#1D2939"}]'>
+  <div id="grid" class="abs"></div>
+  <div id="board" class="abs">
+    <div id="fig" class="abs mono"><b id="fig-n"></b><span id="fig-t"></span><i id="caret"></i></div>
+    <svg id="wires" class="abs" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+    <div id="nodes"></div>
+    <div id="pks"></div>
+  </div>
+  <div id="cap" class="abs"><span id="cap-t"></span></div>
+</div>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const DEF = {};
+  JSON.parse($("stage").dataset.compositionVariables).forEach((v) => { DEF[v.id] = v.default; });
+  const V = RS.vars(DEF);
+  const DUR = 7, A = V.accent, INK = V.ink, NS = "http://www.w3.org/2000/svg";
+  const esc = (s) => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  let NODES;
+  try { NODES = typeof V.nodes === "string" ? JSON.parse(V.nodes) : V.nodes; } catch (e) { NODES = JSON.parse(DEF.nodes); }
+  NODES = (NODES || []).filter(Boolean).slice(0, 6);
+  const N = NODES.length;
+  const PK = String(V.packets || "").split("|").map((s) => s.trim());
+
+  // 선 아이콘(24 격자, 선 굵기 1.8)
+  const ICON = {
+    shirt: '<path d="M8.2 3.5 3.5 6.3l1.9 3.9 2.6-1V20h8V9.2l2.6 1 1.9-3.9-4.7-2.8c-.6 1.5-2 2.4-3.8 2.4S8.8 5 8.2 3.5z"/>',
+    photo: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.6"/><path d="M21 16l-5.5-5L7 19"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.4 4.3-6.5 8-6.5s7 2.1 8 6.5"/>',
+    sparkle: '<path d="M11 3.5l1.9 5.1 5.1 1.9-5.1 1.9L11 17.5l-1.9-5.1L4 10.5l5.1-1.9z"/><path d="M18.5 15l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>',
+    palette: '<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.8 1.6-1.6 0-1.3-1-1.6-1-2.7 0-.9.7-1.4 1.6-1.4H16a5 5 0 0 0 5-5C21 6.3 17 3 12 3z"/><circle cx="7.5" cy="11.5" r="1.2"/><circle cx="9.7" cy="7.3" r="1.2"/><circle cx="14.6" cy="7.3" r="1.2"/>',
+    layout: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/>',
+    share: '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.6M8.2 13.2l7.6 4.6"/>',
+    camera: '<path d="M4 7h3l2-2.5h6L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.8"/>',
+    video: '<rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  };
+  const svgI = (k, col) => `<svg viewBox="0 0 24 24" fill="none" stroke="${col}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON[k] || ICON.photo}</svg>`;
+
+  // ── 세로 배치: 330~1500 안에 노드 높이 h, 사이 g(화살표 길이)
+  const TOP = 330, H = 1170;
+  let h = 164, g = N > 1 ? (H - N * h) / (N - 1) : 0;
+  if (g < 76) { g = 76; h = (H - (N - 1) * g) / N; }
+  if (g > 170) g = 170;
+  const total = N * h + (N - 1) * g, y0 = TOP + (H - total) / 2;
+  const yOf = (i) => y0 + i * (h + g);
+  const sc = Math.min(1, h / 164);   // 노드가 낮아지면 글자도 같이 줄인다
+
+  $("fig-n").textContent = V.fig; $("fig-t").textContent = "";
+  $("fig").style.color = INK; $("caret").style.background = A;
+  $("cap-t").textContent = V.caption; $("cap-t").style.background = INK;
+  if (!V.caption) $("cap").style.display = "none";
+
+  $("nodes").innerHTML = NODES.map((n, i) => {
+    const last = i === N - 1;
+    return `<div class="node" id="n${i}" style="top:${yOf(i).toFixed(1)}px;height:${h.toFixed(1)}px;border-color:${INK}">
+      <div class="glow" style="border-color:${A}"></div>
+      <div class="ic" style="border-color:${last ? A : "#d0d5dd"};background:${last ? A + "12" : "#fff"};transform:scale(${sc.toFixed(3)})">${svgI(n.icon, last ? A : INK)}</div>
+      <div class="tx" style="transform:scale(${sc.toFixed(3)});transform-origin:0 50%"><div class="t" style="color:${INK}">${esc(n.title)}</div>${n.sub ? `<div class="s">${esc(n.sub)}</div>` : ""}</div>
+      <div class="no mono">${String(i + 1).padStart(2, "0")}</div>
+      <div class="ck" style="background:${last ? A : INK}">${svgI("check", "#fff").replace('stroke-width="1.8"', 'stroke-width="3"')}</div>
+    </div>`;
+  }).join("");
+
+  // 화살표(노드 i 아래 → 노드 i+1 위) + 흐르는 점
+  const W = [];
+  for (let i = 0; i < N - 1; i++) {
+    const ya = yOf(i) + h + 4, yb = yOf(i + 1) - 6;
+    const ln = document.createElementNS(NS, "line"), hd = document.createElementNS(NS, "path");
+    ln.setAttribute("x1", 540); ln.setAttribute("x2", 540); ln.setAttribute("y1", ya); ln.setAttribute("y2", ya);
+    ln.setAttribute("stroke", INK); ln.setAttribute("stroke-width", 3);
+    hd.setAttribute("d", `M ${540 - 11} ${yb - 15} L 540 ${yb} L ${540 + 11} ${yb - 15}`);
+    hd.setAttribute("fill", "none"); hd.setAttribute("stroke", INK); hd.setAttribute("stroke-width", 3); hd.setAttribute("stroke-linejoin", "round"); hd.setAttribute("stroke-linecap", "round");
+    const dots = [0, 1].map(() => { const c = document.createElementNS(NS, "circle"); c.setAttribute("r", 6); c.setAttribute("cx", 540); c.setAttribute("fill", A); return c; });
+    $("wires").append(ln, hd, ...dots);
+    W.push({ ya, yb, ln, hd, dots });
+  }
+  $("pks").innerHTML = W.map((_, i) => (PK[i] ? `<div class="pk mono" id="pk${i}" style="background:${INK}">${esc(PK[i])}</div>` : "")).join("");
+
+  // ── 시간표: 노드 차례로 → 화살표가 하나씩 그려지며 꼬리표가 타고 내려감 → 도착하면 체크
+  const NODE_AT = (i) => 0.35 + i * Math.min(0.22, 1.0 / N);
+  const HOP0 = NODE_AT(N - 1) + 0.5, HS = Math.min(0.42, 1.7 / Math.max(1, N - 1)), HD = 0.34;
+  const HOP = (i) => HOP0 + i * HS;
+  const CHECK_AT = (i) => (i === 0 ? HOP0 - 0.05 : HOP(i - 1) + HD);
+  const DONE = CHECK_AT(N - 1);
+
+  const render = (t) => {
+    $("grid").style.opacity = RS.seg(t, 0, 0.35).toFixed(3);
+    $("board").style.transform = `scale(${(1 + 0.025 * RS.seg(t, 0, DUR, "sine.inOut")).toFixed(4)})`;
+    // FIG 제목이 한 자씩 찍힌다
+    const ft = String(V.fig_title), nch = Math.round(ft.length * RS.seg(t, 0.2, 0.2 + 0.045 * ft.length));
+    $("fig-t").textContent = ft.slice(0, nch);
+    $("fig").style.opacity = RS.seg(t, 0.1, 0.25).toFixed(3);
+    $("caret").style.opacity = t < 0.2 + 0.045 * ft.length + 0.6 ? (Math.floor(t / 0.25) % 2 ? 0 : 1) : 0;
+
+    NODES.forEach((_, i) => {
+      const el = $(`n${i}`), at = NODE_AT(i), p = RS.seg(t, at, at + 0.42, "back.out(1.5)");
+      el.style.opacity = RS.seg(t, at, at + 0.14).toFixed(3);
+      el.style.transform = `translateY(${((1 - p) * 26).toFixed(1)}px) scale(${(0.93 + 0.07 * p).toFixed(4)})`;
+      const ca = CHECK_AT(i), cp = RS.seg(t, ca, ca + 0.4, "back.out(2.2)"), last = i === N - 1;
+      const ck = el.querySelector(".ck");
+      ck.style.opacity = RS.seg(t, ca, ca + 0.1).toFixed(3);
+      ck.style.transform = `scale(${(t < ca ? 0.3 : 0.3 + 0.7 * cp) * (last ? 1.15 : 1)}) rotate(${((1 - cp) * -20).toFixed(1)}deg)`;
+      // 꼬리표가 도착하면 강조색 테두리가 번쩍, 마지막 노드는 강조색으로 남아 숨쉰다
+      const fl = RS.seg(t, ca, ca + 0.08) * (1 - RS.seg(t, ca + 0.15, ca + 0.55));
+      const keep = last ? RS.seg(t, ca, ca + 0.3) * (0.75 + 0.25 * Math.cos((t - ca) * 3.2)) : 0;
+      el.querySelector(".glow").style.opacity = Math.max(fl, keep).toFixed(3);
+      el.style.boxShadow = last && t >= ca ? `0 0 0 ${(10 * RS.seg(t, ca, ca + 0.4)).toFixed(1)}px ${A}14, 0 14px 34px rgba(16,24,40,.10)` : "0 8px 22px rgba(16,24,40,.06)";
+    });
+
+    W.forEach((w, i) => {
+      const a = HOP(i), p = RS.seg(t, a, a + HD, "power2.inOut"), y = RS.lerp(w.ya, w.yb, p);
+      w.ln.setAttribute("y2", y.toFixed(1));
+      w.ln.style.opacity = t >= a ? 1 : 0;
+      w.hd.style.opacity = RS.seg(t, a + HD - 0.06, a + HD).toFixed(3);
+      // 다 그려진 뒤에는 점 두 개가 계속 흘러내린다
+      w.dots.forEach((c, j) => {
+        const on = t >= a + HD;
+        const ph = ((t - (a + HD)) * 0.85 + j * 0.5) % 1;
+        c.setAttribute("cy", RS.lerp(w.ya + 6, w.yb - 16, ph).toFixed(1));
+        c.style.opacity = on ? (Math.min(1, ph * 6, (1 - ph) * 6) * RS.seg(t, a + HD, a + HD + 0.3)).toFixed(3) : 0;
+      });
+      const pk = $(`pk${i}`);
+      if (pk) {
+        pk.style.top = `${y.toFixed(1)}px`;
+        pk.style.opacity = (RS.seg(t, a, a + 0.08) * (1 - RS.seg(t, a + HD - 0.08, a + HD + 0.04))).toFixed(3);
+      }
+    });
+
+    const cp = RS.seg(t, 0.6, 1.05, "power3.out");
+    $("cap").style.opacity = RS.seg(t, 0.6, 0.8).toFixed(3);
+    $("cap").style.transform = `translateY(${((1 - cp) * 30).toFixed(1)}px)`;
+  };
+
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["rs-flow-insert"] = tl;
+  RS.sample(tl, 0, DUR, (p) => render(p * DUR));
+  render(0);
+  RS.ready([]).then(() => render(tl.time()));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="brand/gsap.min.js"></script>
+<script src="brand/rs-motion.js"></script>
+<style>
+@font-face { font-family: "Pretendard"; src: url("brand/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0a0a0a; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #0a0a0a; color: #fff;
+  font-family: "Pretendard", sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+.layer { position: absolute; inset: 0; overflow: hidden; }
+.layer img, .layer canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#before-px { image-rendering: pixelated; display: none; }
+#glow { position: absolute; inset: 0; }
+#shade { position: absolute; left: 0; right: 0; bottom: 0; height: 900px;
+  background: linear-gradient(to bottom, rgba(10,10,10,0) 0%, rgba(10,10,10,.35) 45%, rgba(10,10,10,.72) 100%); }
+#line { position: absolute; left: 0; top: 0; width: 2800px; height: 4px; margin: -2px 0 0 -1400px; background: #fff;
+  box-shadow: 0 0 0 1.5px rgba(10,10,10,.35), 0 0 22px rgba(255,255,255,.6); transform-origin: 50% 50%; }
+.tag { position: absolute; font-size: 30px; font-weight: 600; letter-spacing: .02em; padding: 12px 22px; border-radius: 999px;
+  background: rgba(10,10,10,.55); border: 1.5px solid rgba(255,255,255,.35); backdrop-filter: blur(8px); white-space: nowrap; }
+#tag-after { left: 64px; top: 216px; }
+#tag-before { right: 64px; top: 1180px; }
+#cap { position: absolute; left: 64px; right: 64px; top: 1318px; }
+.row { position: relative; display: block; width: max-content; max-width: 100%; transform: skewX(-9deg); transform-origin: 0 100%; }
+#label { font-size: 42px; font-weight: 800; letter-spacing: -.01em; padding: 8px 22px 10px; border-radius: 10px; margin-bottom: 14px; }
+#headline { font-size: 104px; font-weight: 900; letter-spacing: -.035em; line-height: 1.04; text-shadow: 0 6px 30px rgba(0,0,0,.45); }
+.row .txt { position: relative; display: block; white-space: nowrap; }
+.row .flash { position: absolute; top: 0; bottom: 0; left: 0; width: 120px; opacity: 0; }
+#logo { position: absolute; left: 64px; top: 1566px; height: 40px; filter: brightness(0) invert(1); opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="rs-diagonal-split" data-start="0" data-duration="5.5" data-width="1080" data-height="1920"
+  data-composition-variables='[{"id":"before","type":"string","label":"비포 이미지(상품 사진·원본). 비우면 애프터를 모자이크로","default":"assets/slots/before.jpg"},{"id":"after","type":"string","label":"애프터 이미지(RealSnap 결과)","default":"assets/slots/after.jpg"},{"id":"pixelate","type":"number","label":"비포 모자이크 칸 크기(px, 0=끔)","default":0},{"id":"label","type":"string","label":"윗줄 알약 카피","default":"상품 사진 한 장"},{"id":"headline","type":"string","label":"큰 카피(\\n 으로 줄바꿈)","default":"모델 화보로 완성"},{"id":"tag_before","type":"string","label":"비포 쪽 태그(비우면 숨김)","default":"BEFORE · 상품 사진"},{"id":"tag_after","type":"string","label":"애프터 쪽 태그(비우면 숨김)","default":"AFTER · RealSnap"},{"id":"accent","type":"color","label":"강조색(알약·빛번짐)","default":"#F2362F"},{"id":"logo","type":"boolean","label":"RealSnap 로고 표시","default":true}]'>
+  <div class="layer" id="before"><img id="before-img" src="assets/slots/before.jpg" alt="" /><canvas id="before-px"></canvas><div id="glow"></div></div>
+  <div class="layer" id="after"><img id="after-img" src="assets/slots/after.jpg" alt="" /></div>
+  <div id="shade"></div>
+  <div id="line"></div>
+  <span class="tag" id="tag-after"></span>
+  <span class="tag" id="tag-before"></span>
+  <div id="cap">
+    <span class="row" id="label"><span class="txt" id="label-t"></span><i class="flash"></i></span>
+    <span class="row" id="headline"><span class="txt" id="headline-t"></span><i class="flash"></i></span>
+  </div>
+  <img id="logo" src="brand/realsnap-logo.png" alt="RealSnap" />
+</div>
+<script>
+(() => {
+  const V = RS.vars({ before: "assets/slots/before.jpg", after: "assets/slots/after.jpg", pixelate: 0, label: "상품 사진 한 장",
+    headline: "모델 화보로 완성", tag_before: "BEFORE · 상품 사진", tag_after: "AFTER · RealSnap", accent: "#F2362F", logo: true });
+  const $ = (id) => document.getElementById(id);
+  const W = 1080, H = 1920, DUR = 5.5;
+
+  // 소재·카피
+  const px = Number(V.pixelate) || (V.before ? 0 : 18);  // 비포가 없으면 애프터를 모자이크로(업스케일 비교형)
+  $("before-img").src = V.before || V.after;
+  $("after-img").src = V.after;
+  $("label-t").textContent = V.label;
+  $("headline-t").innerHTML = String(V.headline).split("\\n").join("\n").split("\n").map((l) => l.replace(/</g, "&lt;")).join("<br>");
+  $("tag-before").textContent = V.tag_before; $("tag-after").textContent = V.tag_after;
+  if (!V.label) $("label").style.display = "none";
+  if (!V.tag_before) $("tag-before").style.display = "none";
+  if (!V.tag_after) $("tag-after").style.display = "none";
+  const logoOn = V.logo !== false && V.logo !== "false";
+  $("label").style.background = `linear-gradient(90deg, ${V.accent}, ${V.accent}cc)`;
+  document.querySelectorAll(".flash").forEach((f) => { f.style.background = "#fff"; });
+  $("glow").style.background = `radial-gradient(120% 70% at 100% 100%, ${V.accent}8c 0%, ${V.accent}33 38%, transparent 70%)`;
+
+  // 사선: 왼쪽 아래 → 오른쪽 위로 기운 선(수평에서 28°). 선 위쪽(왼쪽 위)이 애프터.
+  // 선 = { (x, y) : x·sinθ + y·cosθ = d }. d 가 0 → DMAX 로 커지며 애프터가 화면을 덮는다.
+  const TH = (28 * Math.PI) / 180, SN = Math.sin(TH), CS = Math.cos(TH);
+  const DMAX = W * SN + H * CS;
+  const side = (x, y) => x * SN + y * CS;
+  const clipFor = (d) => {  // 사각형을 반평면 side < d 로 자른 다각형
+    const R = [[0, 0], [W, 0], [W, H], [0, H]], out = [];
+    for (let i = 0; i < 4; i++) {
+      const a = R[i], b = R[(i + 1) % 4], sa = side(...a) - d, sb = side(...b) - d;
+      if (sa <= 0) out.push(a);
+      if ((sa < 0) !== (sb < 0)) { const k = sa / (sa - sb); out.push([a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k]); }
+    }
+    return out.length ? `polygon(${out.map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(",")})` : "polygon(0 0,0 0,0 0)";
+  };
+  // 선이 지나는 자리(시간 → d): 들어오기 → 천천히 흐르기 → 끝까지 쓸기
+  const dAt = (t) => {
+    if (t < 0.3) return -40;
+    if (t < 1.3) return RS.lerp(-40, 0.36 * DMAX, RS.seg(t, 0.3, 1.3, "expo.out"));
+    if (t < 3.4) return RS.lerp(0.36 * DMAX, 0.58 * DMAX, RS.seg(t, 1.3, 3.4, "sine.inOut"));
+    return RS.lerp(0.58 * DMAX, DMAX + 60, RS.seg(t, 3.4, 4.2, "power3.inOut"));
+  };
+  const tagSide = (el) => side(el.offsetLeft + el.offsetWidth / 2, el.offsetTop + el.offsetHeight / 2);
+
+  // 카피 한 줄 글리치 등장: 왼쪽→오른쪽으로 잘려 나오고, 흰 막대가 앞장서 지나가고, 첫 몇 프레임 좌우로 튄다
+  const JIT = [14, -10, 7, -4, 0];
+  const rowIn = (row, t, at) => {
+    const p = RS.seg(t, at, at + 0.36, "power2.out");
+    const txt = row.querySelector(".txt"), fl = row.querySelector(".flash"), w = row.offsetWidth;
+    row.style.clipPath = `inset(-20px ${((1 - p) * 100).toFixed(2)}% -20px -20px)`;
+    row.style.opacity = t < at ? 0 : 1;
+    const f = Math.floor((t - at) / 0.04);
+    txt.style.transform = `translateX(${t >= at && f < JIT.length ? JIT[f] : 0}px)`;
+    fl.style.opacity = t >= at && p < 1 ? 0.9 * (1 - p) : 0;
+    fl.style.transform = `translateX(${(p * w - 60).toFixed(1)}px)`;
+  };
+
+  const render = (t) => {
+    const d = dAt(t);
+    $("after").style.clipPath = clipFor(d);
+    // 선 위치: 화면 가운데에서 선에 내린 수선의 발
+    const c = side(W / 2, H / 2), k = d - c, lx = W / 2 + k * SN, ly = H / 2 + k * CS;
+    $("line").style.transform = `translate(${(lx).toFixed(1)}px, ${(ly).toFixed(1)}px) rotate(${(-28).toFixed(2)}deg)`;
+    $("line").style.opacity = d > -20 && d < DMAX + 20 ? 1 : 0;
+    // 두 사진 반대 방향으로 천천히 밀어 깊이감
+    $("after-img").style.transform = `scale(${RS.lerp(1.1, 1.0, RS.seg(t, 0, DUR, "power1.out")).toFixed(4)})`;
+    $("before-img").style.transform = `scale(${RS.lerp(1.0, 1.08, RS.seg(t, 0, DUR, "power1.out")).toFixed(4)})`;
+    $("before-px").style.transform = $("before-img").style.transform;
+    // 태그는 선이 지나가면 자리를 바꾼다(애프터 태그는 선 위쪽이 될 때 나오고, 비포 태그는 선에 덮일 때 사라진다)
+    const ta = $("tag-after"), tb = $("tag-before");
+    ta.style.opacity = RS.clamp((d - tagSide(ta)) / 80) * RS.seg(t, 0.6, 0.9);
+    tb.style.opacity = RS.clamp((tagSide(tb) - d) / 80) * RS.seg(t, 0.2, 0.5);
+    rowIn($("label"), t, 0.75);
+    rowIn($("headline"), t, 0.92);
+    $("logo").style.opacity = logoOn ? RS.seg(t, 4.25, 4.75, "power2.out") : 0;
+    $("logo").style.transform = `translateY(${(1 - RS.seg(t, 4.25, 4.75, "power3.out")) * 16}px)`;
+  };
+
+  const pixelateInto = () => {
+    if (!px) return;
+    const img = $("before-img"), cv = $("before-px");
+    // 화면에 덮어 보이는(cover) 영역을 칸 크기만큼 줄여 그린 뒤 픽셀 그대로 키운다
+    const s = Math.max(W / img.naturalWidth, H / img.naturalHeight), sw = W / s, sh = H / s;
+    cv.width = Math.ceil(W / px); cv.height = Math.ceil(H / px);
+    const g = cv.getContext("2d"); g.imageSmoothingEnabled = true;
+    g.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) / 2, sw, sh, 0, 0, cv.width, cv.height);
+    cv.style.display = "block"; img.style.visibility = "hidden";
+  };
+
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["rs-diagonal-split"] = tl;
+  RS.sample(tl, 0, DUR, (p) => render(p * DUR));
+  render(0);
+  RS.ready([$("before-img"), $("after-img")]).then(() => { pixelateInto(); render(tl.time()); });
+})();
+</script>
+</body>
+</html>

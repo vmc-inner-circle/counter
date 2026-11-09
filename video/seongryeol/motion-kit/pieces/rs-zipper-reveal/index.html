@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="brand/gsap.min.js"></script>
+<script src="brand/rs-motion.js"></script>
+<style>
+@font-face { font-family: "Pretendard"; src: url("brand/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0a0a0a; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #0a0a0a; color: #fff;
+  font-family: "Pretendard", sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+.photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 40%; }
+#shade { position: absolute; left: 0; right: 0; bottom: 0; height: 980px; opacity: 0;
+  background: linear-gradient(to bottom, rgba(8,8,10,0) 0%, rgba(8,8,10,.38) 42%, rgba(8,8,10,.78) 100%); }
+#cloth { position: absolute; inset: 0; width: 1080px; height: 1920px; }
+.cap { position: absolute; left: 72px; right: 72px; top: 1236px; }
+.pill { display: inline-block; font-size: 30px; font-weight: 700; letter-spacing: .08em; padding: 10px 22px 11px; border-radius: 999px;
+  background: rgba(255,255,255,.16); border: 1.5px solid rgba(255,255,255,.5); backdrop-filter: blur(10px); margin-bottom: 22px; }
+.head { font-size: 104px; font-weight: 880; letter-spacing: -.04em; line-height: 1.08; text-shadow: 0 6px 34px rgba(0,0,0,.5); }
+.head .ln { display: block; overflow: hidden; padding-bottom: 6px; }
+.head .ln i { display: block; font-style: normal; white-space: nowrap; }
+#logo { position: absolute; left: 72px; top: 1572px; height: 42px; filter: brightness(0) invert(1); opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="rs-zipper-reveal" data-start="0" data-duration="10" data-width="1080" data-height="1920"
+  data-composition-variables='[{"id":"photo1","type":"string","label":"첫 번째로 열리는 화보(세로 사진)","default":"assets/slots/photo-1.jpg"},{"id":"photo2","type":"string","label":"두 번째로 열리는 화보(cycles=2 일 때)","default":"assets/slots/photo-2.jpg"},{"id":"cycles","type":"number","label":"열리는 횟수(1 또는 2)","default":2},{"id":"fabric","type":"string","label":"원단 질감(denim · nylon)","default":"denim"},{"id":"fabric_color","type":"color","label":"원단 색","default":"#2E4A78"},{"id":"metal","type":"color","label":"지퍼 금속 색(이빨·손잡이)","default":"#C9A24A"},{"id":"stitch","type":"color","label":"지퍼 옆 스티치 색","default":"#D9A048"},{"id":"label1","type":"string","label":"첫 화보 알약(비우면 숨김)","default":"LOOK 01"},{"id":"label2","type":"string","label":"두 번째 화보 알약(비우면 숨김)","default":"LOOK 02"},{"id":"headline1","type":"string","label":"첫 화보 카피(\\n 으로 줄바꿈)","default":"옷 사진 한 장으로\\n화보까지"},{"id":"headline2","type":"string","label":"두 번째 화보 카피(비우면 첫 카피)","default":"다음 룩도\\n재촬영 없이"},{"id":"logo","type":"boolean","label":"RealSnap 로고 표시","default":true}]'>
+  <img class="photo" id="ph1" src="assets/slots/photo-1.jpg" alt="" />
+  <img class="photo" id="ph2" src="assets/slots/photo-2.jpg" alt="" />
+  <div id="shade"></div>
+  <canvas id="cloth" width="1080" height="1920"></canvas>
+  <div class="cap" id="cap1"><span class="pill" id="pill1"></span><div class="head" id="head1"></div></div>
+  <div class="cap" id="cap2"><span class="pill" id="pill2"></span><div class="head" id="head2"></div></div>
+  <img id="logo" src="brand/realsnap-logo.png" alt="RealSnap" />
+</div>
+<script>
+(() => {
+  const V = RS.vars({ photo1: "assets/slots/photo-1.jpg", photo2: "assets/slots/photo-2.jpg", cycles: 2, fabric: "denim",
+    fabric_color: "#2E4A78", metal: "#C9A24A", stitch: "#D9A048", label1: "LOOK 01", label2: "LOOK 02",
+    headline1: "옷 사진 한 장으로\n화보까지", headline2: "다음 룩도\n재촬영 없이", logo: true });
+  const $ = (id) => document.getElementById(id);
+  const W = 1080, H = 1920, CX = 540, DUR = 10;
+  const TWO = Number(V.cycles) !== 1;
+  const logoOn = V.logo !== false && V.logo !== "false";
+
+  // 시드 난수(같은 t 면 같은 화면)
+  const prng = (seed) => () => { seed = (seed + 0x6d2b79f5) | 0; let x = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x; return ((x ^ (x >>> 14)) >>> 0) / 4294967296; };
+  const rgb = (hex) => { const h = String(hex).replace("#", ""); const n = parseInt(h.length === 3 ? h.replace(/./g, "$&$&") : h, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  const mix = (hex, to, a) => { const c = rgb(hex), d = rgb(to); return `rgb(${c.map((v, i) => Math.round(v + (d[i] - v) * a)).join(",")})`; };
+
+  // 소재·카피
+  $("ph1").src = V.photo1; $("ph2").src = V.photo2 || V.photo1;
+  const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const lines = (s) => String(s).split("\\n").join("\n").split("\n").map((l) => `<span class="ln"><i>${esc(l)}</i></span>`).join("");
+  $("head1").innerHTML = lines(V.headline1);
+  $("head2").innerHTML = lines(V.headline2 || V.headline1);
+  $("pill1").textContent = V.label1; $("pill2").textContent = V.label2;
+  if (!V.label1) $("pill1").style.display = "none";
+  if (!V.label2) $("pill2").style.display = "none";
+
+  // ── 시간표: 손잡이 위치 s(위→아래), 천 벌어짐 sp(0 닫힘 ~ 1 화면 밖) ──
+  const S0 = 150, S1 = 1830;
+  const SL = TWO
+    ? [[0.25, 0.42, S0, S0 + 46, "power2.out"], [0.42, 0.6, S0 + 46, S0 + 20, "power2.inOut"], [0.6, 2.5, S0 + 20, S1, "sine.inOut"],
+       [5.3, 6.1, S1, S0, "power2.inOut"], [6.45, 7.75, S0, S1, "sine.inOut"]]
+    : [[0.25, 0.42, S0, S0 + 46, "power2.out"], [0.42, 0.6, S0 + 46, S0 + 20, "power2.inOut"], [0.6, 3.1, S0 + 20, S1, "sine.inOut"]];
+  const SP = TWO
+    ? [[2.38, 3.2, 0, 1, "power3.inOut"], [4.8, 5.42, 1, 0, "power3.inOut"], [7.62, 8.45, 0, 1, "power3.inOut"]]
+    : [[2.98, 3.85, 0, 1, "power3.inOut"]];
+  const keyed = (K, v0, t) => { let v = v0; for (const [a, b, f, to, e] of K) { if (t < a) break; v = t >= b ? to : RS.lerp(f, to, RS.seg(t, a, b, e)); } return v; };
+  const sAt = (t) => keyed(SL, S0, t), spAt = (t) => keyed(SP, 0, t);
+  const T_SWAP = 6.2;                                   // 다 닫힌 뒤 안쪽 화보 바꾸기
+  const CAPS = TWO ? [[2.95, 4.85, 1], [8.2, 99, 2]] : [[3.55, 99, 1]];
+
+  // 벌어짐 폭(한쪽, px): 손잡이 위로 V 자. 손잡이 바로 위 18px 은 아직 물려 있다
+  const gV = (y, s) => { const d = Math.max(0, s - y - 18); return 0.16 * d + 0.000055 * d * d; };
+  const gAt = (y, s, sp) => gV(y, s) + sp * 760 * (1 - 0.22 * (y / H));
+
+  // ── 원단 텍스처(한 번만 그림) ──
+  const tex = document.createElement("canvas"); tex.width = W; tex.height = H;
+  const makeFabric = () => {
+    const g = tex.getContext("2d"), im = g.createImageData(W, H), px = im.data, R = prng(7);
+    const [r0, g0, b0] = rgb(V.fabric_color), denim = String(V.fabric) !== "nylon";
+    const col = new Float32Array(W), row = new Float32Array(H);
+    let run = 0; for (let x = 0; x < W; x++) { run = run * 0.55 + (R() - 0.5); col[x] = run; }     // 세로 실 굵기 차(슬럽)
+    for (let y = 0; y < H; y++) row[y] = R() - 0.5;
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const low = 7 * Math.sin(x / 74 + 2.2 * Math.sin(y / 280)) + 5 * Math.sin(y / 430 + x / 910);  // 천 굴곡
+        let v, wh = 0;
+        if (denim) {
+          const tw = ((x + y) % 5) < 2;                 // 오른쪽 위로 오르는 능직 결
+          v = (tw ? 10 : -7) + col[x] * 9 + row[y] * 5 + (R() - 0.5) * 16 + low;
+          wh = tw ? 0 : 0.05 + R() * 0.05;              // 흰 씨실이 살짝 비친다
+        } else {
+          const grid = (x % 24 < 2) || (y % 24 < 2);    // 립스탑 격자
+          v = (grid ? 6 : 0) + col[x] * 2 + (R() - 0.5) * 6 + low * 1.4;
+        }
+        const i = (y * W + x) * 4;
+        px[i] = r0 + v + (235 - r0) * wh; px[i + 1] = g0 + v + (235 - g0) * wh; px[i + 2] = b0 + v + (235 - b0) * wh; px[i + 3] = 255;
+      }
+    }
+    g.putImageData(im, 0, 0);
+    // 지퍼 테이프(양쪽 28px) + 스티치
+    const tape = mix(V.fabric_color, "#000000", denim ? 0.45 : 0.25);
+    g.fillStyle = tape; g.fillRect(CX - 30, 0, 60, H);
+    g.fillStyle = "rgba(255,255,255,.05)"; for (let y = 0; y < H; y += 3) g.fillRect(CX - 30, y, 60, 1);
+    g.fillStyle = "rgba(0,0,0,.35)"; g.fillRect(CX - 31, 0, 2, H); g.fillRect(CX + 29, 0, 2, H);
+    g.strokeStyle = denim ? V.stitch : mix(V.fabric_color, "#ffffff", 0.28); g.lineWidth = 3.2; g.setLineDash([13, 9]); g.lineCap = "round";
+    for (const x of [CX - 48, CX + 48]) { g.beginPath(); g.moveTo(x, -4); g.lineTo(x, H + 4); g.stroke(); }
+    g.setLineDash([]);
+    // 가장자리 어둡게
+    const vg = g.createRadialGradient(CX, H * 0.45, 300, CX, H * 0.45, 1250);
+    vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(0,0,0,.42)"); g.fillStyle = vg; g.fillRect(0, 0, W, H);
+  };
+
+  // 벌어진 천 가장자리 접힘 그늘(한 줄짜리 그라데이션을 띠마다 늘려 쓴다)
+  const edgeShade = (flip) => {
+    const c = document.createElement("canvas"); c.width = 540; c.height = 1; const g = c.getContext("2d");
+    const gr = g.createLinearGradient(flip ? 540 : 0, 0, flip ? 0 : 540, 0);
+    gr.addColorStop(0, "rgba(0,0,0,0)"); gr.addColorStop(0.66, "rgba(0,0,0,0)"); gr.addColorStop(0.86, "rgba(0,0,0,.42)");
+    gr.addColorStop(0.9, "rgba(255,255,255,.10)"); gr.addColorStop(0.925, "rgba(0,0,0,.5)"); gr.addColorStop(1, "rgba(0,0,0,.25)");
+    g.fillStyle = gr; g.fillRect(0, 0, 540, 1); return c;
+  };
+  const shL = edgeShade(false), shR = edgeShade(true);
+
+  // 금속 이빨 한 개(그림자 포함). 왼쪽 체인용, 오른쪽은 뒤집어 그린다
+  const metal = (g, x0, y0, x1, y1) => { const gr = g.createLinearGradient(x0, y0, x1, y1);
+    gr.addColorStop(0, mix(V.metal, "#ffffff", 0.62)); gr.addColorStop(0.35, V.metal); gr.addColorStop(0.7, mix(V.metal, "#000000", 0.35));
+    gr.addColorStop(1, mix(V.metal, "#000000", 0.6)); return gr; };
+  const tooth = (flip) => {
+    const c = document.createElement("canvas"); c.width = 44; c.height = 26; const g = c.getContext("2d");
+    if (flip) { g.translate(44, 0); g.scale(-1, 1); }
+    g.shadowColor = "rgba(0,0,0,.55)"; g.shadowBlur = 3; g.shadowOffsetY = 2;
+    g.fillStyle = metal(g, 0, 7, 0, 19);
+    g.beginPath(); g.roundRect(6, 8, 24, 10, 2.5); g.fill();
+    g.beginPath(); g.ellipse(31, 13, 8, 6.2, 0, 0, Math.PI * 2); g.fill();
+    g.shadowColor = "transparent";
+    g.fillStyle = "rgba(255,255,255,.55)"; g.fillRect(8, 9, 26, 1.6);
+    g.fillStyle = "rgba(0,0,0,.28)"; g.beginPath(); g.ellipse(32, 14.5, 3, 2, 0, 0, Math.PI * 2); g.fill();
+    return c;
+  };
+  const tL = tooth(false), tR = tooth(true);
+  const P = 18;                                         // 이빨 간격
+
+  const cv = $("cloth"), cx = cv.getContext("2d");
+  const halfPath = (s, sp, left) => {
+    cx.beginPath(); cx.moveTo(left ? -900 : W + 900, -20);
+    for (let y = -20; y <= H + 24; y += 24) { const g = gAt(y, s, sp); cx.lineTo(left ? CX - g : CX + g, y); }
+    cx.lineTo(left ? -900 : W + 900, H + 24); cx.closePath();
+  };
+
+  const drawSlider = (x, y, ang) => {
+    cx.save(); cx.translate(x, y);
+    cx.shadowColor = "rgba(0,0,0,.55)"; cx.shadowBlur = 22; cx.shadowOffsetY = 10;
+    // 몸통: 위가 넓고(두 줄이 들어오는 쪽) 아래가 좁다
+    cx.fillStyle = metal(cx, -44, 0, 44, 0);
+    cx.beginPath(); cx.moveTo(-44, -60); cx.lineTo(44, -60); cx.quadraticCurveTo(50, -60, 48, -52);
+    cx.lineTo(26, 40); cx.quadraticCurveTo(24, 48, 16, 48); cx.lineTo(-16, 48); cx.quadraticCurveTo(-24, 48, -26, 40);
+    cx.lineTo(-48, -52); cx.quadraticCurveTo(-50, -60, -44, -60); cx.closePath(); cx.fill();
+    cx.shadowColor = "transparent";
+    const hl = cx.createLinearGradient(-44, 0, 44, 0);
+    hl.addColorStop(0, "rgba(0,0,0,.35)"); hl.addColorStop(0.32, "rgba(255,255,255,.35)"); hl.addColorStop(0.5, "rgba(255,255,255,0)"); hl.addColorStop(1, "rgba(0,0,0,.4)");
+    cx.fillStyle = hl; cx.fill();
+    cx.fillStyle = "rgba(0,0,0,.55)"; cx.fillRect(-30, -60, 10, 5); cx.fillRect(20, -60, 10, 5);    // 이빨 들어가는 틈
+    // 다리(손잡이 고리)
+    cx.fillStyle = metal(cx, -16, 0, 16, 0); cx.beginPath(); cx.roundRect(-15, -44, 30, 44, 8); cx.fill();
+    cx.fillStyle = "rgba(0,0,0,.5)"; cx.beginPath(); cx.roundRect(-7, -36, 14, 24, 5); cx.fill();
+    // 손잡이(늘어진 탭)
+    cx.translate(0, -24); cx.rotate(ang);
+    cx.shadowColor = "rgba(0,0,0,.5)"; cx.shadowBlur = 18; cx.shadowOffsetY = 12; cx.shadowOffsetX = 4;
+    cx.fillStyle = metal(cx, -26, 0, 26, 0);
+    cx.beginPath(); cx.moveTo(-17, -6); cx.lineTo(17, -6); cx.lineTo(25, 140); cx.quadraticCurveTo(25, 164, 0, 166);
+    cx.quadraticCurveTo(-25, 164, -25, 140); cx.closePath(); cx.fill();
+    cx.shadowColor = "transparent";
+    const th = cx.createLinearGradient(-26, 0, 26, 0);
+    th.addColorStop(0, "rgba(0,0,0,.3)"); th.addColorStop(0.3, "rgba(255,255,255,.4)"); th.addColorStop(0.55, "rgba(255,255,255,0)"); th.addColorStop(1, "rgba(0,0,0,.38)");
+    cx.fillStyle = th; cx.fill();
+    cx.fillStyle = "rgba(0,0,0,.6)"; cx.beginPath(); cx.roundRect(-9, 110, 18, 36, 9); cx.fill();       // 아래 구멍
+    cx.fillStyle = "rgba(0,0,0,.5)"; cx.beginPath(); cx.roundRect(-8, 2, 16, 10, 4); cx.fill();         // 위 고리 구멍
+    cx.strokeStyle = "rgba(255,255,255,.28)"; cx.lineWidth = 2; cx.beginPath(); cx.roundRect(-14, 24, 28, 76, 6); cx.stroke();  // 각인 테두리
+    cx.restore();
+  };
+
+  const drawCloth = (t) => {
+    const s = sAt(t), sp = spAt(t);
+    cx.clearRect(0, 0, W, H);
+    if (sp >= 0.999) return;
+    // 1) 천이 안쪽 화보에 드리우는 그림자
+    for (const left of [true, false]) {
+      cx.save(); halfPath(s, sp, left); cx.fillStyle = "#000"; cx.shadowColor = "rgba(0,0,0,.62)"; cx.shadowBlur = 64;
+      cx.shadowOffsetX = left ? 22 : -22; cx.shadowOffsetY = 10; cx.fill(); cx.restore();
+    }
+    // 2) 원단: 4px 띠마다 옆으로 밀어 V 자로 벌린다 + 가장자리 접힘 그늘
+    const ST = 4;
+    for (let y = 0; y < H; y += ST) {
+      const g = gAt(y + ST / 2, s, sp);
+      cx.drawImage(tex, 0, y, 540, ST, -g, y, 540, ST);
+      cx.drawImage(tex, 540, y, 540, ST, CX + g, y, 540, ST);
+      const op = RS.clamp(g / 70) * 0.95;
+      if (op > 0.01) { cx.globalAlpha = op; cx.drawImage(shL, 0, 0, 540, 1, -g, y, 540, ST); cx.drawImage(shR, 0, 0, 540, 1, CX + g, y, 540, ST); cx.globalAlpha = 1; }
+    }
+    // 3) 주름: 손잡이(꼭짓점)에서 위로 퍼지는 부드러운 결
+    const top = gV(0, s), amt = RS.clamp(top / 220) * (1 - sp);
+    if (amt > 0.01) {
+      for (const left of [true, false]) {
+        cx.save(); halfPath(s, sp, left); cx.clip(); cx.filter = "blur(13px)"; cx.lineCap = "round";
+        for (const [k, a, wid] of [[0.55, 0.42, 30], [1.25, 0.3, 40], [2.3, 0.22, 54]]) {
+          for (const [dx, col] of [[0, `rgba(0,0,0,${a * amt})`], [-22, `rgba(255,255,255,${a * amt * 0.32})`]]) {
+            cx.strokeStyle = col; cx.lineWidth = wid; cx.beginPath();
+            for (let y = s - 30; y >= -40; y -= 40) {
+              const g = gAt(y, s, sp), off = k * (24 + 0.2 * (s - y)) + dx;
+              const xx = left ? CX - g - off : CX + g + off;
+              if (y === s - 30) cx.moveTo(xx, y); else cx.lineTo(xx, y);
+            }
+            cx.stroke();
+          }
+        }
+        cx.restore();
+      }
+    }
+    // 4) 이빨(왼쪽 체인은 k·P, 오른쪽은 반 칸 어긋나 맞물린다)
+    for (const left of [true, false]) {
+      for (let y = left ? 0 : P / 2; y < H + P; y += P) {
+        const g = gAt(y, s, sp), d = (gAt(y + 6, s, sp) - gAt(y - 6, s, sp)) / 12;
+        const ex = left ? CX - g : CX + g;
+        if (ex < -40 || ex > W + 40) continue;
+        cx.save(); cx.translate(ex, y); cx.rotate(left ? Math.atan(d) : -Math.atan(d));
+        cx.drawImage(left ? tL : tR, left ? -18 : -26, -13); cx.restore();
+      }
+    }
+    // 5) 손잡이: 다 내려간 뒤 천이 벌어지면 오른쪽 천을 따라 나간다
+    const sx = CX + sp * 760 * (1 - 0.22 * (s / H));
+    const v = (sAt(t + 0.03) - sAt(t - 0.03)) / 0.06;
+    const ang = 0.05 * Math.sin(t * 2.3) + RS.clamp(-v / 9000, -0.22, 0.22);
+    drawSlider(sx, s, ang);
+  };
+
+  const capIn = (id, t, a, b) => {
+    const el = $(id), on = t >= a && t < b + 0.5;
+    el.style.display = on ? "block" : "none"; if (!on) return 0;
+    const out = RS.seg(t, b, b + 0.4, "power2.in");
+    el.style.opacity = 1 - out;
+    el.querySelectorAll(".ln i").forEach((ln, i) => {
+      const p = RS.seg(t, a + 0.14 + i * 0.1, a + 0.74 + i * 0.1, "expo.out");
+      ln.style.transform = `translateY(${((1 - p) * 110).toFixed(1)}%)`;
+    });
+    const pl = el.querySelector(".pill"), pp = RS.seg(t, a, a + 0.45, "power3.out");
+    pl.style.opacity = pp; pl.style.transform = `translateY(${((1 - pp) * 18).toFixed(1)}px)`;
+    return 1 - out;
+  };
+
+  const render = (t) => {
+    // 안쪽 화보: 다 닫혔을 때 바꾼다. 열리는 동안 살짝 당겨 온다
+    const second = TWO && t >= T_SWAP;
+    $("ph1").style.opacity = second ? 0 : 1;
+    $("ph2").style.opacity = second ? 1 : 0;
+    const z0 = second ? T_SWAP : 0, z = RS.seg(t, z0 + 0.4, z0 + 4.2, "power2.out");
+    (second ? $("ph2") : $("ph1")).style.transform = `scale(${RS.lerp(1.14, 1.0, z).toFixed(4)})`;
+    drawCloth(t);
+    let capOn = 0;
+    CAPS.forEach(([a, b, n]) => { capOn = Math.max(capOn, capIn(`cap${n}`, t, a, b)); });
+    if (!TWO) $("cap2").style.display = "none";
+    $("shade").style.opacity = capOn * RS.seg(t, 0, 0.01);
+    const lg = logoOn ? CAPS.reduce((m, [a, b]) => Math.max(m, RS.seg(t, a + 0.5, a + 0.9, "power2.out") * (1 - RS.seg(t, b, b + 0.4))), 0) : 0;
+    $("logo").style.opacity = lg;
+  };
+
+  makeFabric();
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["rs-zipper-reveal"] = tl;
+  RS.sample(tl, 0, DUR, (p) => render(p * DUR));
+  render(0);
+  RS.ready([$("ph1"), $("ph2")]).then(() => render(tl.time()));
+})();
+</script>
+</body>
+</html>

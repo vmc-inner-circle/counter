@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="brand/gsap.min.js"></script>
+<script src="brand/rs-motion.js"></script>
+<style>
+@font-face { font-family: "Pretendard"; src: url("brand/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #f4efdf; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #f4efdf; color: #1a1a1a;
+  font-family: "Pretendard", sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+#fluid { position: absolute; inset: 0; width: 1080px; height: 1920px; }
+#copy { position: absolute; left: 72px; right: 72px; text-align: center; font-size: 84px; font-weight: 800; letter-spacing: -.035em; line-height: 1.12; }
+#copy .ln { display: block; overflow: hidden; padding-bottom: .06em; }
+#copy .ln i { display: inline-block; font-style: normal; }
+#logo { position: absolute; left: 50%; height: 46px; transform: translateX(-50%); opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="rs-grain-fluid" data-start="0" data-duration="7" data-width="1080" data-height="1920"
+  data-composition-variables='[{"id":"color_a","type":"color","label":"덩어리 앞면 색(기본 레인파카 스카이블루)","default":"#3E9AD8"},{"id":"color_b","type":"color","label":"덩어리 뒷면 색(기본 레인파카 레몬 옐로)","default":"#F2D13A"},{"id":"color_deep","type":"color","label":"접힌 그늘 색(비우면 앞면 색을 어둡게)","default":"#1D3A6B"},{"id":"bg","type":"color","label":"바탕색","default":"#F4EFDF"},{"id":"particles","type":"number","label":"부드러운 색 점 개수(1500~3000)","default":3000},{"id":"grain","type":"number","label":"그레인 점 개수(0=끔)","default":38000},{"id":"seed","type":"number","label":"모양 시드(같은 시드 = 같은 영상)","default":7},{"id":"center_y","type":"number","label":"덩어리 가운데 높이(px)","default":800},{"id":"copy","type":"string","label":"겹칠 카피(\\n 줄바꿈, 비우면 없음)","default":"컬러별 화보,\\n재촬영 없이"},{"id":"copy_y","type":"number","label":"카피 윗변 위치(px)","default":1340},{"id":"copy_color","type":"color","label":"카피 색","default":"#1A1A1A"},{"id":"logo","type":"boolean","label":"카피 아래 RealSnap 로고","default":true}]'>
+  <canvas id="fluid" width="1080" height="1920"></canvas>
+  <div id="copy"></div>
+  <img id="logo" src="brand/realsnap-logo.png" alt="RealSnap" />
+</div>
+<script>
+(() => {
+  const V = RS.vars({ color_a: "#3E9AD8", color_b: "#F2D13A", color_deep: "#1D3A6B", bg: "#F4EFDF", particles: 3000, grain: 38000,
+    seed: 7, center_y: 800, copy: "컬러별 화보,\\n재촬영 없이", copy_y: 1340, copy_color: "#1A1A1A", logo: true });
+  const $ = (id) => document.getElementById(id);
+  const W = 1080, H = 1920, DUR = 7;
+  const on = (x) => x !== false && x !== "false";
+  document.body.style.background = V.bg; $("stage").style.background = V.bg;
+
+  // ── 색 ──
+  const hex = (h) => { h = String(h || "").replace("#", ""); if (h.length === 3) h = h.replace(/./g, "$&$&"); const n = parseInt(h || "000000", 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  const mix = (a, b, p) => [a[0] + (b[0] - a[0]) * p, a[1] + (b[1] - a[1]) * p, a[2] + (b[2] - a[2]) * p];
+  const CA = hex(V.color_a), CB = hex(V.color_b);
+  const CD = V.color_deep ? hex(V.color_deep) : mix(CA, [0, 0, 0], 0.55);
+  const WHITE = [255, 255, 255];
+  const DB = mix(mix(CB, [196, 128, 0], 0.4), CD, 0.1);   // 뒷면 그늘
+
+  // ── 시드 난수(고정) ──
+  let s0 = (Number(V.seed) || 7) * 2654435761 >>> 0;
+  const rnd = () => { s0 = (s0 + 0x6d2b79f5) >>> 0; let z = s0; z = Math.imul(z ^ (z >>> 15), z | 1); z ^= z + Math.imul(z ^ (z >>> 7), z | 61); return ((z ^ (z >>> 14)) >>> 0) / 4294967296; };
+  const gauss = () => { let u = 0; for (let k = 0; k < 4; k++) u += rnd(); return (u - 2) / 0.577; };
+  // 흔들림 = 시드로 정한 사인파 합(매끄럽고 t 의 닫힌 식)
+  const WAV = Array.from({ length: 5 }, () => [rnd() * 4 + 1, rnd() * 3 + 0.5, (rnd() - 0.5) * 1.6, rnd() * 6.283, rnd() * 0.6 + 0.4]);
+  const wob = (u, v, t, k) => { let s = 0; for (const [a, b, w, ph, amp] of WAV) s += amp * Math.sin(a * u + b * v * (k ? -1 : 1) + w * t + ph + k * 1.7); return s / 3; };
+
+  // ── 표면: 길이 u(0~1) × 폭 v(-1~1) 천 한 장. t 로만 정한다 ──
+  const NU = 72, NV = 26;
+  const GP = new Float32Array((NU + 1) * (NV + 1) * 3);   // 화면 위치 x,y,z
+  const GN = new Float32Array((NU + 1) * (NV + 1) * 3);   // 법선
+  const SP = new Float32Array((NU + 1) * 2), SA = new Float32Array(NU + 1);
+  const LEN = 1100, WMAX = 290, F = 2600;
+  const surface = (t) => {
+    const s = RS.ease("sine.inOut")(RS.clamp(t / DUR));
+    const a0 = -0.32 + 0.22 * s + 0.08 * Math.sin(t * 0.7);
+    const a1 = 0.5 + 1.1 * s, a3 = 0.3 + 2.9 * s;
+    const tw = 2.1 + 2.6 * s, th0 = -0.55 + 0.95 * s + 0.12 * Math.sin(t * 0.8);
+    const puff = 0.42 - 0.32 * s;
+    const yaw = -0.35 + 0.55 * s, pitch = 0.32 - 0.12 * s;
+    // 척추: 각도 α(u) 를 따라 고정 간격 적분(매 프레임 처음부터 — 상태 누적 없음)
+    let x = 0, y = 0, mx = 0, my = 0;
+    for (let i = 0; i <= NU; i++) {
+      const u = i / NU, c = u - 0.5;
+      const al = a0 + a1 * c + a3 * c * c * c * 8 + 0.18 * wob(u * 2, 0, t * 0.6, 3);
+      SA[i] = al;
+      if (i) { x += Math.sin(al) * LEN / NU; y -= Math.cos(al) * LEN / NU; }
+      SP[i * 2] = x; SP[i * 2 + 1] = y; mx += x; my += y;
+    }
+    mx /= NU + 1; my /= NU + 1;
+    const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+    for (let i = 0; i <= NU; i++) {
+      const u = i / NU, al = SA[i];
+      const taper = Math.pow(Math.sin(Math.PI * RS.clamp(u * 0.98 + 0.01)), 0.5)
+        * (1 - 0.55 * s * RS.ease("power2.in")(RS.clamp((u - 0.5) / 0.5)))
+        * (1 - 0.35 * s * RS.ease("power2.in")(RS.clamp((0.5 - u) / 0.5)));
+      const w = WMAX * taper * (1 + 0.12 * wob(u * 3, 0, t, 1));
+      const th = th0 + tw * (u - 0.5) + 0.25 * wob(u * 2.2, 0, t * 0.8, 2);
+      const ct = Math.cos(th), st = Math.sin(th);
+      const nx = Math.cos(al), ny = Math.sin(al);          // 척추에 수직(화면 평면)
+      for (let j = 0; j <= NV; j++) {
+        const v = (j / NV) * 2 - 1;
+        let lx = v * w + 26 * wob(u * 3, v * 2, t, 4);
+        let lz = Math.sqrt(Math.max(0, 1 - v * v)) * w * puff + 30 * wob(u * 2.5, v * 2.5, t, 5);
+        const rx = lx * ct - lz * st, rz = lx * st + lz * ct;  // 단면 비틀기
+        let X = SP[i * 2] - mx + rx * nx, Y = SP[i * 2 + 1] - my + rx * ny, Z = rz;
+        // 전체를 천천히 돌려 본다(요·피치) → 원근
+        const X1 = X * cy + Z * sy, Z1 = -X * sy + Z * cy;
+        const Y2 = Y * cp - Z1 * sp, Z2 = Y * sp + Z1 * cp;
+        const k = F / (F + Z2), o = (i * (NV + 1) + j) * 3;
+        GP[o] = W / 2 + X1 * k; GP[o + 1] = (Number(V.center_y) || 800) + Y2 * k; GP[o + 2] = Z2;
+      }
+    }
+    // 법선: 격자 이웃 차분(화면 공간)
+    for (let i = 0; i <= NU; i++) for (let j = 0; j <= NV; j++) {
+      const i0 = Math.max(0, i - 1), i1 = Math.min(NU, i + 1), j0 = Math.max(0, j - 1), j1 = Math.min(NV, j + 1);
+      const A = (i1 * (NV + 1) + j) * 3, B = (i0 * (NV + 1) + j) * 3, C = (i * (NV + 1) + j1) * 3, D = (i * (NV + 1) + j0) * 3;
+      const ux = GP[A] - GP[B], uy = GP[A + 1] - GP[B + 1], uz = GP[A + 2] - GP[B + 2];
+      const vx = GP[C] - GP[D], vy = GP[C + 1] - GP[D + 1], vz = GP[C + 2] - GP[D + 2];
+      let n0 = uy * vz - uz * vy, n1 = uz * vx - ux * vz, n2 = ux * vy - uy * vx;
+      const l = Math.hypot(n0, n1, n2) || 1, o = (i * (NV + 1) + j) * 3;
+      GN[o] = n0 / l; GN[o + 1] = n1 / l; GN[o + 2] = n2 / l;
+    }
+  };
+
+  // ── 입자: 표면 위 고정 좌표(u,v) + 두께 방향 흩어짐 ──
+  const NP = Math.round(RS.clamp(Number(V.particles) || 2200, 300, 4000));
+  const NG = Math.round(RS.clamp(Number(V.grain) || 0, 0, 60000));
+  const mkPts = (n, spread, fuzz) => {
+    const P = new Float32Array(n * 5);
+    for (let k = 0; k < n; k++) {
+      // u 는 폭에 비례해 뽑는다(넓은 몸통에 점이 모자라 구멍이 나지 않게), v 는 고르게
+      let u = rnd(); for (let r = 0; r < 8 && rnd() > Math.pow(Math.sin(Math.PI * u), 0.5) * 0.85 + 0.15; r++) u = rnd();
+      P[k * 5] = u;
+      P[k * 5 + 1] = (rnd() * 2 - 1) * spread;                      // v(그레인은 가장자리로 살짝 넘침)
+      P[k * 5 + 2] = gauss() * fuzz;                                // 법선 방향 흩어짐(px)
+      P[k * 5 + 3] = rnd();                                         // 크기·투명도용
+      P[k * 5 + 4] = gauss() * fuzz * 0.6;                          // 옆 흩어짐
+    }
+    return P;
+  };
+  const PS = mkPts(NP, 0.97, 10), PG = mkPts(NG, 1.07, 16);
+
+  // 격자 보간: (u,v) → 위치·법선
+  const OUT = new Float32Array(6);
+  const sampleAt = (u, v) => {
+    const fu = u * NU, fv = RS.clamp((v + 1) / 2) * NV;
+    const i = Math.min(NU - 1, Math.floor(fu)), j = Math.min(NV - 1, Math.floor(fv)), a = fu - i, b = fv - j;
+    const o00 = (i * (NV + 1) + j) * 3, o10 = o00 + (NV + 1) * 3, o01 = o00 + 3, o11 = o10 + 3;
+    for (let c = 0; c < 3; c++) {
+      OUT[c] = (GP[o00 + c] * (1 - a) + GP[o10 + c] * a) * (1 - b) + (GP[o01 + c] * (1 - a) + GP[o11 + c] * a) * b;
+      OUT[3 + c] = (GN[o00 + c] * (1 - a) + GN[o10 + c] * a) * (1 - b) + (GN[o01 + c] * (1 - a) + GN[o11 + c] * a) * b;
+    }
+    // v 가 ±1 을 넘으면(그레인 가장자리 흩날림) 바깥으로 조금 더
+    if (Math.abs(v) > 1) {
+      const e = (Math.abs(v) - 1) * 900, o = v > 0 ? (i * (NV + 1) + NV) * 3 : (i * (NV + 1)) * 3, q = v > 0 ? o - 3 : o + 3;
+      const dx = GP[o] - GP[q], dy = GP[o + 1] - GP[q + 1], l = Math.hypot(dx, dy) || 1;
+      OUT[0] += (dx / l) * e; OUT[1] += (dy / l) * e;
+    }
+  };
+
+  // 색: 앞/뒷면(법선 z 부호) + 빛 + 접힘(비스듬할수록 그늘) → 앞뒤 8단 × 밝기 14단 으로 양자화
+  const L = (() => { const l = [-0.45, -0.55, -0.7], n = Math.hypot(...l); return l.map((x) => x / n); })();
+  const NS = 8, NL = 14;
+  const PAL = [];
+  for (let a = 0; a < NS; a++) for (let b = 0; b < NL; b++) {
+    const side = a / (NS - 1), lit = b / (NL - 1);
+    // 면마다 그늘 색을 따로(파랑→남색, 노랑→진한 황토) — 둘을 섞어 탁해지지 않게
+    const ss = side * side * (3 - 2 * side);
+    const lo = mix(CD, DB, ss), hi = mix(CA, CB, ss);
+    let c = mix(lo, hi, Math.pow(lit, 0.75));
+    c = mix(c, WHITE, Math.max(0, lit - 0.82) * 1.2);
+    PAL.push(c.map((x) => Math.round(x)));
+  }
+  const colorKey = (nz, nx, ny, nzL, u) => {
+    // 화면 쪽을 향하면 nz < 0
+    const side = RS.clamp(0.5 - nz * 2.4 + (u - 0.56) * 1.9);   // 앞면·아랫몸 = A, 뒷면·윗꼬리 = B
+    const lit = RS.clamp(Math.pow(Math.abs(nx * L[0] + ny * L[1] + nzL * L[2]), 1.3) * 1.05 + 0.08 - Math.pow(1 - Math.abs(nz), 4) * 0.5);
+    return Math.round(side * (NS - 1)) * NL + Math.round(lit * (NL - 1));
+  };
+  // 부드러운 점 스프라이트(색마다 한 번)
+  const SPR = {};
+  const sprite = (key) => {
+    if (SPR[key]) return SPR[key];
+    const c = document.createElement("canvas"); c.width = c.height = 96;
+    const g = c.getContext("2d"), [r, gg, b] = PAL[key], gr = g.createRadialGradient(48, 48, 0, 48, 48, 48);
+    gr.addColorStop(0, `rgba(${r},${gg},${b},1)`); gr.addColorStop(0.5, `rgba(${r},${gg},${b},.42)`); gr.addColorStop(1, `rgba(${r},${gg},${b},0)`);
+    g.fillStyle = gr; g.fillRect(0, 0, 96, 96);
+    return (SPR[key] = c);
+  };
+
+  // 필름 그레인 타일(시드 고정) — 프레임 번호로 위치만 바꾼다
+  const NT = document.createElement("canvas"); NT.width = NT.height = 256;
+  { const g = NT.getContext("2d"), im = g.createImageData(256, 256);
+    for (let k = 0; k < 256 * 256; k++) { const v = rnd() * 255; im.data[k * 4] = im.data[k * 4 + 1] = im.data[k * 4 + 2] = v; im.data[k * 4 + 3] = 255; }
+    g.putImageData(im, 0, 0); }
+  const NOFF = Array.from({ length: 64 }, () => [Math.floor(rnd() * 256), Math.floor(rnd() * 256)]);
+
+  const cv = $("fluid"), g = cv.getContext("2d");
+  const LAYERS = 10;
+  const ZS = new Float32Array(NP), ZG = new Float32Array(NG);
+  const SX = new Float32Array(NP), SY = new Float32Array(NP), SK = new Uint16Array(NP), SR = new Float32Array(NP);
+  const GX = new Float32Array(NG), GY = new Float32Array(NG), GK = new Uint16Array(NG);
+
+  const drawFluid = (t) => {
+    surface(t);
+    g.globalCompositeOperation = "source-over"; g.globalAlpha = 1;
+    g.fillStyle = V.bg; g.fillRect(0, 0, W, H);
+    let zmin = 1e9, zmax = -1e9;
+    const place = (P, k, X, Y, Z, K, R) => {
+      const u = P[k * 5], v = P[k * 5 + 1];
+      sampleAt(u, v);
+      const d = P[k * 5 + 2], e = P[k * 5 + 4];
+      X[k] = OUT[0] + OUT[3] * d + e * OUT[4]; Y[k] = OUT[1] + OUT[4] * d - e * OUT[3]; Z[k] = OUT[2] + OUT[5] * d;
+      K[k] = colorKey(OUT[5], OUT[3], OUT[4], OUT[5], u);
+      if (R) R[k] = (22 + P[k * 5 + 3] * 34) * (F / (F + Z[k]));
+      if (Z[k] < zmin) zmin = Z[k]; if (Z[k] > zmax) zmax = Z[k];
+    };
+    for (let k = 0; k < NP; k++) place(PS, k, SX, SY, ZS, SK, SR);
+    for (let k = 0; k < NG; k++) place(PG, k, GX, GY, ZG, GK, null);
+    const zr = (zmax - zmin) || 1, layer = (z) => Math.min(LAYERS - 1, Math.floor(((zmax - z) / zr) * LAYERS)); // 먼 것부터
+    const LS = Array.from({ length: LAYERS }, () => []), LG = Array.from({ length: LAYERS }, () => ({}));
+    for (let k = 0; k < NP; k++) LS[layer(ZS[k])].push(k);
+    for (let k = 0; k < NG; k++) { const b = LG[layer(ZG[k])], key = GK[k]; (b[key] || (b[key] = [])).push(k); }
+    for (let l = 0; l < LAYERS; l++) {
+      for (const k of LS[l]) {
+        const r = SR[k];
+        g.globalAlpha = 0.16 + PS[k * 5 + 3] * 0.1;
+        g.drawImage(sprite(SK[k]), SX[k] - r, SY[k] - r, r * 2, r * 2);
+      }
+      const B = LG[l];
+      for (const key in B) {
+        const [r, gg, b] = PAL[key];
+        g.globalAlpha = 0.42; g.fillStyle = `rgb(${r},${gg},${b})`;
+        g.beginPath();
+        for (const k of B[key]) { const sz = 1.3 + PG[k * 5 + 3] * 1.3; g.rect(GX[k], GY[k], sz, sz); }
+        g.fill();
+      }
+    }
+    // 화면 전체 고운 그레인
+    const [ox, oy] = NOFF[Math.floor(t * 24) % NOFF.length];
+    g.globalCompositeOperation = "soft-light"; g.globalAlpha = 0.22;
+    g.save(); g.translate(-ox, -oy);
+    for (let y = 0; y < H + 256; y += 256) for (let x = 0; x < W + 256; x += 256) g.drawImage(NT, x, y);
+    g.restore();
+    g.globalCompositeOperation = "source-over"; g.globalAlpha = 1;
+  };
+
+  // ── 카피·로고 ──
+  const lines = String(V.copy || "").split("\\n").join("\n").split("\n").filter((l) => l.trim());
+  $("copy").style.color = V.copy_color; $("copy").style.top = (Number(V.copy_y) || 1340) + "px";
+  const LN = lines.map((l) => { const s = document.createElement("span"); s.className = "ln"; const i = document.createElement("i"); i.textContent = l; s.appendChild(i); $("copy").appendChild(s); return i; });
+  const logoOn = on(V.logo) && lines.length > 0;
+  const placeLogo = () => { $("logo").style.top = ($("copy").offsetTop + $("copy").offsetHeight + 34) + "px"; };
+
+  const render = (t) => {
+    drawFluid(t);
+    LN.forEach((e, k) => {
+      const a = 1.3 + k * 0.14, p = RS.seg(t, a, a + 0.7, "expo.out");
+      e.style.transform = `translateY(${((1 - p) * 110).toFixed(1)}%)`;
+    });
+    const pl = logoOn ? RS.seg(t, 1.9, 2.5, "power3.out") : 0;
+    $("logo").style.opacity = pl.toFixed(3);
+    $("logo").style.transform = `translate(-50%, ${((1 - pl) * 14).toFixed(1)}px)`;
+  };
+
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["rs-grain-fluid"] = tl;
+  RS.sample(tl, 0, DUR, (p) => render(p * DUR));
+  placeLogo();
+  render(0);
+  RS.ready([$("logo")]).then(() => { placeLogo(); render(tl.time()); });
+})();
+</script>
+</body>
+</html>
